@@ -11,5 +11,9 @@ if test -e $HOME/.pyenv
 end
 
 set -x GOPATH $HOME/dev/go
-set -x PATH /opt/brew/bin $PATH
+mkdir -p $GOPATH/bin
+set -x PATH $GOPATH/bin $PATH
 
+if test -e /opt/brew/bin
+  set -x PATH /opt/brew/bin $PATH
+end
