@@ -53,7 +53,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (golint flycheck-pycheckers flymake-python-pyflakes company-irony company-irony-c-headers flymake-less irony flycheck-clang-tidy flycheck flymake-google-cpplint yaml-mode markdown-mode+ js2-mode google-c-style go-mode company))))
+    (flycheck-clang-analyzer flycheck-clangcheck golint flycheck-pycheckers flymake-python-pyflakes company-irony company-irony-c-headers flymake-less irony flycheck-clang-tidy flycheck flymake-google-cpplint yaml-mode markdown-mode+ js2-mode google-c-style go-mode company))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
