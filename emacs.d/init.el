@@ -64,5 +64,11 @@
 ;(load-theme 'manoj-dark t)
 (load-theme 'wombat t)
 
+(require `go-mode)
 (add-hook 'go-mode-hook 'flycheck-mode)
-(add-hook 'go-mode-hook '(lambda () (setq tab-width 2)))
+(add-hook 'go-mode-hook (lambda()
+           (add-hook 'before-save-hook' 'gofmt-before-save)
+           (local-set-key (kbd "M-.") 'godef-jump)
+           (setq tab-width 2)
+))
+
