@@ -5,6 +5,15 @@
 (package-initialize)
 (prefer-coding-system 'utf-8)
 
+(require `go-mode)
+(add-hook 'go-mode-hook 'flycheck-mode)
+(add-hook 'go-mode-hook (lambda()
+           (add-hook 'before-save-hook 'gofmt-before-save)
+           (local-set-key (kbd "M-.") 'godef-jump)
+           (setq tab-width 2)
+))
+
+
 ; C-h
 (global-set-key "\C-h" 'backward-delete-char)
 ; disable backup
@@ -63,12 +72,4 @@
 
 ;(load-theme 'manoj-dark t)
 (load-theme 'wombat t)
-
-(require `go-mode)
-(add-hook 'go-mode-hook 'flycheck-mode)
-(add-hook 'go-mode-hook (lambda()
-           (add-hook 'before-save-hook' 'gofmt-before-save)
-           (local-set-key (kbd "M-.") 'godef-jump)
-           (setq tab-width 2)
-))
 
