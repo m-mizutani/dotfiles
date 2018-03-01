@@ -1,0 +1,5 @@
+export PS1="\[\033[38;5;2m\]\h\[$(tput sgr0)\]\[\033[38;5;15m\]:\[$(tput sgr0)\]\[\033[38;5;12m\]\w\[$(tput sgr0)\]\[\033[38;5;15m\] \\$ \[$(tput sgr0)\]"
+
+if [ -e $HOME/.cpad2/profile ]; then
+  source $HOME/.cpad2/profile
+fi
