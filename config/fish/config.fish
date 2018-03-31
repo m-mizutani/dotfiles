@@ -5,6 +5,10 @@ set -x GOPATH $HOME/dev/go
 mkdir -p $GOPATH/bin
 set -x PATH $GOPATH/bin $PATH
 
+if test -e $HOME/local/bin
+  set -x PATH $HOME/local/bin $PATH
+end
+
 if test -e /opt/brew/bin
   set -x PATH /opt/brew/bin $PATH
 end
