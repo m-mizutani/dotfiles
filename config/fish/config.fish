@@ -9,6 +9,10 @@ if test -e $HOME/local/bin
   set -x PATH $HOME/local/bin $PATH
 end
 
+if test -e $HOME/.local/bin
+  set -x PATH $HOME/.local/bin $PATH
+end
+
 if test -e /opt/brew/bin
   set -x PATH /opt/brew/bin $PATH
 end
