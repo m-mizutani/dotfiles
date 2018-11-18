@@ -4,6 +4,7 @@ alias make="make -j8"
 set -x GOPATH $HOME/dev/go
 mkdir -p $GOPATH/bin
 set -x PATH $GOPATH/bin $PATH
+set -x GO111MODULE auto
 
 if test -e $HOME/local/bin
   set -x PATH $HOME/local/bin $PATH
