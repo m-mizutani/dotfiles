@@ -2,7 +2,6 @@ alias em="emacs -nw"
 alias make="make -j8"
 
 set -x GOPATH $HOME/dev/go
-set -x GO111MODULE auto
 mkdir -p $GOPATH/bin
 set -x PATH $GOPATH/bin $PATH
 set -x GO111MODULE auto
