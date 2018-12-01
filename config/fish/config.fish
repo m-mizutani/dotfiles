@@ -10,6 +10,10 @@ if test -e $HOME/local/bin
   set -x PATH $HOME/local/bin $PATH
 end
 
+if test -e $HOME/.cargo/bin
+  set -x PATH $HOME/.cargo/bin $PATH
+end
+
 if test -e $HOME/.local/bin
   set -x PATH $HOME/.local/bin $PATH
 end
