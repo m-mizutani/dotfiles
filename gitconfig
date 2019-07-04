@@ -1,0 +1,10 @@
+[user]
+	name = Masayoshi Mizutani
+	email = mizutani@cookpad.com
+[merge "mergepbx"]
+	name = Xcode project files merger
+	driver = mergepbx %O %A %B
+	note = auto-generated configuration by cpad2 upgrade
+[url "ssh://git@ghe.ckpd.co/"]
+	insteadOf = https://ghe.ckpd.co/
+
