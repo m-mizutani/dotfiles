@@ -2,6 +2,9 @@ alias em="emacs -nw"
 alias make="make -j8"
 alias gcd="cd (ghq root)/(ghq list | peco)"
 alias gh="hub browse (ghq list | peco | cut -d '/' -f 2,3)"
+alias jqc="jq --color-output"
+alias less="less -r"
+alias l="less -r"
 
 
 set -x GOPATH $HOME/dev/go
@@ -46,4 +49,7 @@ if test -e /usr/local/texlive/2018/bin/x86_64-darwin
 end
 
 
-set -g fish_user_paths "/opt/brew/opt/terraform@0.11/bin" $fish_user_paths
+if test -e $HOME/.cpad2/profile.fish 
+  . ~/.cpad2/profile.fish
+end
+
