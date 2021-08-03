@@ -38,6 +38,9 @@ if test -e $HOME/.rbenv
   # $HOME/.rbenv/bin/rbenv init - | source
 end
 
+set -x GOPATH $HOME/.go
+set -x PATH $GOPATH/bin $PATH
+
 if test -e $HOME/.goenv
   set -x GOENV_ROOT $HOME/.goenv
   set -x PATH $GOENV_ROOT/bin $PATH
