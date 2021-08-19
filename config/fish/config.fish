@@ -62,3 +62,8 @@ if test -e $HOME/.cpad2/profile.fish
   . ~/.cpad2/profile.fish
 end
 
+set -x GCLOUD_CONFIG $HOME/.gcloud/google-cloud-sdk/path.fish.inc
+if test -e $GCLOUD_CONFIG
+  source $GCLOUD_CONFIG
+end
+
