@@ -1,12 +1,16 @@
 alias em="emacs -nw"
 alias make="make -j8"
 alias gcd="cd (ghq root)/(ghq list | sort | peco)"
-alias gh="hub browse (ghq list | peco | cut -d '/' -f 2,3)"
-alias jqc="jq --color-output"
+alias jpp="pbpaste | jq"
+alias bpp="pbpaste | base64 -D"
 alias less="less -r"
 alias l="less -r"
 alias pb="pbpaste | pbcopy"
+alias h="fish -c \"(history | peco)\""
 
+function fish_user_key_bindings
+  bind \cr 'peco_select_history (commandline -b)'
+end
 
 set -x GO111MODULE auto
 
@@ -25,8 +29,16 @@ end
 if test -e /opt/brew/bin
   set -x PATH /opt/brew/bin $PATH
 end
+if test -e /opt/homebrew/bin/
+  set -x PATH /opt/homebrew/bin/ $PATH
+end
+
+if test -e $HOME/Library/Python/3.9/bin
+  set -x PATH $HOME/Library/Python/3.9/bin $PATH
+end
 
 if test -e $HOME/.rbenv/shims
+  status --is-interactive; and source (rbenv init -|psub)
   set -x PATH  $HOME/.rbenv/shims $PATH
 end
 

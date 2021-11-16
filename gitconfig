@@ -1,6 +1,6 @@
 [user]
 	name = Masayoshi Mizutani
-	email = mizutani@cookpad.com
+	email = masayoshi.mizutani@dr-ubie.com
 [merge "mergepbx"]
 	name = Xcode project files merger
 	driver = mergepbx %O %A %B
@@ -41,3 +41,5 @@
 	symlinks = false
 [pull]
 	rebase = false
+[init]
+	defaultBranch = main
