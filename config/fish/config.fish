@@ -79,3 +79,6 @@ if test -e $GCLOUD_CONFIG
   source $GCLOUD_CONFIG
 end
 
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
