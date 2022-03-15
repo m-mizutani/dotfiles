@@ -9,6 +9,7 @@ alias less="less -r"
 alias l="less -r"
 alias pb="pbpaste | pbcopy"
 alias h="fish -c \"(history | peco)\""
+alias tffmt="git status -s | grep \.tf | cut -c 3- | sed -e 's@\(.*\)@terraform fmt \1@g' | bash"
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
