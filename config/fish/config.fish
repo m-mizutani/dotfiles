@@ -9,7 +9,7 @@ alias less="less -r"
 alias l="less -r"
 alias pb="pbpaste | pbcopy"
 alias h="fish -c \"(history | peco)\""
-alias tffmt="git status -s | grep \.tf | cut -c 3- | sed -e 's@\(.*\)@terraform fmt \1@g' | bash"
+alias tffmt=" git diff --name-only| grep \.tf | sed -e 's@\(.*\)@terraform fmt \1@g' | bash"
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
@@ -34,6 +34,10 @@ if test -e /opt/brew/bin
 end
 if test -e /opt/homebrew/bin/
   set -x PATH /opt/homebrew/bin/ $PATH
+end
+
+if test -e /usr/local/go/bin
+  set -x PATH /usr/local/go/bin $PATH
 end
 
 if test -e $HOME/Library/Python/3.9/bin
@@ -72,16 +76,14 @@ if test -e /usr/local/texlive/2018/bin/x86_64-darwin
   set -x PATH /usr/local/texlive/2018/bin/x86_64-darwin $PATH
 end
 
-
-if test -e $HOME/.cpad2/profile.fish
-  . ~/.cpad2/profile.fish
-end
-
 set -x GCLOUD_CONFIG $HOME/.gcloud/google-cloud-sdk/path.fish.inc
 if test -e $GCLOUD_CONFIG
   source $GCLOUD_CONFIG
 end
 
+if test -e $HOME/Library/Python/3.9/bin
+  set -x PATH $HOME/Library/Python/3.9/bin $PATH
+end
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
