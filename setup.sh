@@ -15,6 +15,7 @@ ln -s $SCRIPTPATH/hammerspoon/init.lua $HOME/.hammerspoon/init.lua
 
 ln -s $SCRIPTPATH/tmux.conf $HOME/.tmux.conf
 ln -s $SCRIPTPATH/bashrc $HOME/.bashrc
+ln -s $SCRIPTPATH/hyper.js $HOME/.hyper.js
 
 ln -s $SCRIPTPATH/gitconfig $HOME/.gitconfig
 
