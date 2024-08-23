@@ -10,6 +10,11 @@ alias l="less -r"
 alias pb="pbpaste | pbcopy"
 alias h="fish -c \"(history | peco)\""
 alias tffmt=" git diff --name-only| grep \.tf | sed -e 's@\(.*\)@terraform fmt \1@g' | bash"
+alias brclean="git branch --merged | grep -v ' main' | xargs git branch -d"
+alias cid='git rev-parse HEAD | tr -d "\n" | pbcopy && pbpaste'
+alias pn='pbpaste | tr "\n" " " | pbcopy'
+alias ge='echo "masayoshi.mizutani+$(date +%Y%m%d%H%M%S)@dr-ubie.com" | pbcopy'
+alias gnew='git co main && git pull && git cob'
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
@@ -85,5 +90,16 @@ if test -e $HOME/Library/Python/3.9/bin
   set -x PATH $HOME/Library/Python/3.9/bin $PATH
 end
 
+if test -e $HOME/.ubie-bin
+  set -x PATH $HOME/.ubie-bin $PATH
+end
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
+set -x CLOUDSDK_PYTHON_SITEPACKAGES 1
+
+# source /Users/mizutani/.docker/init-fish.sh || true # Added by Docker Desktop
+
+if test -e /opt/homebrew/bin//direnv
+  direnv hook fish | source
+end

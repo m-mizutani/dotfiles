@@ -7,18 +7,21 @@
 	note = auto-generated configuration by cpad2 upgrade
 [url "ssh://git@ghe.ckpd.co/"]
 	insteadOf = https://ghe.ckpd.co/
+[url "git@github.com:"]
+	insteadOf = https://github.com/
 
 [submodule]
     recurse = true
 
 [alias]
-    d = diff -b
+    d = diff -b --word-diff
     co = checkout
     cob = checkout -b
     c = commit
     s = status -s
     br = branch
     sw = switch
+    swc = switch -c
     l = log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd\n%Cblue%cn %Cred%d %Creset%s'
     rollback = reset @~1
     r = reset @~1
@@ -32,6 +35,7 @@
     superpull = pull upstream master
     superpush = ! git push -u origin $(git rev-parse --abbrev-ref HEAD)
     current = rev-parse --short HEAD
+    ph = push origin HEAD
 
 [ghq]
     root = ~/.ghq

@@ -131,6 +131,8 @@ module.exports = {
     // set to true to preserve working directory when creating splits or tabs
     preserveCWD: true,
     // for advanced config flags please refer to https://hyper.is/#cfg
+    scrollback: 10000,
+    windowSize: [640, 480],
   },
   // a list of plugins to fetch and install from npm
   // format: [@org/]project[#version]
@@ -143,7 +145,6 @@ module.exports = {
     // "hyper-monokai-deluxe",
     "hyperpower",
     "hyper-flat",
-    "gitrocket",
     "hyperborder",
   ],
   // in development, you can create a directory under

@@ -6,3 +6,5 @@ fi
 
 # added by travis gem
 [ -f /Users/mizutani/.travis/travis.sh ] && source /Users/mizutani/.travis/travis.sh
+
+source /Users/mizutani/.docker/init-bash.sh || true # Added by Docker Desktop
