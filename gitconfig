@@ -5,10 +5,6 @@
 	name = Xcode project files merger
 	driver = mergepbx %O %A %B
 	note = auto-generated configuration by cpad2 upgrade
-[url "ssh://git@ghe.ckpd.co/"]
-	insteadOf = https://ghe.ckpd.co/
-[url "git@github.com:"]
-	insteadOf = https://github.com/
 
 [submodule]
     recurse = true
