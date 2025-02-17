@@ -83,5 +83,7 @@ config.keys = {
 config.automatically_reload_config = true
 config.scrollback_lines = 10000
 config.enable_scroll_bar = true
+skip_close_confirmation_for_processes_named = { "bash", "zsh", "fish", "tmux", "sh" }
+
 
 return config
