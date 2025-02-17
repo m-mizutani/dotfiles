@@ -21,3 +21,5 @@ ln -s $SCRIPTPATH/gitconfig $HOME/.gitconfig
 
 mkdir -p $HOME/.config/git
 ln -s $SCRIPTPATH/gitignore $HOME/.config/git/ignore
+
+ln -s $SCRIPTPATH/wezterm.lua $HOME/.wezterm.lua
