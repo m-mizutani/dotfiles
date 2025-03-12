@@ -103,3 +103,12 @@ set -x CLOUDSDK_PYTHON_SITEPACKAGES 1
 if test -e /opt/homebrew/bin//direnv
   direnv hook fish | source
 end
+
+if test -e $HOME/.rd
+  set -x PATH $HOME/.rd/bin $PATH
+#  set -x DOCKER_HOST unix://$HOME/.rd/docker.sock
+end
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+set --export --prepend PATH "/Users/mizutani/.rd/bin"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
