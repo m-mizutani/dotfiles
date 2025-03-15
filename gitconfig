@@ -30,7 +30,7 @@
     unstage = reset HEAD
     superpull = pull upstream master
     superpush = ! git push -u origin $(git rev-parse --abbrev-ref HEAD)
-    current = rev-parse --short HEAD
+    n = rev-parse HEAD
     ph = push origin HEAD
 
 [ghq]
