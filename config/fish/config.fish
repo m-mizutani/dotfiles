@@ -15,6 +15,7 @@ alias cid='git rev-parse HEAD | tr -d "\n" | pbcopy && pbpaste'
 alias pn='pbpaste | tr "\n" " " | pbcopy'
 alias ge='echo "masayoshi.mizutani+$(date +%Y%m%d%H%M%S)@dr-ubie.com" | pbcopy'
 alias gnew='git co main && git pull && git cob'
+alias gt='go tool'
 alias gtt='go tool task'
 
 function fish_user_key_bindings
