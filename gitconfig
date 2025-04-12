@@ -31,6 +31,7 @@
     superpull = pull upstream master
     superpush = ! git push -u origin $(git rev-parse --abbrev-ref HEAD)
     h = rev-parse --short HEAD
+    lh = rev-parse HEAD
     ph = push origin HEAD
 
 [ghq]
