@@ -95,9 +95,6 @@ end
 if test -e $HOME/.ubie-bin
   set -x PATH $HOME/.ubie-bin $PATH
 end
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
 set -x CLOUDSDK_PYTHON_SITEPACKAGES 1
 
 # source /Users/mizutani/.docker/init-fish.sh || true # Added by Docker Desktop
@@ -114,3 +111,6 @@ end
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 set --export --prepend PATH "/Users/mizutani/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/mizutani/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/Downloads/google-cloud-sdk/path.fish.inc'; end
