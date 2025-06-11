@@ -17,6 +17,7 @@ alias ge='echo "masayoshi.mizutani+$(date +%Y%m%d%H%M%S)@dr-ubie.com" | pbcopy'
 alias gnew='git co main && git pull && git cob'
 alias gt='go tool'
 alias gtt='go tool task'
+alias ghc='gh browse -n -c'
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
@@ -113,4 +114,4 @@ set --export --prepend PATH "/Users/mizutani/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/mizutani/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/Downloads/google-cloud-sdk/path.fish.inc'; end
+if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
