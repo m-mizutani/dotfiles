@@ -23,3 +23,6 @@ mkdir -p $HOME/.config/git
 ln -s $SCRIPTPATH/gitignore $HOME/.config/git/ignore
 
 ln -s $SCRIPTPATH/wezterm.lua $HOME/.wezterm.lua
+
+mkdir -p $HOME/.claude
+ln -s $SCRIPTPATH/claude/commands $HOME/.claude/commands

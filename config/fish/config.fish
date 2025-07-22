@@ -113,4 +113,4 @@ set --export --prepend PATH "/Users/mizutani/.rd/bin"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/mizutani/Downloads/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/Downloads/google-cloud-sdk/path.fish.inc'; end
+if [ -f '/Users/mizutani/.gcloud/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.gcloud/google-cloud-sdk/path.fish.inc'; end
