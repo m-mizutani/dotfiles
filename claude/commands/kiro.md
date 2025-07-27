@@ -11,9 +11,14 @@ spec-driven development は、以下の5つのフェーズからなる開発手�
 ### 1. 事前準備フェーズ
 
 - ユーザーがClaude Codeに対して、実行したいタスクの概要を伝える
+- タスクの概要から適切な spec 名を考えてそれをslugとします
+    - たとえば、「記事コンポーネントを作成する」というタスクなら `create-article-component` というslugになります
+- git branch をデフォルトブランチ（殆どの場合 `main`）にしてremoteからpullして同期し、その上で `git checkout -b {type}/{slug}` としてbranchを作成してください
+  - `type` は `feat`, `fix`, `refactor`, `perf`, `style`, `docs`, `test`, `ci`, `build`, `chore`, `revert` から選んでください
+  - 例えば `feat/create-article-component` のようになります
 - このフェーズで !`mkdir -p ./.cckiro/specs`  を実行します
-- `./.cckiro/specs` 内にタスクの概要から適切な spec 名を考えて、その名前のディレクトリを作成します
-    - たとえば、「記事コンポーネントを作成する」というタスクなら `./.cckiro/specs/create-article-component` という名前のディレクトリを作成します
+- `./.cckiro/specs` 内にslug名でのディレクトリを作成します
+    - たとえば、 `./.cckiro/specs/create-article-component` という名前のディレクトリを作成します
 - 以下ファイルを作成するときはこのディレクトリの中に作成します
 
 ### 2. 要件フェーズ

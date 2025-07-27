@@ -1,0 +1,41 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)",
+      "Bash(go:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(mkdir:*)",
+      "Bash(git pull:*)",
+      "Bash(git checkout:*)",
+      "Bash(git diff:*)"
+    ],
+    "deny": [
+      "Bash(rm:*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /Users/mizutani/Music/claude/shaaan.mp3"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /Users/mizutani/Music/claude/higrashi.mp3"
+          }
+        ]
+      }
+    ]
+  }
+}
