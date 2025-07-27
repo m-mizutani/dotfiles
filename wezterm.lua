@@ -6,9 +6,13 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
+config.use_ime = true
+
 -- 定数定義
-local FONT_NAME = 'Source Code Pro'
-local FONT_SIZE = 12.0
+local FONT_NAME = 'Source Han Code JP'
+-- local FONT_NAME = 'Bizin Gothic'
+-- local FONT_SIZE = 13.0
+local FONT_SIZE = 10.0
 local ADJUST_WIDTH = 50
 
 -- 見た目の設定

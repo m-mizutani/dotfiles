@@ -18,6 +18,7 @@ alias gnew='git co main && git pull && git cob'
 alias gt='go tool'
 alias gtt='go tool task'
 alias ghc='gh browse -n -c'
+alias cc='claude --dangerously-skip-permissions'
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
