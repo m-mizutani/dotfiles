@@ -23,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /Users/mizutani/Music/claude/shaaan.mp3"
+            "command": "afplay $HOME/.claude/sounds/shaaan.mp3"
           }
         ]
       }
@@ -33,7 +33,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /Users/mizutani/Music/claude/higrashi.mp3"
+            "command": "afplay $HOME/.claude/sounds/higurashi.mp3"
           }
         ]
       }
