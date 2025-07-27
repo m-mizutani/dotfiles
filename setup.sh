@@ -26,5 +26,5 @@ ln -s $SCRIPTPATH/wezterm.lua $HOME/.wezterm.lua
 
 mkdir -p $HOME/.claude
 ln -s $SCRIPTPATH/claude/settings.json $HOME/.claude/settings.json
-ln -s $SCRIPTPATH/claude/sounds $HOME/.claude/sounds
-ln -s $SCRIPTPATH/claude/commands $HOME/.claude/commands
+ln -s $SCRIPTPATH/claude/sounds $HOME/.claude/
+ln -s $SCRIPTPATH/claude/commands $HOME/.claude/
