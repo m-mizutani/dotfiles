@@ -17,6 +17,7 @@
       "Bash(rm:*)"
     ]
   },
+  "env": { "DISABLE_AUTOUPDATER": "1" },
   "hooks": {
     "Notification": [
       {
