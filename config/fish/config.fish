@@ -117,3 +117,8 @@ set --export --prepend PATH "/Users/mizutani/.rd/bin"
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/mizutani/.gcloud/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.gcloud/google-cloud-sdk/path.fish.inc'; end
 if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
+
+# Tailscale
+if [ -f '/Applications/Tailscale.app/Contents/MacOS/Tailscale' ]
+  alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
+end  
