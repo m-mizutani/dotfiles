@@ -1,6 +1,8 @@
 {
   "permissions": {
     "allow": [
+      "Fetch(https://github.com/*)",
+      "Fetch(https://zenn.dev/*)",
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
       "Bash(go:*)",
@@ -39,5 +41,8 @@
         ]
       }
     ]
+  },
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
   }
 }
