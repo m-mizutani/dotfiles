@@ -6,7 +6,7 @@ Claude Codeを用いたspec-driven developmentを行います。
 
 ## spec-driven development とは
 
-spec-driven development は、以下の5つのフェーズからなる開発手法です。
+spec-driven development は、以下の5つのフェーズからなる開発手法です。各フェーズでユーザーからのレビューを受けます。ユーザーが明示的に許可するまでは次のフェーズに移ることは禁止です。
 
 ### 1. 事前準備フェーズ
 
