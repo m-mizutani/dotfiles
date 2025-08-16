@@ -8,7 +8,7 @@ module.exports = {
     // or `'canary'` for less polished but more frequent updates
     updateChannel: "stable",
     // default font size in pixels for all tabs
-    fontSize: 12,
+    fontSize: 11,
     // font family with optional fallbacks
     fontFamily:
       '"Source Code Pro", "DejaVu Sans Mono", Consolas, "Lucida Console", monospace',
