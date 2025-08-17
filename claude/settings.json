@@ -15,11 +15,14 @@
       "Bash(git checkout:*)",
       "Bash(git diff:*)"
     ],
-    "deny": [
+    "deny": [],
+    "ask": [
       "Bash(rm:*)"
     ]
   },
-  "env": { "DISABLE_AUTOUPDATER": "1" },
+  "env": {
+    "DISABLE_AUTOUPDATER": "1"
+  },
   "hooks": {
     "Notification": [
       {
