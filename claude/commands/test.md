@@ -1,0 +1,1 @@
+Run `zenv go test ./...` and fix all failures even if they are not related to your changes.
