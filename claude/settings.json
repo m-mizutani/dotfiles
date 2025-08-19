@@ -21,7 +21,7 @@
       "Bash(git diff:*)"
     ],
     "deny": [
-      "Bash(go build:*)",
+      "Bash(go build:*)"
     ],
     "ask": [
       "Bash(rm:*)"
