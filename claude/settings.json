@@ -5,7 +5,10 @@
       "Fetch(https://zenn.dev/*)",
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
-      "Bash(go:*)",
+      "Bash(go test:*)",
+      "Bash(go run:*)",
+      "Bash(go mod:*)",
+      "Bash(go get:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
@@ -15,7 +18,9 @@
       "Bash(git checkout:*)",
       "Bash(git diff:*)"
     ],
-    "deny": [],
+    "deny": [
+      "Bash(go build:*)",
+    ],
     "ask": [
       "Bash(rm:*)"
     ]
