@@ -20,8 +20,8 @@ Claude Codeを用いた統合型spec-driven developmentを行います。要件�
   - 例： `feat/create-article-component`
 
 #### 統合specファイルの作成
-- ディレクトリ `./{slug}` を作成（例： `./create-article-component`）
-- `./{slug}/spec.md` として統合specファイルを作成
+- ディレクトリ `.cckiro/specs/{slug}` を作成（例： `.cckiro/specs/create-article-component`）
+- `.cckiro/specs/{slug}/spec.md` として統合specファイルを作成
 - このファイルには以下の3つのセクションを含める：
 
 ```markdown
@@ -112,7 +112,7 @@ Claude Codeを用いた統合型spec-driven developmentを行います。要件�
 ### フェーズ3: 実装
 
 - ユーザーの明示的な承認後、実装を開始
-- `./{slug}/spec.md` の実装計画に基づいて実装
+- `.cckiro/specs/{slug}/spec.md` の実装計画に基づいて実装
 - 実装の進捗に応じてチェックボックス `[ ]` を `[x]` に更新
 - 必要に応じてspecファイルも実態に合わせて更新
 - 実装中の変更や追加要件があれば、specファイルの該当セクションも更新
