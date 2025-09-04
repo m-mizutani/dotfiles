@@ -99,7 +99,7 @@ config.background = {
     {
     -- 画像レイヤー（上層）
     source = { File = background_image_path },
-    opacity = 0.75, -- 透明度（お好みで調整：0.0-1.0）
+    opacity = 0.5, -- 透明度（お好みで調整：0.0-1.0）
     vertical_align = "Middle",
     horizontal_align = "Center",
     repeat_x = "NoRepeat",
