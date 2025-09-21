@@ -38,7 +38,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay $HOME/.claude/sounds/shaaan.mp3"
+            "command": "afplay /System/Library/Sounds/Hero.aiff"
           }
         ]
       }
@@ -48,7 +48,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay $HOME/.claude/sounds/higurashi.mp3"
+            "command": "afplay /System/Library/Sounds/Submarine.aiff"
           }
         ]
       }
