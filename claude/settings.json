@@ -23,7 +23,8 @@
     "deny": [
       "Bash(git commit:*)",
       "Bash(git add:*)",
-      "Bash(go build:*)"
+      "Bash(go build:*)",
+      "Bash(kill:*)"
     ],
     "ask": [
       "Bash(rm:*)"
