@@ -1,302 +1,237 @@
-.env ファイルを .env.toml に変換しなさい。これはzenvというツールで使われている.envファイルで、以下の移行ガイドに沿って書き換えをすること。すでに .env.toml が存在する場合、既存の内容を優先し .env の内容を移管するように。.env は今後利用しない前提で、すべての値を移植せよ。
+.env ファイルを .env.toml に変換しなさい。これはzenvというツールで使われている.envファイルで、以下の移行ガイドに沿って書き換えをすること。すでに .env.toml が存在する場合、既存の内容を優先し .env の内容を移管するように。.env は今後利用しない前提で、すべての値を移植せよ。また同様の値があったり再構成が必要な変数があれば、alias, value, refs などを利用して最適化せよ。
 
 また移管する際に項目の種類ごとに分類し、適切な順序にせよ。各種類ごとに見出しと区切り文字( `-----` など)を挿入し、視認性を向上させよ。
-
 # Migration Guide: zenv v1 to v2
 
-This guide helps you migrate from zenv v1 to v2. **v2 is a complete rewrite** that focuses on configuration files and environment variable management, but **removes some advanced features** from v1.
+This guide helps you migrate from zenv v1 to v2. **v2 encourages using `.env.toml` files** as the primary configuration format, offering cleaner syntax and more features than traditional `.env` files.
 
-## ⚠️ Important: What's NOT Available in v2
+## ⚠️ Important: What's Changed in v2
 
-Before migrating, understand that v2 **removes** several v1 features:
+| Feature | v1 (.env) | v2 (.env.toml) | Migration |
+|---------|-----------|----------------|-----------|
+| **Basic Variables** | `KEY=value` | `KEY = "value"` | Direct migration |
+| **File Content (`&` prefix)** | `KEY=&/path/file` | `[KEY]`<br>`file = "/path/file"` | Use section format |
+| **Command Execution (backticks)** | `KEY=`\`command\`` | `[KEY]`<br>`command = ["cmd", "arg"]` | Use section format |
+| **Variable Replacement (`%`)** | `%VAR%` | `{{ .VAR }}` | Use templates or command refs |
+| **Secret Management (Keychain)** | ✅ Built-in | ❌ **Removed** | Use external tools |
 
-| Feature | v1 | v2 | Migration Path |
-|---------|----|----|----------------|
-| **Secret Management (Keychain)** | ✅ Full support (`secret write/read/list`, `@namespace`) | ❌ **Removed** | Use external tools or TOML file references |
-| **Variable Replacement (`%` prefix)** | ✅ `%MYTOOL_DB_PASSWD` | ✅ **Template support** | Migrate to TOML `template` with Go templates |
-| **File Content Loading (`&` prefix)** | ✅ `KEY=&/path/file` | ✅ **Replaced with TOML** | Migrate to TOML `file = "path"` |
-| **Command Execution (backticks)** | ✅ `KEY=`\`command\`` | ✅ **Replaced with TOML** | Migrate to TOML `command/args` |
+## Quick Start: Migrate to .env.toml
 
-## What v2 Focuses On
+v2 encourages using `.env.toml` as your primary configuration:
+- **Standard TOML syntax** for simple variables
+- **Section format** for advanced features
+- **Better readability** and maintainability
+- **Type safety** with proper string quoting
 
-v2 is designed for **configuration-driven** environment management:
-- **TOML configuration files** with structured settings
-- **Multiple file support** with clear precedence
-- **Clean CLI interface** without complex secret management
-- **Better architecture** for simple use cases
+## Migration Examples
 
-## Detailed Feature Comparison
+### Basic Variables
 
-### Basic Environment Variable Loading
-
-#### v1 (.env files)
+#### v1 (.env)
 ```bash
-# .env file
 POSTGRES_DB=dev_db
 POSTGRES_USER=testuser
-
-# Usage
-zenv psql  # Automatically loads .env
-zenv -e production.env psql  # Load specific file
+API_KEY=secret123
+PORT=3000
 ```
 
-#### v2 (.env files - Compatible)
-```bash
-# Same .env file works
-POSTGRES_DB=dev_db
-POSTGRES_USER=testuser
-
-# Usage (same commands work)
-zenv psql  # Automatically loads .env
-zenv -e production.env psql  # Load specific file
-```
-
-**✅ Migration**: No changes needed for basic .env usage.
-
-### Advanced Variable Loading
-
-#### v1 (Advanced Syntax in .env)
-```bash
-# .env with v1 special syntax
-SECRET_KEY=&/path/to/secret.txt         # File content
-API_TOKEN=`gcloud auth print-access-token`  # Command execution
-DB_PASSWORD=%VAULT_DB_PASS              # Variable replacement
-```
-
-#### v2 (TOML Configuration)
+#### v2 (.env.toml) - Recommended
 ```toml
-# .env.toml
+POSTGRES_DB = "dev_db"
+POSTGRES_USER = "testuser"
+API_KEY = "secret123"
+PORT = "3000"
+```
+
+**✅ Migration**: Simply add quotes and use TOML syntax.
+
+### File Content Loading
+
+#### v1 (.env with `&` prefix)
+```bash
+SECRET_KEY=&/path/to/secret.txt
+SSL_CERT=&/etc/ssl/cert.pem
+```
+
+#### v2 (.env.toml)
+```toml
 [SECRET_KEY]
 file = "/path/to/secret.txt"
 
-[API_TOKEN]
-command = "gcloud"
-args = ["auth", "print-access-token"]
-
-# Variable replacement is now done with templates
-[DB_PASSWORD]
-template = "{{ .VAULT_DB_PASS }}"
-refs = ["VAULT_DB_PASS"]
+[SSL_CERT]
+file = "/etc/ssl/cert.pem"
 ```
 
-**⚠️ Migration**: 
-- File loading: ✅ Migrate to TOML `file` directive
-- Command execution: ✅ Migrate to TOML `command/args` directives
-- Variable replacement: ✅ Migrate to TOML `template` with Go templates
+### Command Execution
 
-### Secret Management (macOS Keychain)
-
-#### v1 (Full Keychain Integration with Namespaces)
+#### v1 (.env with backticks)
 ```bash
-# Store secrets in macOS Keychain with namespace organization
+GIT_HASH=`git rev-parse HEAD`
+BUILD_DATE=`date +%Y%m%d`
+```
+
+#### v2 (.env.toml)
+```toml
+[GIT_HASH]
+command = ["git", "rev-parse", "HEAD"]
+
+[BUILD_DATE]
+command = ["date", "+%Y%m%d"]
+```
+
+### Variable Replacement
+
+#### v1 (.env with `%` prefix)
+```bash
+DATABASE_URL=postgresql://%DB_USER%:%DB_PASS%@%DB_HOST%/mydb
+```
+
+#### v2 (.env.toml with templates)
+```toml
+DB_USER = "admin"
+DB_PASS = "secret"
+DB_HOST = "localhost"
+
+[DATABASE_URL]
+value = "postgresql://{{ .DB_USER }}:{{ .DB_PASS }}@{{ .DB_HOST }}/mydb"
+refs = ["DB_USER", "DB_PASS", "DB_HOST"]
+```
+
+### Secret Management
+
+#### v1 (Built-in Keychain)
+```bash
 zenv secret write @aws AWS_SECRET_ACCESS_KEY
-zenv secret generate @project API_TOKEN 32
-zenv secret list
-
-# Use in .env with namespace prefix
-AWS_SECRET_ACCESS_KEY=%@aws.AWS_SECRET_ACCESS_KEY
-API_TOKEN=%@project.API_TOKEN
+AWS_SECRET_ACCESS_KEY=%@aws.AWS_SECRET_ACCESS_KEY  # in .env
 ```
 
-#### v2 (No Built-in Secret Management)
-```bash
-# Feature completely removed - no built-in secret storage
+#### v2 (Use External Tools)
+```toml
+# Load from external secret manager or file
+[AWS_SECRET_ACCESS_KEY]
+file = "/run/secrets/aws_key"  # Docker secrets, K8s secrets, etc.
 ```
 
-**❌ Migration**: No direct equivalent. Alternative approaches:
-- External secret management tools (Vault, AWS Secrets Manager, etc.)
-- Environment variable injection from CI/CD systems
-- File-based secrets with appropriate permissions (chmod 600)
-- Continue using v1 for projects requiring Keychain integration
+**❌ Migration**: Use external secret management (Vault, AWS Secrets Manager, K8s Secrets)
 
-## Breaking Changes
+## Installation
 
-### 1. Installation and Module Path
-
-#### v1
 ```bash
+# v1 (old)
 go install github.com/m-mizutani/zenv@latest
-```
 
-#### v2
-```bash
+# v2 (new - requires /v2 suffix)
 go install github.com/m-mizutani/zenv/v2@latest
 ```
 
-**⚠️ Important**: Even after v2.0.0 is released, `go install github.com/m-mizutani/zenv@latest` will still install **v1** due to Go modules major version handling. You **must** use the `/v2` suffix to get v2.
+## File Format Recommendation
 
-### 2. Environment Variable Precedence
-
-#### v1 Precedence
-The exact precedence in v1 varied, but generally:
-- System environment variables
-- `.env` files
-- Command-line arguments
-
-#### v2 Precedence (Explicit)
-```
-System < .env < TOML < Inline
-```
-Where `<` means "is overridden by"
-
-**What This Means:**
-- **System environment variables** have the **lowest** priority
-- **Inline variables** (KEY=value) have the **highest** priority
-- **TOML files** override `.env` files
-- **`.env` files** override system variables
-
-**Action Required**: Review your environment variable setup to ensure the new precedence order works for your use case.
-
-### 3. CLI Interface Changes
-
-#### New Options in v2
-- `-t, --toml FILE`: Load environment variables from TOML file
-- Automatic environment variable listing when no command is specified
-
-#### Behavioral Changes
-- **v1**: Required explicit command or specific flags to show variables
-- **v2**: Shows environment variables by default when no command is provided
+While v2 still supports `.env` files, **we recommend migrating to `.env.toml`**:
 
 ```bash
-# v2 - Shows all loaded environment variables
-zenv -e .env.production
+# Rename your file
+mv .env .env.toml
 
-# v2 - Execute command with environment variables
-zenv -e .env.production npm start
+# Update the syntax (add quotes to values)
+# Before: KEY=value
+# After:  KEY = "value"
 ```
 
-## New Features in v2
+## Command Usage
 
-### 1. TOML Configuration Files
+```bash
+# v1 (loads .env)
+zenv myapp
 
-v2 introduces powerful TOML configuration support:
+# v2 (loads .env.toml) - Recommended
+zenv myapp  # Auto-loads .env.toml if present
 
-#### Basic Static Values
+# v2 with explicit file
+zenv -t config.toml myapp
+```
+
+## Complete Migration Example
+
+### v1 Project (.env)
+```bash
+# .env
+APP_NAME=myapp
+PORT=3000
+DEBUG=true
+
+# Advanced features
+DB_PASSWORD=&/secrets/db.txt
+GIT_HASH=`git rev-parse --short HEAD`
+DATABASE_URL=postgresql://%DB_USER%:%DB_PASSWORD%@localhost/mydb
+DB_USER=admin
+```
+
+### v2 Project (.env.toml) - Recommended
 ```toml
+# Simple variables (one-liners)
+APP_NAME = "myapp"
+PORT = "3000"
+DEBUG = "true"
+DB_USER = "admin"
+
+# File loading
+[DB_PASSWORD]
+file = "/secrets/db.txt"
+
+# Command execution
+[GIT_HASH]
+command = ["git", "rev-parse", "--short", "HEAD"]
+
+# Template for complex values
 [DATABASE_URL]
-value = "postgresql://localhost/mydb"
-
-[API_KEY]
-value = "your-api-key"
+value = "postgresql://{{ .DB_USER }}:{{ .DB_PASSWORD }}@localhost/mydb"
+refs = ["DB_USER", "DB_PASSWORD"]
 ```
 
-#### File Content Loading
+## Additional Features
+
+### Aliases (Reference Other Variables)
 ```toml
-[SECRET_KEY]
-file = "/path/to/secret/file"
+# One-liner for primary DB
+PRIMARY_DB = "postgresql://primary.db.com/myapp"
 
-[SSL_CERT]
-file = "/etc/ssl/certs/app.pem"
-```
-
-#### Command Execution
-```toml
-[GIT_COMMIT]
-command = "git"
-args = ["rev-parse", "HEAD"]
-
-[BUILD_TIME]
-command = "date"
-args = ["+%Y-%m-%d %H:%M:%S"]
-```
-
-#### Multiline Values
-```toml
-[CONFIG_JSON]
-value = """
-{
-  "database": {
-    "host": "localhost",
-    "port": 5432
-  }
-}
-"""
-```
-
-#### Alias Support (NEW in v2)
-```toml
-# Reference system environment variables
-[USER_HOME]
-alias = "HOME"
-
-# Reference other variables in the same file
-[PRIMARY_DB]
-value = "postgresql://primary.db.com/myapp"
-
+# Create an alias
 [DATABASE_URL]
 alias = "PRIMARY_DB"
-
-# Create alternative names for existing variables
-[DB_CONNECTION]
-alias = "DATABASE_URL"
 ```
 
-#### Template Support (NEW in v2 - Replaces v1's Variable Replacement)
+### Templates (Combine Variables)
 ```toml
-# Template support replaces v1's %VARIABLE syntax with Go templates
-# v1: DATABASE_URL=postgresql://%DB_USER%:%DB_PASS%@%DB_HOST%:%DB_PORT%/%DB_NAME%
-# v2: Use template with Go template syntax
+# Define components as one-liners
+DB_USER = "admin"
+DB_HOST = "localhost"
 
-# Templates can reference:
-# 1. Variables defined in the same TOML file
-# 2. Variables from .env files loaded before the TOML
-# 3. System environment variables
-# Priority: TOML > .env > System
-
-[DB_USER]
-value = "admin"
-
-[DB_PASS]
-file = "/secrets/db_password"
-
-[DB_HOST]
-value = "localhost"
-
-[DB_PORT]
-value = "5432"
-
-[DB_NAME]
-value = "myapp"
-
+# Combine with template
 [DATABASE_URL]
-template = "postgresql://{{ .DB_USER }}:{{ .DB_PASS }}@{{ .DB_HOST }}:{{ .DB_PORT }}/{{ .DB_NAME }}"
-refs = ["DB_USER", "DB_PASS", "DB_HOST", "DB_PORT", "DB_NAME"]
+value = "postgresql://{{ .DB_USER }}@{{ .DB_HOST }}/myapp"
+refs = ["DB_USER", "DB_HOST"]
+```
 
-# Conditional configuration
-[USE_STAGING]
-value = "true"
+### Conditional Configuration
+```toml
+USE_STAGING = "true"
 
 [API_ENDPOINT]
-template = "{{ if .USE_STAGING }}https://staging.api.example.com{{ else }}https://api.example.com{{ end }}"
+value = "{{ if .USE_STAGING }}https://staging.api.example.com{{ else }}https://api.example.com{{ end }}"
 refs = ["USE_STAGING"]
-
-# Combine paths
-[LOG_PATH]
-template = "{{ .HOME }}/logs/{{ .APP_NAME }}.log"
-refs = ["HOME", "APP_NAME"]
-
-# Reference variables from .env files
-# If .env contains: DB_USER=alice, DB_HOST=prod.example.com
-# This template can use them:
-[PROD_DB_URL]
-template = "postgresql://{{ .DB_USER }}@{{ .DB_HOST }}:5432/{{ .DB_NAME }}"
-refs = ["DB_USER", "DB_HOST", "DB_NAME"]  # DB_USER, DB_HOST from .env, DB_NAME from TOML
 ```
 
-### 2. Multiple File Support
+## Migration Checklist
 
-```bash
-# Load from multiple sources with clear precedence
-zenv -e base.env -e override.env -t config.toml KEY=value command
-```
+1. ☐ Install v2: `go install github.com/m-mizutani/zenv/v2@latest`
+2. ☐ Rename `.env` to `.env.toml`
+3. ☐ Add quotes to all values: `KEY=value` → `KEY = "value"`
+4. ☐ Convert file loading: `KEY=&/path` → `[KEY] file = "/path"`
+5. ☐ Convert commands: `KEY=`\`cmd arg\`` → `[KEY] command = ["cmd", "arg"]`
+6. ☐ Convert templates: `%VAR%` → `{{ .VAR }}`
+7. ☐ Test: `zenv myapp`
 
-### 3. Enhanced Error Handling
-
-v2 provides better error messages and handles edge cases more gracefully.
-
-## Step-by-Step Migration
-
-### Step 1: Update Installation
+## Quick Reference
 
 ```bash
 # Remove old version (optional)
@@ -356,8 +291,7 @@ value = "postgresql://localhost/mydb"
 file = "/path/to/api/key"
 
 [GIT_COMMIT]
-command = "git"
-args = ["rev-parse", "HEAD"]
+command = ["git", "rev-parse", "HEAD"]
 ```
 
 ### Step 5: Update Scripts and CI/CD
@@ -420,17 +354,16 @@ API_BASE_URL=https://api.myapp.com
 file = "/etc/myapp/secret.key"
 
 [GIT_COMMIT]
-command = "git"
-args = ["rev-parse", "HEAD"]
+command = ["git", "rev-parse", "HEAD"]
 
 # Variable replacement with template
 [DATABASE_PASSWORD]
-template = "{{ .VAULT_DATABASE_PASS }}"
+value = "{{ .VAULT_DATABASE_PASS }}"
 refs = ["VAULT_DATABASE_PASS"]
 
 # Complex variable replacement
 [DATABASE_URL]
-template = "postgresql://{{ .DB_USER }}:{{ .DB_PASS }}@{{ .DB_HOST }}:5432/myapp"
+value = "postgresql://{{ .DB_USER }}:{{ .DB_PASS }}@{{ .DB_HOST }}:5432/myapp"
 refs = ["DB_USER", "DB_PASS", "DB_HOST"]
 ```
 
@@ -516,8 +449,7 @@ export DOCKER_TAG="${GIT_BRANCH}-$(git rev-parse --short HEAD)"
 
 # .env.toml (for command-based values)
 [GIT_BRANCH]
-command = "git"
-args = ["rev-parse", "--abbrev-ref", "HEAD"]
+command = ["git", "rev-parse", "--abbrev-ref", "HEAD"]
 
 # Use external secret management for CI
 export SECRET_TOKEN=$CI_SECRET_TOKEN  # from CI environment
@@ -556,12 +488,11 @@ zenv -e .env -t config.toml
 **Solution**: Ensure proper TOML syntax for commands:
 
 ```toml
-# Correct
+# Correct - command as array
 [GIT_BRANCH]
-command = "git"
-args = ["rev-parse", "--abbrev-ref", "HEAD"]
+command = ["git", "rev-parse", "--abbrev-ref", "HEAD"]
 
-# Incorrect
+# Incorrect - command as string
 [GIT_BRANCH]
 command = "git rev-parse --abbrev-ref HEAD"
 ```
@@ -573,6 +504,10 @@ command = "git rev-parse --abbrev-ref HEAD"
 ```toml
 [SECRET]
 file = "/absolute/path/to/file"  # Use absolute paths
+
+# or
+
+SECRET.file = "/absolute/path/to/file"  # Use absolute paths
 ```
 
 ## Best Practices for v2
