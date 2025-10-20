@@ -112,7 +112,7 @@ config.background = {
     source = {
       Color = "#000000"
     },
-    opacity = 0.7, -- 黒レイヤーの透明度（お好みで調整）
+    opacity = 0.8, -- 黒レイヤーの透明度（お好みで調整）
     width = "100%",
     height = "100%",
   }
