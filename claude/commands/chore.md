@@ -22,6 +22,7 @@ Claude Codeを用いた統合型spec-driven developmentを行います。要件�
 #### 統合specファイルの作成
 - ディレクトリ `.cckiro/specs/{slug}` を作成（例： `.cckiro/specs/create-article-component`）
 - `.cckiro/specs/{slug}/spec.md` として統合specファイルを作成
+  - ファイルを作成したらパスをユーザーに提示しなさい
 - このファイルには以下の3つのセクションを含める：
 
 ```markdown
