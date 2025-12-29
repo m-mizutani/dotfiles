@@ -3,3 +3,12 @@
 例:
 slug: enhance-error-handling
 path: .cckiro/issues/enhance-error-handling.md
+
+Issueはあくまで問題を記載するだけなので、
+
+- as-is: 現状がどうなっているか
+- to-be: どのような機能が実装されているべきか
+
+という概要だけがまとまっていればよい。実装の詳細などに踏み込んだ話は不要。
+このissueをもとに別途要件定義や設計をするので、課題についてのみまとめよ。
+
