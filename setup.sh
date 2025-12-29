@@ -28,3 +28,6 @@ mkdir -p $HOME/.claude
 ln -s $SCRIPTPATH/claude/settings.json $HOME/.claude/settings.json
 ln -s $SCRIPTPATH/claude/sounds $HOME/.claude/
 ln -s $SCRIPTPATH/claude/commands $HOME/.claude/
+
+mkdir -p $HOME/.config/ghostty
+ln -s $SCRIPTPATH/config/ghostty/config $HOME/.config/ghostty/config

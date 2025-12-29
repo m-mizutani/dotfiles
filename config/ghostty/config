@@ -1,0 +1,69 @@
+# Ghostty Configuration
+# https://ghostty.org/docs/config/reference
+
+# Theme and Colors - Brewer inspired
+theme = Dark+
+background-opacity = 0.9
+
+# Font Settings - matching WezTerm
+font-family = "Source Han Code JP"
+font-size = 10
+font-style = Bold
+font-thicken = true
+adjust-cell-width = -5%
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+
+# Window Settings - minimal padding like WezTerm
+window-decoration = true
+window-padding-x = 2
+window-padding-y = 2
+window-theme = dark
+
+# Shell
+shell-integration = detect
+shell-integration-features = sudo,title,no-cursor
+
+# Scrollback
+scrollback-limit = 10000
+
+# Misc
+confirm-close-surface = false
+quit-after-last-window-closed = false
+auto-update = off
+
+# Keybindings - WezTerm style with Ctrl+t as leader
+# ペイン分割
+keybind = ctrl+t>apostrophe=new_split:right
+keybind = ctrl+t>shift+apostrophe=new_split:down
+
+# ペイン移動
+keybind = ctrl+t>o=goto_split:next
+keybind = ctrl+t>n=goto_split:next
+keybind = ctrl+t>p=goto_split:previous
+
+# ペインズーム
+keybind = ctrl+z=toggle_split_zoom
+
+# ペインサイズ調整
+keybind = ctrl+t>left=resize_split:left,50
+keybind = ctrl+t>right=resize_split:right,50
+keybind = ctrl+t>up=resize_split:up,50
+keybind = ctrl+t>down=resize_split:down,50
+
+# タブ操作
+keybind = ctrl+t>c=new_tab
+keybind = ctrl+t>w=close_surface
+keybind = ctrl+t>1=goto_tab:1
+keybind = ctrl+t>2=goto_tab:2
+keybind = ctrl+t>3=goto_tab:3
+
+macos-titlebar-style = tabs
+
+quick-terminal-position = "top"
+quick-terminal-screen = "main"
+quick-terminal-animation-duration = 0.3
+keybind = "global:shift+ctrl+enter=toggle_quick_terminal"
+
