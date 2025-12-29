@@ -1,8 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Fetch(https://github.com/*)",
-      "Fetch(https://zenn.dev/*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:zenn.dev)",
+      "WebSearch",
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
       "Bash(go test:*)",
