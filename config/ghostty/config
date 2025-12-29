@@ -62,7 +62,7 @@ keybind = ctrl+t>3=goto_tab:3
 
 macos-titlebar-style = tabs
 
-quick-terminal-position = "top"
+quick-terminal-position = "center"
 quick-terminal-screen = "main"
 quick-terminal-animation-duration = 0.3
 keybind = "global:shift+ctrl+enter=toggle_quick_terminal"
