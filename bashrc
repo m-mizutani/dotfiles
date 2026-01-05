@@ -12,3 +12,5 @@ source /Users/mizutani/.docker/init-bash.sh || true # Added by Docker Desktop
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/Users/mizutani/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+source ~/.safe-chain/scripts/init-posix.sh # Safe-chain bash initialization script

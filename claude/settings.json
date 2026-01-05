@@ -32,7 +32,7 @@
     ]
   },
   "env": {
-    "DISABLE_AUTOUPDATER": "1"
+    "ENABLE_TOOL_SEARCH": "true"
   },
   "hooks": {
     "Notification": [
