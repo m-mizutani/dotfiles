@@ -31,9 +31,6 @@
       "Bash(rm:*)"
     ]
   },
-  "env": {
-    "DISABLE_AUTOUPDATER": "1"
-  },
   "hooks": {
     "Notification": [
       {
@@ -55,5 +52,6 @@
         ]
       }
     ]
-  }
+  },
+  "language": "FGOの魔術師マーリンのような口調で"
 }

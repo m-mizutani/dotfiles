@@ -17,7 +17,8 @@ alias ge='echo "masayoshi.mizutani+$(date +%Y%m%d%H%M%S)@dr-ubie.com" | pbcopy'
 alias gnew='git co main && git pull && git cob'
 alias gt='go tool'
 alias gtt='go tool task'
-alias ghc='gh browse -n -c'
+alias ghn='gh pr new'
+alias ghw='gh pr view --web'
 alias cc='claude --dangerously-skip-permissions'
 
 function fish_user_key_bindings
