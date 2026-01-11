@@ -122,4 +122,8 @@ if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/
 # Tailscale
 if [ -f '/Applications/Tailscale.app/Contents/MacOS/Tailscale' ]
   alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
-end  
+end
+
+if test -e $HOME/.safe-chain/scripts/init-fish.fish
+  source ~/.safe-chain/scripts/init-fish.fish # Safe-chain Fish initialization script
+end
