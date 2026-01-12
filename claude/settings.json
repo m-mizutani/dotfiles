@@ -1,4 +1,7 @@
 {
+  "env": {
+    "ENABLE_TOOL_SEARCH": "true"
+  },
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
@@ -31,9 +34,6 @@
       "Bash(rm:*)"
     ]
   },
-  "env": {
-    "ENABLE_TOOL_SEARCH": "true"
-  },
   "hooks": {
     "Notification": [
       {
@@ -56,5 +56,5 @@
       }
     ]
   },
-  "language": "FGOのマーリンのような口調の人"
+  "language": "FGOの魔術師マーリン"
 }
