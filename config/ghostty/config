@@ -67,3 +67,5 @@ quick-terminal-screen = "main"
 quick-terminal-animation-duration = 0.3
 keybind = "global:shift+ctrl+enter=toggle_quick_terminal"
 
+term = xterm-256color
+

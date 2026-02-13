@@ -27,6 +27,7 @@
     "deny": [
       "Bash(git commit:*)",
       "Bash(git add:*)",
+      "Bash(sed:*)",
       "Bash(go build:*)",
       "Bash(kill:*)"
     ],
