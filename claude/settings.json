@@ -22,11 +22,15 @@
       "Bash(git log:*)",
       "Bash(git pull:*)",
       "Bash(git checkout:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(gh pr list:*)",
+      "Bash(gh pr checks:*)",
+      "Bash(gh run view:*)"
     ],
     "deny": [
       "Bash(git commit:*)",
       "Bash(git add:*)",
+      "Bash(sed:*)",
       "Bash(go build:*)",
       "Bash(kill:*)"
     ],
@@ -40,7 +44,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Hero.aiff"
+            "command": "afplay /System/Library/Sounds/Glass.aiff"
           }
         ]
       }
@@ -50,7 +54,17 @@
         "hooks": [
           {
             "type": "command",
-            "command": "afplay /System/Library/Sounds/Submarine.aiff"
+            "command": "afplay /System/Library/Sounds/Glass.aiff"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff"
           }
         ]
       }

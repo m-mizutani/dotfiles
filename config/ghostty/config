@@ -27,7 +27,7 @@ shell-integration = detect
 shell-integration-features = sudo,title,no-cursor
 
 # Scrollback
-scrollback-limit = 100000
+scrollback-limit = 10000000
 
 # Misc
 confirm-close-surface = false
@@ -66,4 +66,6 @@ quick-terminal-position = "center"
 quick-terminal-screen = "main"
 quick-terminal-animation-duration = 0.3
 keybind = "global:shift+ctrl+enter=toggle_quick_terminal"
+
+term = xterm-256color
 
