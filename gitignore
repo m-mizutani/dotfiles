@@ -1,8 +1,9 @@
 .DS_Store
 .env*
-
+.prettierignore
 
 **/.claude/settings.local.json
+**/.claude/settings.json
 .cckiro/
 /tmp
 
