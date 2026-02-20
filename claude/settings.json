@@ -23,6 +23,7 @@
       "Bash(git pull:*)",
       "Bash(git checkout:*)",
       "Bash(git diff:*)",
+      "Bash(gh run list:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr checks:*)",
       "Bash(gh run view:*)"
