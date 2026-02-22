@@ -41,9 +41,7 @@ find_pr_number() {
   local branch="$3"
 
   local pr_number
-  pr_number=$(gh api "/repos/${owner}/${repo}/pulls" \
-    -f head="${owner}:${branch}" \
-    -f state=open \
+  pr_number=$(gh api "/repos/${owner}/${repo}/pulls?head=${owner}:${branch}&state=open" \
     --jq '.[0].number // empty')
 
   if [ -z "$pr_number" ]; then
