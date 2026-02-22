@@ -7,15 +7,9 @@ set -euo pipefail
 
 THREAD_ID="${1:?Usage: get-comment.sh <thread_node_id>}"
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-source "$SCRIPT_DIR/_lib.sh"
-
-# GraphQLでスレッド詳細を取得
-QUERY=$(python3 -c "
-import json
-query = '''
-query(\$id: ID!) {
-  node(id: \$id) {
+QUERY='
+query($id: ID!) {
+  node(id: $id) {
     ... on PullRequestReviewThread {
       id
       isResolved
@@ -26,9 +20,7 @@ query(\$id: ID!) {
       comments(first: 100) {
         nodes {
           body
-          author {
-            login
-          }
+          author { login }
           createdAt
           url
         }
@@ -36,45 +28,22 @@ query(\$id: ID!) {
     }
   }
 }
-'''
-print(json.dumps({
-    'query': query,
-    'variables': {
-        'id': '$THREAD_ID'
-    }
-}))
-")
+'
 
-RESPONSE=$(graphql_request "$QUERY")
-
-# 整形して出力
-echo "$RESPONSE" | python3 -c "
-import sys, json
-
-data = json.loads(sys.stdin.read())
-node = data['data']['node']
-
-if not node:
-    print(json.dumps({'error': 'Thread not found', 'thread_id': '$THREAD_ID'}))
-    sys.exit(1)
-
-result = {
-    'thread_id': node['id'],
-    'is_resolved': node['isResolved'],
-    'path': node.get('path', ''),
-    'line': node.get('line'),
-    'start_line': node.get('startLine'),
-    'diff_side': node.get('diffSide', ''),
-    'comments': []
-}
-
-for c in node['comments']['nodes']:
-    result['comments'].append({
-        'body': c['body'],
-        'author': c['author']['login'] if c.get('author') else 'unknown',
-        'created_at': c['createdAt'],
-        'url': c.get('url', '')
-    })
-
-print(json.dumps(result, indent=2, ensure_ascii=False))
-"
+gh api graphql \
+  -f query="$QUERY" \
+  -f id="$THREAD_ID" \
+  --jq '{
+    thread_id: .data.node.id,
+    is_resolved: .data.node.isResolved,
+    path: .data.node.path,
+    line: .data.node.line,
+    start_line: .data.node.startLine,
+    diff_side: .data.node.diffSide,
+    comments: [.data.node.comments.nodes[] | {
+      body: .body,
+      author: (.author.login // "unknown"),
+      created_at: .createdAt,
+      url: .url
+    }]
+  }'
