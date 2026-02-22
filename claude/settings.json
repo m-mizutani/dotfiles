@@ -26,7 +26,10 @@
       "Bash(gh run list:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr checks:*)",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "Bash(bash $HOME/.claude/skills/check-pr-comment/list-comments.sh:*)",
+      "Bash(bash $HOME/.claude/skills/check-pr-comment/get-comment.sh:*)",
+      "Bash(bash $HOME/.claude/skills/check-pr-comment/resolve-thread.sh:*)"
     ],
     "deny": [
       "Bash(git commit:*)",
