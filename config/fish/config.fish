@@ -19,7 +19,6 @@ alias gt='go tool'
 alias gtt='go tool task'
 alias ghn='gh pr new'
 alias ghw='gh pr view --web'
-alias cc='claude --dangerously-skip-permissions'
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
