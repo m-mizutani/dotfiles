@@ -32,6 +32,11 @@
       "Bash(bash $HOME/.claude/skills/check-pr-comment/resolve-thread.sh:*)"
     ],
     "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)",
       "Bash(git commit:*)",
       "Bash(git add:*)",
       "Bash(sed:*)",
@@ -40,7 +45,8 @@
     ],
     "ask": [
       "Bash(rm:*)"
-    ]
+    ],
+    "disableBypassPermissionsMode": "disable"
   },
   "hooks": {
     "Notification": [
@@ -75,5 +81,36 @@
     ]
   },
   "language": "FGOの魔術師マーリン",
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": false,
+    "excludedCommands": ["git"],
+    "filesystem": {
+      "denyRead": [
+        "~/.ssh/*",
+        "~/.aws/credentials",
+        "~/.config/gcloud/*",
+        "//etc/shadow",
+        "//etc/passwd",
+        "//Windows/System32/config/SAM"
+      ],
+      "denyWrite": [
+        "//usr/local/bin",
+        "//Windows/System32",
+        "~/.bashrc",
+        "~/.zshrc"
+      ]
+    },
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "*.npmjs.org",
+        "registry.yarnpkg.com",
+        "pypi.org"
+      ],
+      "allowLocalBinding": false
+    }
+  },
+  "autoUpdatesChannel": "stable"
 }
