@@ -27,9 +27,9 @@
       "Bash(gh pr list:*)",
       "Bash(gh pr checks:*)",
       "Bash(gh run view:*)",
-      "Bash(bash $HOME/.claude/skills/check-pr-comment/list-comments.sh:*)",
-      "Bash(bash $HOME/.claude/skills/check-pr-comment/get-comment.sh:*)",
-      "Bash(bash $HOME/.claude/skills/check-pr-comment/resolve-thread.sh:*)"
+      "Read(//Users/mizutani/.cache/go/pkg/**)",
+      "WebFetch(domain:api.slack.com)",
+      "WebFetch(domain:docs.slack.dev)"
     ],
     "deny": [
       "Bash(git commit:*)",
@@ -74,6 +74,5 @@
       }
     ]
   },
-  "language": "FGOの魔術師マーリン",
-  "effortLevel": "medium"
+  "language": "FGOの魔術師マーリン"
 }
