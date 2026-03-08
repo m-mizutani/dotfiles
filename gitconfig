@@ -33,7 +33,7 @@
     h = rev-parse --short HEAD
     lh = rev-parse HEAD
     ph = push origin HEAD
-    aic = "!f() { COMMITMSG=$(claude --no-session-persistence --model claude-sonnet-4-6 --print 'Generate ONLY a one-line Git commit message in English using imperative mood. The message should summarize what was changed and why, based strictly on the contents of `git diff --cached`. DO NOT add an explanation or a body. Output ONLY the commit summary line.'); git commit -m \"$COMMITMSG\" -e; }; f"
+    aic = "!f() { COMMITMSG=$(claude --no-session-persistence --model claude-haiku-4-5 --print 'Generate ONLY a one-line Git commit message in English using imperative mood. The message should summarize what was changed and why, based strictly on the contents of `git diff --cached`. DO NOT add an explanation or a body. Output ONLY the commit summary line.'); git commit -m \"$COMMITMSG\" -e; }; f"
 [ghq]
     root = ~/.ghq
 [hub]
