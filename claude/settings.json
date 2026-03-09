@@ -80,9 +80,6 @@
       }
     ]
   },
-<<<<<<< HEAD
-  "language": "FGOの魔術師マーリン"
-=======
   "language": "FGOの魔術師マーリン",
   "effortLevel": "medium",
   "sandbox": {
@@ -116,5 +113,4 @@
     }
   },
   "autoUpdatesChannel": "stable"
->>>>>>> 4ef31ce361210047c0cd1f6c89ace1bf9445a9cd
 }
