@@ -94,6 +94,9 @@
       "allowLocalBinding": false
     },
     "filesystem": {
+      "allowWrite": [
+        "~/Library/Caches/go-build/"
+      ],
       "denyWrite": [
         "//usr/local/bin",
         "//Windows/System32",
@@ -114,6 +117,10 @@
       "gh:*",
       "zenv:*"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/mizutani/.claude/statusline-command.sh"
   },
   "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
