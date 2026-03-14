@@ -28,6 +28,7 @@ mkdir -p $HOME/.claude
 ln -s $SCRIPTPATH/claude/settings.json $HOME/.claude/settings.json
 ln -s $SCRIPTPATH/claude/sounds $HOME/.claude/
 ln -s $SCRIPTPATH/claude/commands $HOME/.claude/
+ln -s $SCRIPTPATH/claude/statusline-command.sh $HOME/.claude/statusline-command.sh
 mkdir -p $HOME/.claude/skills
 ln -s $SCRIPTPATH/claude/skills/check-pr-comment $HOME/.claude/skills/
 
