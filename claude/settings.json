@@ -81,27 +81,9 @@
     ]
   },
   "language": "FGOの魔術師マーリン",
-  "effortLevel": "medium",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false,
-    "excludedCommands": ["git"],
-    "filesystem": {
-      "denyRead": [
-        "~/.ssh/*",
-        "~/.aws/credentials",
-        "~/.config/gcloud/*",
-        "//etc/shadow",
-        "//etc/passwd",
-        "//Windows/System32/config/SAM"
-      ],
-      "denyWrite": [
-        "//usr/local/bin",
-        "//Windows/System32",
-        "~/.bashrc",
-        "~/.zshrc"
-      ]
-    },
     "network": {
       "allowedDomains": [
         "github.com",
@@ -110,7 +92,30 @@
         "pypi.org"
       ],
       "allowLocalBinding": false
-    }
+    },
+    "filesystem": {
+      "denyWrite": [
+        "//usr/local/bin",
+        "//Windows/System32",
+        "~/.bashrc",
+        "~/.zshrc"
+      ],
+      "denyRead": [
+        "~/.ssh/*",
+        "~/.aws/credentials",
+        "~/.config/gcloud/*",
+        "//etc/shadow",
+        "//etc/passwd",
+        "//Windows/System32/config/SAM"
+      ]
+    },
+    "excludedCommands": [
+      "git"
+    ]
   },
-  "autoUpdatesChannel": "stable"
+  "effortLevel": "medium",
+  "autoUpdatesChannel": "stable",
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true
+  }
 }
