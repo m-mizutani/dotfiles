@@ -110,7 +110,9 @@
       ]
     },
     "excludedCommands": [
-      "git"
+      "git:*",
+      "gh:*",
+      "zenv:*"
     ]
   },
   "effortLevel": "medium",
