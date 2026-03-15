@@ -131,6 +131,7 @@
     "excludedCommands": [
       "git:*",
       "gh:*",
+      "npx difit:*",
       "zenv:*"
     ]
   },
