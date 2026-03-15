@@ -74,7 +74,6 @@
       "Bash(rsync *)",
       "Bash(git reset --hard *)",
       "Bash(git clean -fd *)"
-
     ],
     "ask": [
       "Bash(rm *)",
@@ -127,8 +126,23 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/mizutani/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
+  },
   "language": "FGOの魔術師マーリン",
-  "effortLevel": "medium",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false,
@@ -137,7 +151,9 @@
       "gh:*",
       "gcloud:*",
       "docker:*",
-      "bq:*"
+      "bq:*",
+      "npx difit:*",
+      "zenv:*"
     ],
     "filesystem": {
       "allowWrite": [
@@ -232,7 +248,6 @@
         "~/.claude/settings.json",
         "~/.claude/settings.local.json"
       ]
-
     },
     "network": {
       "allowedDomains": [
@@ -244,5 +259,6 @@
       "allowLocalBinding": true
     }
   },
+  "effortLevel": "medium",
   "autoUpdatesChannel": "stable"
 }
