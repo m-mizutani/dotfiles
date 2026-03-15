@@ -161,8 +161,7 @@
         "~/.npm",
         "~/.cache",
         "~/.agent-browser",
-        "~/Library/Caches/go-build",
-        "~/Library/Caches/ms-playwright"
+        "~/Library/Caches"
       ],
       "denyRead": [
         "~/.ssh",
