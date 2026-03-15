@@ -80,6 +80,22 @@
       }
     ]
   },
+  "statusLine": {
+    "type": "command",
+    "command": "bash /Users/mizutani/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "gopls-lsp@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
+  },
   "language": "FGOの魔術師マーリン",
   "sandbox": {
     "enabled": true,
@@ -118,13 +134,6 @@
       "zenv:*"
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash /Users/mizutani/.claude/statusline-command.sh"
-  },
   "effortLevel": "medium",
-  "autoUpdatesChannel": "stable",
-  "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true
-  }
+  "autoUpdatesChannel": "stable"
 }
