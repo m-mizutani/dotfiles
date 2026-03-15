@@ -95,7 +95,7 @@
     },
     "filesystem": {
       "allowWrite": [
-        "~/Library/Caches/go-build/"
+        "~/Library/Caches/"
       ],
       "denyWrite": [
         "//usr/local/bin",
