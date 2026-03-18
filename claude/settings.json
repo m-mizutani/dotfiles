@@ -153,6 +153,7 @@
       "docker:*",
       "bq:*",
       "npx difit:*",
+      "mo:*",
       "zenv:*"
     ],
     "filesystem": {
@@ -161,7 +162,8 @@
         "~/.npm",
         "~/.cache",
         "~/.agent-browser",
-        "~/Library/Caches"
+        "~/Library/Caches",
+        "~/go/pkg/mod/cache"
       ],
       "denyRead": [
         "~/.ssh",
