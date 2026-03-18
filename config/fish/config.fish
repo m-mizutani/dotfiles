@@ -126,3 +126,7 @@ end
 if test -e $HOME/.safe-chain/scripts/init-fish.fish
   source ~/.safe-chain/scripts/init-fish.fish # Safe-chain Fish initialization script
 end
+
+if test -e /Users/mizutani/.local/bin/mise
+  /Users/mizutani/.local/bin/mise activate fish | source
+end
