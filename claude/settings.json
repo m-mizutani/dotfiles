@@ -253,6 +253,9 @@
     "network": {
       "allowedDomains": [
         "github.com",
+        "proxy.golang.org",
+        "google.golang.org",
+        "cloud.google.com",
         "*.npmjs.org",
         "registry.yarnpkg.com",
         "pypi.org"

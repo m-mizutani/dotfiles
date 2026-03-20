@@ -26,4 +26,20 @@ fi
 in_k=$(echo "$total_in"  | awk '{printf "%.1fk", $1/1000}')
 out_k=$(echo "$total_out" | awk '{printf "%.1fk", $1/1000}')
 
-printf "%s | %s | in:%s out:%s | \$%s" "$model" "$ctx_str" "$in_k" "$out_k" "$cost"
+# Rate limit usage
+rl_5h=$(echo "$input"  | jq -r '.rate_limits.five_hour.used_percentage  // empty')
+rl_7d=$(echo "$input"  | jq -r '.rate_limits.seven_day.used_percentage  // empty')
+
+if [ -n "$rl_5h" ]; then
+  rl_5h_str=$(printf "5h:%.1f%%" "$rl_5h")
+else
+  rl_5h_str="5h:--"
+fi
+
+if [ -n "$rl_7d" ]; then
+  rl_7d_str=$(printf "7d:%.1f%%" "$rl_7d")
+else
+  rl_7d_str="7d:--"
+fi
+
+printf "%s | %s | in:%s out:%s | \$%s | %s %s" "$model" "$ctx_str" "$in_k" "$out_k" "$cost" "$rl_5h_str" "$rl_7d_str"
