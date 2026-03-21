@@ -5,6 +5,7 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.cloud.google.com)",
       "WebFetch(domain:zenn.dev)",
       "WebSearch",
       "Bash(npm run lint)",
@@ -257,6 +258,7 @@
         "github.com",
         "proxy.golang.org",
         "google.golang.org",
+	"ai.google.dev",
         "cloud.google.com",
         "*.npmjs.org",
         "registry.yarnpkg.com",
