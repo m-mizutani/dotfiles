@@ -30,8 +30,15 @@ out_k=$(echo "$total_out" | awk '{printf "%.1fk", $1/1000}')
 rl_5h=$(echo "$input"  | jq -r '.rate_limits.five_hour.used_percentage  // empty')
 rl_7d=$(echo "$input"  | jq -r '.rate_limits.seven_day.used_percentage  // empty')
 
+rl_5h_reset=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty')
+
 if [ -n "$rl_5h" ]; then
-  rl_5h_str=$(printf "5h:%.1f%%" "$rl_5h")
+  if [ -n "$rl_5h_reset" ]; then
+    reset_time=$(date -r "$rl_5h_reset" '+%H:%M')
+    rl_5h_str=$(printf "5h:%.1f%%(@%s)" "$rl_5h" "$reset_time")
+  else
+    rl_5h_str=$(printf "5h:%.1f%%" "$rl_5h")
+  fi
 else
   rl_5h_str="5h:--"
 fi
