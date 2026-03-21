@@ -6,6 +6,8 @@ popd > /dev/null
 
 mkdir -p $HOME/.config/fish
 ln -s $SCRIPTPATH/config/fish/config.fish $HOME/.config/fish/config.fish
+mkdir -p $HOME/.config/fish/functions
+ln -s $SCRIPTPATH/config/fish/functions/fish_title.fish $HOME/.config/fish/functions/fish_title.fish
 
 mkdir -p $HOME/.emacs.d
 ln -s $SCRIPTPATH/emacs.d/init.el $HOME/.emacs.d/init.el
