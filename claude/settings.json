@@ -166,7 +166,8 @@
         "~/.cache",
         "~/.agent-browser",
         "~/Library/Caches",
-        "~/go/pkg/mod/cache"
+        "~/go/pkg/mod/cache",
+        "~/.go/pkg/mod/cache"
       ],
       "denyRead": [
         "~/.ssh",
