@@ -76,6 +76,8 @@
       "Bash(scp *)",
       "Bash(rsync *)",
       "Bash(git reset --hard *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
       "Bash(git clean -fd *)"
     ],
     "ask": [
@@ -84,7 +86,6 @@
       "Bash(cp *)",
       "Bash(sed *)",
       "Bash(npx *)",
-      "Bash(git push *)",
       "Bash(git pull *)",
       "Bash(git checkout *)",
       "Bash(git merge *)",
