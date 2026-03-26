@@ -95,7 +95,8 @@
       "Bash(pkill *)",
       "mcp__claude_ai_Slack"
     ],
-    "disableBypassPermissionsMode": "disable"
+    "disableBypassPermissionsMode": "disable",
+    "defaultMode": "auto"
   },
   "hooks": {
     "Notification": [
@@ -149,16 +150,19 @@
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false,
-    "excludedCommands": [
-      "git:*",
-      "gh:*",
-      "gcloud:*",
-      "docker:*",
-      "bq:*",
-      "npx difit:*",
-      "mo:*",
-      "zenv:*"
-    ],
+    "network": {
+      "allowedDomains": [
+        "github.com",
+        "proxy.golang.org",
+        "google.golang.org",
+        "ai.google.dev",
+        "cloud.google.com",
+        "*.npmjs.org",
+        "registry.yarnpkg.com",
+        "pypi.org"
+      ],
+      "allowLocalBinding": true
+    },
     "filesystem": {
       "allowWrite": [
         "//tmp/claude-work",
@@ -168,6 +172,26 @@
         "~/Library/Caches",
         "~/go/pkg/mod/cache",
         "~/.go/pkg/mod/cache"
+      ],
+      "denyWrite": [
+        "//etc",
+        "//usr",
+        "//bin",
+        "//sbin",
+        "//opt",
+        "//var",
+        "//System",
+        "//Library",
+        "~/.ssh",
+        "~/.gnupg",
+        "~/.bashrc",
+        "~/.bash_profile",
+        "~/.zshrc",
+        "~/.zprofile",
+        "~/.profile",
+        "~/.config/fish",
+        "~/.claude/settings.json",
+        "~/.claude/settings.local.json"
       ],
       "denyRead": [
         "~/.ssh",
@@ -232,42 +256,20 @@
         "//etc/sudoers",
         "//etc/ssl/private",
         "//etc/pki"
-      ],
-      "denyWrite": [
-        "//etc",
-        "//usr",
-        "//bin",
-        "//sbin",
-        "//opt",
-        "//var",
-        "//System",
-        "//Library",
-        "~/.ssh",
-        "~/.gnupg",
-        "~/.bashrc",
-        "~/.bash_profile",
-        "~/.zshrc",
-        "~/.zprofile",
-        "~/.profile",
-        "~/.config/fish",
-        "~/.claude/settings.json",
-        "~/.claude/settings.local.json"
       ]
     },
-    "network": {
-      "allowedDomains": [
-        "github.com",
-        "proxy.golang.org",
-        "google.golang.org",
-	"ai.google.dev",
-        "cloud.google.com",
-        "*.npmjs.org",
-        "registry.yarnpkg.com",
-        "pypi.org"
-      ],
-      "allowLocalBinding": true
-    }
+    "excludedCommands": [
+      "git:*",
+      "gh:*",
+      "gcloud:*",
+      "docker:*",
+      "bq:*",
+      "npx difit:*",
+      "mo:*",
+      "zenv:*"
+    ]
   },
   "effortLevel": "medium",
-  "autoUpdatesChannel": "stable"
+  "autoUpdatesChannel": "stable",
+  "skipAutoPermissionPrompt": true
 }
