@@ -4,6 +4,7 @@
 
 **/.claude/settings.local.json
 **/.claude/settings.json
+.claude/worktrees
 .cckiro/
 /tmp
 
