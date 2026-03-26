@@ -33,7 +33,7 @@
     h = rev-parse --short HEAD
     lh = rev-parse HEAD
     ph = push origin HEAD
-    aic = "!f() { COMMITMSG=$(git diff --cached | claude --no-session-persistence --model claude-haiku-4-5 --print 'You are generating a Conventional Commit message. Based strictly on the provided git diff, generate ONLY a one-line commit message using the Conventional Commits specification. Format: <type>(optional-scope): <imperative summary>. Rules: Use one of these types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Write the summary in imperative mood. Maximum ~72 characters. Do NOT include body text or explanation. Output ONLY the commit message line. Do NOT wrap the output in backticks, code blocks, or any markdown formatting. Output raw plain text only.'); git commit -m \"$COMMITMSG\" -e; }; f"
+    aic = "!f() { COMMITMSG=$(git diff --cached | claude --no-session-persistence --model claude-haiku-4-5 --print 'You are generating a Conventional Commit message. Based strictly on the provided git diff, generate ONLY a one-line commit message using the Conventional Commits specification. Format: <type>(optional-scope): <imperative summary>. Rules: Use one of these types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert. Write the summary in imperative mood. Maximum ~72 characters. Do NOT include body text or explanation. Output ONLY the commit message line. Do NOT wrap the output in backticks, code blocks, or any markdown formatting. Output raw plain text only.'); git commit -m \"$COMMITMSG\" && git push origin HEAD; }; f"
 [ghq]
     root = ~/.ghq
 [hub]
