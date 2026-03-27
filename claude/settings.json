@@ -262,6 +262,9 @@
     "excludedCommands": [
       "git:*",
       "gh:*",
+      "go get:*",
+      "pnpm update:*",
+      "pnpm upgrade:*",
       "gcloud:*",
       "docker:*",
       "bq:*",
