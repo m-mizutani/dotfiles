@@ -62,6 +62,7 @@ def build_groups() -> list[Group]:
         Group("Fish Shell", [
             Link("config/fish/config.fish", f"{HOME}/.config/fish/config.fish"),
             Link("config/fish/functions/fish_title.fish", f"{HOME}/.config/fish/functions/fish_title.fish"),
+            Link("config/fish/functions/wcd.fish", f"{HOME}/.config/fish/functions/wcd.fish"),
         ]),
         Group("Emacs", [
             Link("emacs.d/init.el", f"{HOME}/.emacs.d/init.el"),
