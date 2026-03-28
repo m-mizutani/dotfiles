@@ -87,6 +87,7 @@ def build_groups() -> list[Group]:
             Link("claude/statusline-command.sh", f"{HOME}/.claude/statusline-command.sh"),
             Link("claude/skills/check-pr-comment", f"{HOME}/.claude/skills/check-pr-comment"),
             Link("claude/skills/dev", f"{HOME}/.claude/skills/dev"),
+            Link("claude/skills/brainstorm", f"{HOME}/.claude/skills/brainstorm"),
         ]),
         Group("Ghostty", [
             Link("config/ghostty/config", f"{HOME}/.config/ghostty/config"),
