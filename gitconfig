@@ -22,6 +22,7 @@
     rollback = reset @~1
     r = reset @~1
     wip = commit -a -m wip
+    wt = worktree
     unwip = reset @~1
     logg = log --stat --graph --decorate=full
     loggg = log --stat --graph --format=fuller
