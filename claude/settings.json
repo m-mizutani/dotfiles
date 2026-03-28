@@ -260,6 +260,7 @@
       "git:*",
       "gh:*",
       "go get:*",
+      "go test:*",
       "pnpm update:*",
       "pnpm upgrade:*",
       "gcloud:*",
