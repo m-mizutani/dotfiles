@@ -85,6 +85,7 @@ def build_groups() -> list[Group]:
             Link("claude/sounds", f"{HOME}/.claude/sounds"),
             Link("claude/commands", f"{HOME}/.claude/commands"),
             Link("claude/statusline-command.sh", f"{HOME}/.claude/statusline-command.sh"),
+            Link("claude/statusline.mjs", f"{HOME}/.claude/statusline.mjs"),
             Link("claude/skills/check-pr-comment", f"{HOME}/.claude/skills/check-pr-comment"),
             Link("claude/skills/dev", f"{HOME}/.claude/skills/dev"),
             Link("claude/skills/brainstorm", f"{HOME}/.claude/skills/brainstorm"),
