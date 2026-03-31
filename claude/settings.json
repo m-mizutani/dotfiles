@@ -42,7 +42,6 @@
       "Read(./secrets/**)",
       "Read(./**/*.pem)",
       "Read(./**/*.key)",
-      "Bash(git commit:*)",
       "Bash(sed:*)",
       "Bash(go build:*)",
       "Bash(kill:*)",
@@ -77,8 +76,6 @@
       "Bash(scp *)",
       "Bash(rsync *)",
       "Bash(git reset --hard *)",
-      "Bash(git push *)",
-      "Bash(git commit *)",
       "Bash(git clean -fd *)"
     ],
     "ask": [
@@ -91,6 +88,8 @@
       "Bash(chmod *)",
       "Bash(kill *)",
       "Bash(pkill *)",
+      "Bash(git push *)",
+      "Bash(git commit *)",
       "mcp__claude_ai_Slack"
     ],
     "disableBypassPermissionsMode": "disable",
