@@ -94,7 +94,7 @@ def build_groups() -> list[Group]:
             Link("config/ghostty/config", f"{HOME}/.config/ghostty/config"),
         ]),
         Group("Bin", [
-            Link("bin/gitship", f"{HOME}/.local/bin/gitship"),
+            Link("bin/gph", f"{HOME}/.local/bin/gph"),
         ]),
     ]
 
