@@ -14,7 +14,7 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch
 
 1. `git branch --show-current` で現在のブランチ名を取得
 2. ブランチ名からslugを抽出（slash以降。例: `feat/create-article-component` → `create-article-component`）
-3. `.cckiro/specs/{slug}/spec.md` の存在確認
+3. `.spec/{slug}/spec.md` の存在確認
 4. specファイルが存在する場合、チェックボックスの進捗状況を確認
 
 ## フェーズ判定ルール
@@ -46,8 +46,8 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch
 - 既にfeature branchにいる場合：そのブランチをそのまま使う
 
 ## 統合specファイルの作成
-- `.cckiro/specs/{slug}/` ディレクトリを作成
-- `.cckiro/specs/{slug}/spec.md` を以下のテンプレートで作成
+- `.spec/{slug}/` ディレクトリを作成
+- `.spec/{slug}/spec.md` を以下のテンプレートで作成
   - 作成したらファイルへのリンクをユーザーに提示
   - 日本語で記述
   - 図はmermaid形式（ASCII Art禁止）
@@ -129,7 +129,7 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch
 
 > **⚠️ 重要: 以下の手順を必ず両方とも実行せよ。省略は禁止。**
 
-1. **`mo` でプレビューを開く（必須）**: spec作成が完了したら、必ず `mo .cckiro/specs/{slug}/spec.md` をバックグラウンドで実行してブラウザプレビューを開け。`mo` はMarkdownをブラウザでライブプレビューするツールで、ファイル保存時に自動リロードされる。これによりユーザーがspecを確認・編集しやすくなる。
+1. **`mo` でプレビューを開く（必須）**: spec作成が完了したら、必ず `mo .spec/{slug}/spec.md` をバックグラウンドで実行してブラウザプレビューを開け。`mo` はMarkdownをブラウザでライブプレビューするツールで、ファイル保存時に自動リロードされる。これによりユーザーがspecを確認・編集しやすくなる。
 2. **ユーザーにレビューを依頼し、ここで必ず停止する（必須）**: プレビューが開いた状態でレビューを依頼し、**ユーザーから明示的な承認を得るまで Phase 2 に進んではならない。** Auto modeであっても、承認なしに実装を開始することは絶対に禁止。ユーザーが「OK」「進めて」「LGTM」等の承認を返すまで待つこと。
 
 ---
@@ -142,7 +142,7 @@ specファイルに基づいて実装を開始する。
 - 実装開始前に `/compact` を実行してコンテキストを圧縮せよ。Phase 1での議論やspec作成過程の詳細はspecファイルに集約されているため、コンテキストウィンドウを実装作業のために確保する
 
 ## specの読み込み
-- ファイルパスが引数で与えられた場合はそのパス、なければブランチ名のslugから `.cckiro/specs/{slug}/` 以下のmarkdownファイルをspecとして読み込む
+- ファイルパスが引数で与えられた場合はそのパス、なければブランチ名のslugから `.spec/{slug}/` 以下のmarkdownファイルをspecとして読み込む
 - specの内容（要件・設計・実装計画）を把握してから実装に着手する
 
 ## 調査・リサーチ
@@ -160,7 +160,7 @@ specファイルに基づいて実装を開始する。
 ## git add
 - ファイルを変更・作成したら都度 `git add` せよ。実装完了時にまとめてではなく、変更のたびに実施する
 - **`git add .` や `git add -A` のような一括追加は禁止。** 必ず `git add <ファイルパス>` で対象ファイルを明示的に指定すること
-- **specファイル（`.cckiro/specs/` 以下）は `git add` するな。** specはあくまで作業用ドキュメントであり、コミット対象に含めない
+- **specファイル（`.spec/` 以下）は `git add` するな。** specはあくまで作業用ドキュメントであり、コミット対象に含めない
 
 ---
 
