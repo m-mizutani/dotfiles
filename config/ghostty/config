@@ -3,7 +3,7 @@
 
 # Theme and Colors - Brewer inspired
 theme = Dark+
-background-opacity = 0.9
+background-opacity = 0.7
 
 # Font Settings - matching WezTerm
 font-family = "Bizin Gothic"
