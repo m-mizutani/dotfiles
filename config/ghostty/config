@@ -44,6 +44,10 @@ keybind = ctrl+t>shift+apostrophe=new_split:down
 keybind = ctrl+t>o=goto_split:next
 keybind = ctrl+t>n=goto_split:next
 keybind = ctrl+t>p=goto_split:previous
+keybind = super+ctrl+h=goto_split:left
+keybind = super+ctrl+l=goto_split:right
+keybind = super+ctrl+k=goto_split:top
+keybind = super+ctrl+j=goto_split:bottom
 
 # ペインズーム
 keybind = ctrl+z=toggle_split_zoom
