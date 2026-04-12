@@ -258,6 +258,7 @@
     "excludedCommands": [
       "git:*",
       "gh:*",
+      "difit:*",
       "go get:*",
       "go test:*",
       "pnpm update:*",
