@@ -15,13 +15,14 @@ user_invocable: true
 
 ## 手順
 
-1. ユーザーの引数や会話のコンテキストから、表示したい差分の対象を判断する:
-   - 引数なし・特に指定がない場合: `difit working --include-untracked` (現在の作業ツリーの変更を表示)
+1. まず `git diff --stat main` と `git diff --cached --stat` を実行して、mainとの差分やステージング状況を把握する
+2. ユーザーの引数や会話のコンテキストから、表示したい差分の対象を判断する:
+   - 引数なし・特に指定がない場合: `difit main HEAD --include-untracked` (mainブランチとの差分を表示)
    - コミット指定: `difit HEAD~3` など
    - ブランチ比較: `difit main feature-branch` など
    - ステージ済み: `difit staged`
    - PR: `difit --pr <URL>`
-2. 以下のコマンドを実行する:
+3. 以下のコマンドを実行する:
 
 ```
 difit [引数...]
