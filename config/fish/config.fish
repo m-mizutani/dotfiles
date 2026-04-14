@@ -27,6 +27,7 @@ end
 
 set -x GO111MODULE auto
 set -x CLAUDE_CODE_DISABLE_TERMINAL_TITLE 1
+set -x CLAUDE_CODE_NO_FLICKER 1
 
 if test -e $HOME/local/bin
   set -x PATH $HOME/local/bin $PATH
