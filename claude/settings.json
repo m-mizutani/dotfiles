@@ -3,6 +3,7 @@
     "ENABLE_TOOL_SEARCH": "true"
   },
   "permissions": {
+    "defaultMode": "auto",
     "allow": [
       "WebFetch(domain:github.com)",
       "WebFetch(domain:docs.cloud.google.com)",
