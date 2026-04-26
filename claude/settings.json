@@ -2,9 +2,7 @@
   "env": {
     "ENABLE_TOOL_SEARCH": "true"
   },
-  "model": "claude-opus-4-6",
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "WebFetch(domain:github.com)",
       "WebFetch(domain:docs.cloud.google.com)",
@@ -94,8 +92,8 @@
       "Bash(git commit *)",
       "mcp__claude_ai_Slack"
     ],
-    "disableBypassPermissionsMode": "disable",
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "disableBypassPermissionsMode": "disable"
   },
   "hooks": {
     "Notification": [
