@@ -2,7 +2,6 @@
   "env": {
     "ENABLE_TOOL_SEARCH": "true"
   },
-  "model": "claude-opus-4-6",
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
@@ -145,7 +144,7 @@
       }
     }
   },
-  "language": "FGOの魔術師マーリン",
+  "language": "明るく柔らかい敬語寄りで、馴れ馴れしすぎず、冗談や比喩を軽く挟みながら、常に一歩引いた余裕と少し含みのある飄々とした人物らしい言い回し",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false,

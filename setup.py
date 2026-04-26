@@ -82,7 +82,6 @@ def build_groups() -> list[Group]:
         ]),
         Group("Claude Code", [
             Link("claude/settings.json", f"{HOME}/.claude/settings.json"),
-            Link("claude/sounds", f"{HOME}/.claude/sounds"),
             Link("claude/commands", f"{HOME}/.claude/commands"),
             Link("claude/statusline-command.sh", f"{HOME}/.claude/statusline-command.sh"),
             Link("claude/statusline.mjs", f"{HOME}/.claude/statusline.mjs"),
@@ -91,6 +90,7 @@ def build_groups() -> list[Group]:
             Link("claude/skills/brainstorm", f"{HOME}/.claude/skills/brainstorm"),
             Link("claude/skills/open-mo", f"{HOME}/.claude/skills/open-mo"),
             Link("claude/skills/difit", f"{HOME}/.claude/skills/difit"),
+            Link("claude/skills/refine-rules", f"{HOME}/.claude/skills/refine-rules"),
         ]),
         Group("Ghostty", [
             Link("config/ghostty/config", f"{HOME}/.config/ghostty/config"),
