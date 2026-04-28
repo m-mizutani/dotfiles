@@ -75,6 +75,7 @@
       "Bash(ssh *)",
       "Bash(scp *)",
       "Bash(rsync *)",
+      "Bash(gh pr comment:*)",
       "Bash(git reset --hard *)",
       "Bash(git clean -fd *)"
     ],
