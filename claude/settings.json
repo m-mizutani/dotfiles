@@ -270,6 +270,7 @@
       "bq:*",
       "npx difit:*",
       "mo:*",
+      "task:*",
       "zenv:*"
     ]
   },
