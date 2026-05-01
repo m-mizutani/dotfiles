@@ -276,5 +276,6 @@
   },
   "effortLevel": "medium",
   "autoUpdatesChannel": "stable",
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "agentPushNotifEnabled": true
 }
