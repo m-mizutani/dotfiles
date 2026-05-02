@@ -80,6 +80,9 @@ def build_groups() -> list[Group]:
             Link("gitconfig", f"{HOME}/.gitconfig"),
             Link("gitignore", f"{HOME}/.config/git/ignore"),
         ]),
+        Group("Node / npm", [
+            Link("npmrc", f"{HOME}/.npmrc"),
+        ]),
         Group("Claude Code", [
             Link("claude/settings.json", f"{HOME}/.claude/settings.json"),
             Link("claude/commands", f"{HOME}/.claude/commands"),
