@@ -264,6 +264,7 @@
       "go get:*",
       "go test:*",
       "pnpm test:*",
+      "pnpm lint:*",
       "pnpm update:*",
       "pnpm upgrade:*",
       "gcloud:*",
