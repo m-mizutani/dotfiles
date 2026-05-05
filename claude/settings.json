@@ -263,6 +263,7 @@
       "difit:*",
       "go get:*",
       "go test:*",
+      "pnpm test:*",
       "pnpm update:*",
       "pnpm upgrade:*",
       "gcloud:*",
