@@ -76,8 +76,6 @@
       "Bash(scp *)",
       "Bash(rsync *)",
       "Bash(gh pr comment:*)",
-      "Bash(pnpm:*-g*)",
-      "Bash(pnpm:*--global*)",
       "Bash(git reset --hard *)",
       "Bash(git clean -fd *)"
     ],
@@ -276,7 +274,6 @@
       "pnpm lint:*",
       "pnpm update:*",
       "pnpm upgrade:*",
-      "pnpm install:*",
       "gcloud:*",
       "docker:*",
       "bq:*",
@@ -286,7 +283,7 @@
       "zenv:*"
     ]
   },
-  "effortLevel": "medium",
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true
