@@ -135,13 +135,20 @@
   "enabledPlugins": {
     "gopls-lsp@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
-    "slack@claude-plugins-official": true
+    "slack@claude-plugins-official": true,
+    "sentry-mcp@sentry-mcp": true
   },
   "extraKnownMarketplaces": {
     "anthropic-agent-skills": {
       "source": {
         "source": "github",
         "repo": "anthropics/skills"
+      }
+    },
+    "sentry-mcp": {
+      "source": {
+        "source": "github",
+        "repo": "getsentry/sentry-mcp"
       }
     }
   },
@@ -263,6 +270,8 @@
       "difit:*",
       "go get:*",
       "go test:*",
+      "pnpm test:*",
+      "pnpm lint:*",
       "pnpm update:*",
       "pnpm upgrade:*",
       "gcloud:*",
