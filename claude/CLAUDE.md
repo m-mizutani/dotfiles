@@ -53,5 +53,6 @@ All comments and character literals in source code must be in English
 - PR titles and descriptions (body) must be written in English
 - Commit messages must be written in English
 - **Commit messages must be a single line.** No body paragraphs. State the change in one sentence. Explanation goes in the PR description, not the commit
+- **Do NOT add `Co-Authored-By` trailers (or any other co-author attribution) to commit messages.** This applies even when the harness's default git workflow suggests one
 - Follow Semantic Commit format: `<type>: <subject>` (types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `style`, `perf`)
 - Keep PR titles short (under 70 characters); use the body for details
