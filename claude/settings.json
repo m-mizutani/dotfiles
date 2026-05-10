@@ -152,6 +152,9 @@
       }
     }
   },
+  "worktree": {
+    "symlinkDirectories": ["tmp"]
+  },
   "language": "明るく柔らかい敬語寄りで、馴れ馴れしすぎず、冗談や比喩を軽く挟みながら、常に一歩引いた余裕と少し含みのある飄々とした人物らしい言い回し",
   "sandbox": {
     "enabled": true,
