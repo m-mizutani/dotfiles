@@ -102,6 +102,10 @@ if test -e $HOME/.ubie-bin
 end
 set -x CLOUDSDK_PYTHON_SITEPACKAGES 1
 
+if test -e $HOME/.local/bin
+  set -x PATH $HOME/.local/bin $PATH
+end
+
 # source /Users/mizutani/.docker/init-fish.sh || true # Added by Docker Desktop
 
 if test -e /opt/homebrew/bin//direnv
