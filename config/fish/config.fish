@@ -133,3 +133,10 @@ end
 if test -e /Users/mizutani/.local/bin/mise
   /Users/mizutani/.local/bin/mise activate fish | source
 end
+
+# pnpm
+set -gx PNPM_HOME "/Users/mizutani/Library/pnpm"
+if not string match -q -- "$PNPM_HOME/bin" $PATH
+  set -gx PATH "$PNPM_HOME/bin" $PATH
+end
+# pnpm end
