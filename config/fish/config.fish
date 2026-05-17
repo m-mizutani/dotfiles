@@ -102,6 +102,10 @@ if test -e $HOME/.ubie-bin
 end
 set -x CLOUDSDK_PYTHON_SITEPACKAGES 1
 
+if test -e $HOME/.local/bin
+  set -x PATH $HOME/.local/bin $PATH
+end
+
 # source /Users/mizutani/.docker/init-fish.sh || true # Added by Docker Desktop
 
 if test -e /opt/homebrew/bin//direnv
@@ -119,6 +123,7 @@ set --export --prepend PATH "/Users/mizutani/.rd/bin"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/mizutani/.gcloud/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.gcloud/google-cloud-sdk/path.fish.inc'; end
+if [ -f '/Users/mizutani/.google/google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google/google-cloud-sdk/path.fish.inc'; end
 if [ -f '/Users/mizutani/.google-cloud-sdk/path.fish.inc' ]; . '/Users/mizutani/.google-cloud-sdk/path.fish.inc'; end
 
 # Tailscale
