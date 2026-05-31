@@ -21,6 +21,14 @@ imported below:
 - If a task seems too complex, break it down into smaller steps, but complete ALL steps
 - Long code is acceptable — incomplete code is NOT
 
+## Writing Principles (Code / Tests / Commits / Comments)
+Each artifact has a distinct responsibility. Do not mix them up.
+
+- **Code expresses HOW** — the mechanism. Names and structure should make the implementation self-explanatory; do not restate it in prose
+- **Test code expresses WHAT** — the externally observable behavior and contract. A test should read as a specification of what the unit is supposed to do, not how it does it. Avoid coupling tests to internal implementation details
+- **Commit messages express WHY** — the motivation for the change (the bug being fixed, the requirement being satisfied, the constraint that forced this approach). The diff already shows *what* changed; the commit log must add the *why*
+- **Code comments express WHY NOT** — the alternatives that were considered and rejected, the non-obvious constraints, the subtle invariants, the workarounds for specific bugs. If a comment only restates *what* the code does, delete it. Write a comment only when removing it would make a future reader wonder "why didn't they just do X instead?"
+
 ## Multi-Instance Safety (Stateless Design)
 - **Assume the application runs as multiple concurrent instances** (horizontal scaling). Any design that assumes single-instance will break in production
 - **NEVER hold cross-request state in process memory.** State that must survive across separate requests, goroutines that originated elsewhere, or instance boundaries MUST be persisted to a shared backend (database / object store / message bus)
