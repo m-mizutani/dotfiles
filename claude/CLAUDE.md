@@ -38,6 +38,11 @@ Each artifact has a distinct responsibility. Do not mix them up.
   - Singleton caches of business data without a shared backend
   - Cross-goroutine coordination via channels at package scope
 
+## Subagent Delegation
+- **Token-heavy but monotonous tasks (large-scale code search, repetitive code changes, log/file scanning, etc.) MUST in principle be delegated to subagents**, keeping the main context lean
+- For these delegated subagents, use a lighter model such as `sonnet` or `haiku` rather than the top-tier model
+- Reserve the main agent (and the top-tier model) for tasks that genuinely require deep reasoning, architectural judgment, or synthesis across results
+
 ## Directory
 - When the user mentions the `tmp` directory, you SHOULD NOT see `/tmp`. Check `./tmp` from the repository root
 
