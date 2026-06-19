@@ -30,6 +30,9 @@ shell-integration-features = sudo,title,no-cursor
 # Scrollback
 scrollback-limit = 10000000
 
+# Bell
+bell-features = title,attention,border
+
 # Misc
 confirm-close-surface = false
 quit-after-last-window-closed = false
