@@ -288,7 +288,6 @@
       "zenv:*"
     ]
   },
-  "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
