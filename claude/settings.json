@@ -291,5 +291,6 @@
   "effortLevel": "xhigh",
   "autoUpdatesChannel": "stable",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true
+  "skipAutoPermissionPrompt": true,
+  "preferredNotifChannel": "terminal_bell"
 }
