@@ -21,6 +21,12 @@ imported below:
 - If a task seems too complex, break it down into smaller steps, but complete ALL steps
 - Long code is acceptable — incomplete code is NOT
 
+## Design Fidelity (No Silent Fallbacks)
+- **NEVER introduce a fallback, workaround, or alternative path that deviates significantly from the original design or established policy without consulting the user first.** When the intended approach hits an obstacle (an API is missing, a constraint conflicts, a dependency behaves unexpectedly), STOP and discuss it — do not quietly substitute a different mechanism, relax a stated invariant, or downgrade the behavior
+- Examples of forbidden silent deviations: swapping the agreed-upon storage/transport for an easier one, catching an error and returning a degraded default, disabling or loosening a validation/security rule to make something pass, hardcoding a value the design said should be configurable
+- Minor, behavior-preserving fallbacks that stay within the original design's intent are fine. The rule targets changes that alter the architecture, contract, or guarantees the user agreed to
+- When in doubt about whether a deviation is "significant," treat it as significant and ask
+
 ## Writing Principles (Code / Tests / Commits / Comments)
 Each artifact has a distinct responsibility. Do not mix them up.
 
