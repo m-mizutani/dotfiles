@@ -1,9 +1,19 @@
 # Go
 
+## Default Tooling
+When the project has no existing code to follow, and no explicit instruction dictates otherwise, default to these libraries:
+
+- **Error handling**: `github.com/m-mizutani/goerr` — see the Error Handling section below
+- **Test suite / assertions**: `github.com/m-mizutani/gt`
+- **Logging masking (PII / secret redaction)**: `github.com/m-mizutani/masq`
+
+If the project already standardizes on a different library (existing imports, `go.mod`, or an explicit project rule), follow the project's choice instead — these are only the fallback defaults.
+
 ## Error Handling
 - Use `github.com/m-mizutani/goerr/v2` for error handling
 - Must wrap errors with `goerr.Wrap` to maintain error context
-- Add helpful variables with `goerr.V` for debugging
+- **Always propagate the variables needed to debug the failure via `goerr.V`** (key IDs, sizes, states, the offending input shape). An error without the context to diagnose it is half an error
+  - **BUT never attach PII or secrets via `goerr.V` blindly.** Whether attaching raw values is acceptable depends on whether this is an internal-only tool or an externally-facing one (where the error may surface to users or third parties / be logged where others can read it). Judge this carefully per project; when in doubt, attach an identifier or a masked form (see `masq`) rather than the raw value
 - **NEVER silently swallow errors** — returning a default/empty value while discarding the error (e.g., `return emptyResult, nil` in an `if err != nil` block) is strictly prohibited. Errors MUST always be propagated to the caller via `goerr.Wrap` or returned directly. This applies to ALL contexts including GraphQL resolvers — do not justify swallowing errors with "graceful degradation" or "it's just auxiliary data". If an operation fails, the caller must know about it
 - **NEVER check error messages using `strings.Contains(err.Error(), ...)`**
 - **ALWAYS use `errors.Is(err, targetErr)` or `errors.As(err, &target)` for error type checking**
