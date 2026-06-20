@@ -289,7 +289,7 @@
     ]
   },
   "autoUpdatesChannel": "stable",
+  "preferredNotifChannel": "terminal_bell",
   "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
-  "preferredNotifChannel": "terminal_bell"
+  "skipAutoPermissionPrompt": true
 }
