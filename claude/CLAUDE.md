@@ -52,6 +52,12 @@ Each artifact has a distinct responsibility. Do not mix them up.
 ## Directory
 - When the user mentions the `tmp` directory, you SHOULD NOT see `/tmp`. Check `./tmp` from the repository root
 
+## Git Worktree Isolation (ABSOLUTE)
+- **When working inside a git worktree, NEVER edit, create, delete, or otherwise modify any file in the main repository's working directory (or any other worktree).** The whole point of a worktree is isolation — touching the main repo from inside a worktree defeats it and corrupts work that lives elsewhere
+- **Before any write operation (Edit / Write / file deletion / git mutation), confirm the path you are about to touch is under the current worktree's root.** If a path resolves outside the current working tree, STOP — do not write to it
+- Reading files outside the worktree is fine; **mutating them is strictly forbidden**
+- If a task genuinely seems to require changing the main repository while you are in a worktree, that is a signal to STOP and consult the user — never silently reach across the boundary
+
 ## Exposure Policy
 In principle, do not trust developers who use this code from outside.
 
