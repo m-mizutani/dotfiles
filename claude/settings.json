@@ -97,6 +97,17 @@
     "disableBypassPermissionsMode": "disable"
   },
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node /Users/mizutani/.claude/worktree-guard.mjs"
+          }
+        ]
+      }
+    ],
     "Notification": [
       {
         "hooks": [
