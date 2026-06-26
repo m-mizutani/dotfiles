@@ -141,7 +141,8 @@
   },
   "worktree": {
     "symlinkDirectories": [
-      "tmp"
+      "tmp",
+      ".epic"
     ]
   },
   "statusLine": {
