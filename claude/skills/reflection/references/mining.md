@@ -27,6 +27,23 @@ ls -d "$PROJ/$ENC" "$PROJ/$ENC"--claude-worktrees-* 2>/dev/null
 
 `<encoded-root>*` のような緩いglobは別リポジトリ（`shirabe-foo` 等）を巻き込むので使わない。本体は完全一致、worktree は `--claude-worktrees-*` で限定する。
 
+## 現在のセッションのJSONLを特定する（入力なしモードの補完用）
+
+入力なし（現在セッション）モードでは、会話は既に文脈の中にあるので原則これは不要。文脈が要約で圧縮されて欠けがありそうなときだけ、自分のセッションファイルを開いて補う。
+
+セッションIDは scratchpad ディレクトリのパス末尾に現れる UUID（例: `.../<encoded-cwd>/<session-id>/scratchpad`）。現在の作業ディレクトリ（worktree なら worktree 自身）をエンコードした prefix の下に、その UUID 名の JSONL がある。
+
+```bash
+CWD=$(pwd)                                       # worktree の中ならそのパスのまま
+ENC=$(printf '%s' "$CWD" | sed 's/[/.]/-/g')     # / と . を - に
+PROJ="$HOME/.claude/projects"
+
+# 直近に更新された JSONL が現在のセッション（IDが分かっていれば直接指定する方が確実）
+ls -t "$PROJ/$ENC"/*.jsonl 2>/dev/null | head -1
+```
+
+抽出は本体と同じ「対話を時系列で抜く jq」を使う。
+
 ## 対話（人間＋Claude）を時系列で抽出する jq
 
 反省には Claude が何をしたかが要る。だから人間の発話だけでなく **assistant のテキスト出力も並べて** 抜く。jq は1行ずつ順に処理するので、`type` で role を付けて出すだけで時系列の対話が得られる。
