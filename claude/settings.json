@@ -153,9 +153,16 @@
     "gopls-lsp@claude-plugins-official": true,
     "skill-creator@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
+    "epic@m-mizutani-plugins": true,
     "sentry-mcp@sentry-mcp": true
   },
   "extraKnownMarketplaces": {
+    "m-mizutani-plugins": {
+      "source": {
+        "source": "directory",
+        "path": "/Users/mizutani/.ghq/github.com/m-mizutani/claude-code"
+      }
+    },
     "anthropic-agent-skills": {
       "source": {
         "source": "github",
