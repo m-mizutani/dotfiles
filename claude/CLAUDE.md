@@ -13,6 +13,7 @@ imported below:
 @rules/frontend.md
 @rules/testing.md
 @rules/completion-check.md
+@rules/collaboration.md
 
 ## Implementation Completeness
 - **NEVER leave incomplete implementations, TODOs, or placeholder code**
