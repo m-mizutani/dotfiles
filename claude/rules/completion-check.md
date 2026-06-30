@@ -13,3 +13,6 @@ Before declaring a task complete:
   - Run the frontend lint command (typically `pnpm lint`)
   - Both MUST pass before declaring the task complete. Do not skip lint even for "trivial" changes — IME / keyboard policies and similar invariants are enforced here, and silent regressions are exactly what lint is for
 - Verify test coverage for your changes — EVERY new function/method MUST be tested
+- **Verification must actually run. An environmental obstacle (a missing daemon, a blocked socket, a sandbox limit) is something to work around — not an excuse to declare a task done unverified.** Try the workaround (start the dependency, adjust the host, request the permission) before reporting you could not verify. A clean `go vet` is not a passing test
+- **Unit tests do not prove operational paths.** When the change touches scripts, migrations, or operational config (compose files, init scripts, task targets), exercise that path end-to-end locally before declaring done
+- **Do not attribute a CI failure to flakiness until you have reproduced a clean run locally.** Confirm your code is not the cause first
