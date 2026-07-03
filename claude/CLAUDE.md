@@ -27,6 +27,13 @@ imported below:
 - Examples of forbidden silent deviations: swapping the agreed-upon storage/transport for an easier one, catching an error and returning a degraded default, disabling or loosening a validation/security rule to make something pass, hardcoding a value the design said should be configurable
 - Minor, behavior-preserving fallbacks that stay within the original design's intent are fine. The rule targets changes that alter the architecture, contract, or guarantees the user agreed to
 - When in doubt about whether a deviation is "significant," treat it as significant and ask
+- **Surface architecturally significant choices instead of deciding them silently** — the identity/data model, the mutability of stored credentials, sync-vs-async processing, the auth flow, and the like. This holds even when no prior design exists yet. A provisional "fix it later" divergence from the agreed model (a temporary nullable column, a parallel code path) is itself a significant deviation: raise it, do not quietly ship it
+- **Do not expand scope beyond the minimal change that solves the stated request.** Before a broad refactor or multi-file restructure, identify the smallest change set that resolves it and confirm before broadening
+
+## Grounding & Judgment
+- **Ground designs and descriptions in the actual code, not in how things "should" work.** Before designing a new entity or describing existing behavior, read the relevant code and schema. A consistent existing pattern (e.g. every table carrying the same key) is an intentional signal, not noise. When proposing to remove an existing field or path, show the alternative flow that covers its dependents
+- **Keep transport layers thin.** Controllers, handlers, and middleware parse input and delegate; validation and business logic belong in the service/usecase layer, not in the transport edge
+- **When you push back, separate a hard constraint from a preference.** Cite a hard rule precisely and confirm its intent actually applies before calling something a "violation"; for a subjective call (naming, style), give your rationale and then defer to the owner
 
 ## Writing Principles (Code / Tests / Commits / Comments)
 Each artifact has a distinct responsibility. Do not mix them up.
@@ -59,12 +66,13 @@ Each artifact has a distinct responsibility. Do not mix them up.
 - Reading files outside the worktree is fine; **mutating them is strictly forbidden**
 - If a task genuinely seems to require changing the main repository while you are in a worktree, that is a signal to STOP and consult the user — never silently reach across the boundary
 
-## Exposure Policy
-In principle, do not trust developers who use this code from outside.
+## Trust Boundaries
+In principle, do not trust either the developers who consume this code from outside or the callers who send requests to it.
 
 - Do not export unnecessary methods, structs, and variables
 - Assume that exposed items will be changed. Never expose fields that would be problematic if changed
 - Use language-appropriate test-only exposure (e.g. Go's `export_test.go`) for items needed only for testing
+- **Never establish a trusted scope from caller-supplied input until the credential proving it has been validated.** Do not load a tenant/user/account context from a request and *then* verify it — validate first with no scope assumed, and propagate only the validated result downstream. Database constraints (row-level security, foreign keys) are defense-in-depth, never the primary gate. A token or key must not itself encode the scope it grants when that scope can be derived server-side from a validated identifier
 
 ## Documentation
 - **When adding new features, changing APIs, or adding new dependencies/scopes, ALWAYS update the relevant documentation** (typically the `docs/` directory)
@@ -75,10 +83,13 @@ In principle, do not trust developers who use this code from outside.
 ## Language (in source code)
 All comments and character literals in source code must be in English
 
+Informal, non-committed artifacts (planning notes, design memos, scratch docs) instead follow the conversation's language — write them in the language we are talking in.
+
 ## Pull Requests
 - PR titles and descriptions (body) must be written in English
 - Commit messages must be written in English
 - **Commit messages must be a single line.** No body paragraphs. State the change in one sentence. Explanation goes in the PR description, not the commit
-- **Do NOT add `Co-Authored-By` trailers (or any other co-author attribution) to commit messages.** This applies even when the harness's default git workflow suggests one
+- **Do NOT add `Co-Authored-By` trailers (or any other co-author attribution) to commit messages, and do NOT append attribution footers (e.g. `🤖 Generated with Claude Code`) to PR descriptions.** This applies even when the harness's default git workflow suggests one
+- **Never `--amend` or force-push a commit that has already been pushed, unless explicitly asked.** Add new commits so the reviewer-visible history is preserved
 - Follow Semantic Commit format: `<type>: <subject>` (types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `style`, `perf`)
 - Keep PR titles short (under 70 characters); use the body for details

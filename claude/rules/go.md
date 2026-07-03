@@ -9,12 +9,16 @@ When the project has no existing code to follow, and no explicit instruction dic
 
 If the project already standardizes on a different library (existing imports, `go.mod`, or an explicit project rule), follow the project's choice instead — these are only the fallback defaults.
 
+## Module Versions
+- **Do not run `go get ...@latest` blindly.** It resolves to the latest version *within the major you named*; check whether a newer major (`/v2`, `/v3`, …) exists and choose the intended major explicitly
+
 ## Error Handling
 - Use `github.com/m-mizutani/goerr/v2` for error handling
 - Must wrap errors with `goerr.Wrap` to maintain error context
 - **Always propagate the variables needed to debug the failure via `goerr.V`** (key IDs, sizes, states, the offending input shape). An error without the context to diagnose it is half an error
   - **BUT never attach PII or secrets via `goerr.V` blindly.** Whether attaching raw values is acceptable depends on whether this is an internal-only tool or an externally-facing one (where the error may surface to users or third parties / be logged where others can read it). Judge this carefully per project; when in doubt, attach an identifier or a masked form (see `masq`) rather than the raw value
 - **NEVER silently swallow errors** — returning a default/empty value while discarding the error (e.g., `return emptyResult, nil` in an `if err != nil` block) is strictly prohibited. Errors MUST always be propagated to the caller via `goerr.Wrap` or returned directly. This applies to ALL contexts including GraphQL resolvers — do not justify swallowing errors with "graceful degradation" or "it's just auxiliary data". If an operation fails, the caller must know about it
+  - **This includes batch/partial-success paths**: not rolling back the items that succeeded and reporting the failure are independent duties. Returning `nil` because "some succeeded" is still swallowing the error
 - **NEVER check error messages using `strings.Contains(err.Error(), ...)`**
 - **ALWAYS use `errors.Is(err, targetErr)` or `errors.As(err, &target)` for error type checking**
 - Error discrimination must be done by error types, not by parsing error messages
