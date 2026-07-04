@@ -7,6 +7,7 @@
 - For repositories with multiple backends (e.g. memory + persistent), test both implementations when applicable
 - Every function, method, and handler MUST have corresponding tests
 - Tests must be written BEFORE declaring the task complete
+- **Tests MUST NOT depend on real external domains or services** (no `example.com`, no live URLs) — use `httptest` servers or clearly fake hosts. Live-service integration tests are the one exception: gate them behind `TEST_`-prefixed environment variables (skip when unset), and when you write them, cover ALL methods of the client under test — a partial live test gives false confidence
 
 ## Conventions
 - Test files should use `package {name}_test`. Do not use the same package name as the production code

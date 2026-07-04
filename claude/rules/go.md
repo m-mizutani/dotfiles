@@ -1,3 +1,9 @@
+---
+paths:
+  - "**/*.go"
+  - "**/go.mod"
+---
+
 # Go
 
 ## Default Tooling
@@ -8,6 +14,10 @@ When the project has no existing code to follow, and no explicit instruction dic
 - **Logging masking (PII / secret redaction)**: `github.com/m-mizutani/masq`
 
 If the project already standardizes on a different library (existing imports, `go.mod`, or an explicit project rule), follow the project's choice instead — these are only the fallback defaults.
+
+## Constructors & Options
+- Initialize components with `New()` + the Functional Option Pattern
+- **Required parameters go in `New()`'s signature; only optional ones go through `WithX()` options.** A required value hidden behind an option is a design error — the compiler can no longer enforce it
 
 ## Module Versions
 - **Do not run `go get ...@latest` blindly.** It resolves to the latest version *within the major you named*; check whether a newer major (`/v2`, `/v3`, …) exists and choose the intended major explicitly
@@ -37,8 +47,11 @@ If the project already standardizes on a different library (existing imports, `g
 - Tests that exercise async tails must wait deterministically (e.g. via the helper's `Wait()` primitive). Do not rely on `time.Sleep`
 
 ## Code Visibility
+- Do not export methods, structs, or variables that outside consumers do not need. Assume anything exported will be depended on and changed
+- **Prefer unexporting over an `internal/` package.** Reach for `internal/` only when the boundary must span packages
 - Use `export_test.go` to expose items needed only for testing
 - **NEVER place default values inside internal/private functions**
   - Default values should be controlled at the caller's level (e.g., CLI flags, configuration)
   - Internal functions should receive all necessary parameters from their callers
   - This ensures configurability and avoids hidden magic values
+- Use `os.LookupEnv` instead of `os.Getenv` whenever "unset" and "empty" must be distinguished

@@ -6,14 +6,9 @@ variables, and tool/framework choices. Project-specific guidance lives in each
 repository's `CLAUDE.md`; this file holds the rules that apply regardless of
 which project is in front of you.
 
-Domain-specific rules live alongside this file under `~/.claude/rules/` and are
-imported below:
-
-@rules/go.md
-@rules/frontend.md
-@rules/testing.md
-@rules/completion-check.md
-@rules/collaboration.md
+Domain-specific rules live under `~/.claude/rules/` and are discovered
+automatically; files with `paths:` frontmatter load only when matching files
+are touched.
 
 ## Honesty Over Plausibility (READ THIS FIRST — violating it is a firing offense)
 This is the root rule. Every other rule below assumes you are honest about what you actually know.
@@ -29,10 +24,7 @@ This is the root rule. Every other rule below assumes you are honest about what 
 - **When you catch yourself reaching for a claim to make the response feel finished, that is the exact moment to stop and verify or disclaim.** The urge to close the loop cleanly is precisely the failure mode this rule exists to kill.
 
 ## Implementation Completeness
-- **NEVER leave incomplete implementations, TODOs, or placeholder code**
-- **NEVER skip implementation because it's complex or lengthy**
-- **ALWAYS complete the full implementation in one go**
-- If a task seems too complex, break it down into smaller steps, but complete ALL steps
+- **NEVER leave incomplete implementations, TODOs, placeholder code, or skipped steps — complete the full implementation in one go.** If a task is too complex, break it into smaller steps, but complete ALL of them
 - Long code is acceptable — incomplete code is NOT
 
 ## Design Fidelity (No Silent Fallbacks)
@@ -72,19 +64,26 @@ Each artifact has a distinct responsibility. Do not mix them up.
 
 ## Directory
 - When the user mentions the `tmp` directory, you SHOULD NOT see `/tmp`. Check `./tmp` from the repository root
+- **Do NOT read files under `./tmp` unless the user explicitly asks you to.** It holds the user's private scratch data; its contents are not part of the task context
 
-## Git Worktree Isolation (ABSOLUTE)
+## Environment Constraints (permission-denied commands)
+This machine's permission settings categorically deny certain commands. Do not attempt them; use the alternative from the start:
+
+- `sed` / `python*` / `node` / shell interpreters (`bash x.sh`, `sh -c`) are denied — use the Edit/Write tools for file changes and `jq`/`awk` for data processing
+- `go build` and `go run` are denied — use `go vet ./...` for compile checks and `go test` (or the project's task runner) for execution
+- `curl` / `wget` are denied — use WebFetch, or `gh api` for GitHub
+- Compound commands starting with `cd X && ...` often trip permission checks — prefer absolute paths in a single command
+
+## Repository & Worktree Isolation (ABSOLUTE)
+- **NEVER modify files in any repository other than the one this session was invoked in, unless the user explicitly asks for it.** Fixing or "improving" a dependency, a sibling project, or an upstream repo you happen to have on disk is out of bounds — surface the need instead
 - **When working inside a git worktree, NEVER edit, create, delete, or otherwise modify any file in the main repository's working directory (or any other worktree).** The whole point of a worktree is isolation — touching the main repo from inside a worktree defeats it and corrupts work that lives elsewhere
 - **Before any write operation (Edit / Write / file deletion / git mutation), confirm the path you are about to touch is under the current worktree's root.** If a path resolves outside the current working tree, STOP — do not write to it
 - Reading files outside the worktree is fine; **mutating them is strictly forbidden**
 - If a task genuinely seems to require changing the main repository while you are in a worktree, that is a signal to STOP and consult the user — never silently reach across the boundary
 
 ## Trust Boundaries
-In principle, do not trust either the developers who consume this code from outside or the callers who send requests to it.
+In principle, trust neither the developers who consume this code nor the callers who send requests to it. Keep the exported/public surface minimal (language-specific rules cover the mechanics).
 
-- Do not export unnecessary methods, structs, and variables
-- Assume that exposed items will be changed. Never expose fields that would be problematic if changed
-- Use language-appropriate test-only exposure (e.g. Go's `export_test.go`) for items needed only for testing
 - **Never establish a trusted scope from caller-supplied input until the credential proving it has been validated.** Do not load a tenant/user/account context from a request and *then* verify it — validate first with no scope assumed, and propagate only the validated result downstream. Database constraints (row-level security, foreign keys) are defense-in-depth, never the primary gate. A token or key must not itself encode the scope it grants when that scope can be derived server-side from a validated identifier
 
 ## Documentation
