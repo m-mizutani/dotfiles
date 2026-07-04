@@ -1,3 +1,10 @@
+---
+paths:
+  - "**/*.{ts,tsx,js,jsx,mjs,cjs}"
+  - "**/*.{css,scss,vue,svelte}"
+  - "**/package.json"
+---
+
 # Frontend
 
 ## Package Manager (pnpm) Policy
