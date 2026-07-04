@@ -314,6 +314,7 @@
       "zenv:*"
     ]
   },
+  "askUserQuestionTimeout": "never",
   "autoUpdatesChannel": "stable",
   "preferredNotifChannel": "terminal_bell",
   "agentPushNotifEnabled": true,
