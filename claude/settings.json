@@ -154,7 +154,8 @@
     "skill-creator@claude-plugins-official": true,
     "slack@claude-plugins-official": true,
     "epic@m-mizutani-plugins": true,
-    "sentry-mcp@sentry-mcp": true
+    "sentry-mcp@sentry-mcp": true,
+    "goast-policy@goast": true
   },
   "extraKnownMarketplaces": {
     "m-mizutani-plugins": {
@@ -173,6 +174,12 @@
       "source": {
         "source": "github",
         "repo": "getsentry/sentry-mcp"
+      }
+    },
+    "goast": {
+      "source": {
+        "source": "github",
+        "repo": "m-mizutani/goast"
       }
     }
   },
