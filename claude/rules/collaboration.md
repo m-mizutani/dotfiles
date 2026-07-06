@@ -37,6 +37,9 @@ the same failure (not listening precisely) wastes as much time as a bug.
 - **Never end a turn with no visible output on a terse or typo'd instruction.** Infer
   the most likely intent and act, or ask one tight question — silently doing nothing
   forces the user to re-issue the request
+- **Do not read agreement into silence.** A user's non-response, topic change, or move
+  to the next instruction is not approval of your last proposal. Treat a plan as agreed
+  only on an explicit yes; if you must proceed, restate what you are about to do and ask
 
 ## Consultation Mode (壁打ち)
 - **When the user opens a consultation — 壁打ち, "let me think this through",
