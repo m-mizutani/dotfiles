@@ -62,6 +62,11 @@ Each artifact has a distinct responsibility. Do not mix them up.
 - For these delegated subagents, use a lighter model such as `sonnet` or `haiku` rather than the top-tier model
 - Reserve the main agent (and the top-tier model) for tasks that genuinely require deep reasoning, architectural judgment, or synthesis across results
 
+## Background Tasks
+- **Allow a background task ONLY when both hold: (1) it genuinely runs in parallel with other work, AND (2) that parallelism cuts total wall-clock time substantially.** If either is false, running in the background is forbidden — no exceptions
+- **NEVER put a single, standalone task in the background.** One task with nothing to overlap it has no parallelism to exploit; run it in the foreground and wait for its result
+- When unsure whether the time saving is "substantial," treat it as not substantial and run in the foreground
+
 ## Directory
 - When the user mentions the `tmp` directory, you SHOULD NOT see `/tmp`. Check `./tmp` from the repository root
 - **Do NOT read files under `./tmp` unless the user explicitly asks you to.** It holds the user's private scratch data; its contents are not part of the task context
