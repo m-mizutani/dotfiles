@@ -38,11 +38,6 @@ confirm-close-surface = false
 quit-after-last-window-closed = false
 auto-update = off
 
-# Keybindings - WezTerm style with Ctrl+t as leader
-# ペイン分割
-keybind = ctrl+t>apostrophe=new_split:right
-keybind = ctrl+t>shift+apostrophe=new_split:down
-
 # ペイン移動
 keybind = super+ctrl+h=goto_split:left
 keybind = super+ctrl+l=goto_split:right
