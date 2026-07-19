@@ -95,6 +95,7 @@ def build_groups() -> list[Group]:
             Link("claude/skills/difit", f"{HOME}/.claude/skills/difit"),
             Link("claude/skills/refine-rules", f"{HOME}/.claude/skills/refine-rules"),
             Link("claude/skills/my-code-review", f"{HOME}/.claude/skills/my-code-review"),
+            Link("claude/skills/codex-review", f"{HOME}/.claude/skills/codex-review"),
             Link("claude/skills/reflection", f"{HOME}/.claude/skills/reflection"),
         ]),
         Group("Ghostty", [
