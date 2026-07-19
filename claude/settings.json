@@ -1,9 +1,103 @@
 {
+  "agentPushNotifEnabled": true,
+  "askUserQuestionTimeout": "never",
+  "autoUpdatesChannel": "stable",
+  "enabledPlugins": {
+    "epic@m-mizutani-plugins": true,
+    "goast-policy@goast": true,
+    "gopls-lsp@claude-plugins-official": true,
+    "sentry-mcp@sentry-mcp": true,
+    "skill-creator@claude-plugins-official": true,
+    "slack@claude-plugins-official": true
+  },
   "env": {
-    "CLAUDE_AFK_TIMEOUT_MS": "2147483647",
     "CLAUDE_AFK_COUNTDOWN_MS": "2147483647",
+    "CLAUDE_AFK_TIMEOUT_MS": "2147483647",
     "ENABLE_TOOL_SEARCH": "true"
   },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "repo": "anthropics/skills",
+        "source": "github"
+      }
+    },
+    "goast": {
+      "source": {
+        "repo": "m-mizutani/goast",
+        "source": "github"
+      }
+    },
+    "m-mizutani-plugins": {
+      "source": {
+        "path": "/Users/mizutani/.ghq/github.com/m-mizutani/claude-code",
+        "source": "directory"
+      }
+    },
+    "sentry-mcp": {
+      "source": {
+        "repo": "getsentry/sentry-mcp",
+        "source": "github"
+      }
+    }
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "command": "afplay /System/Library/Sounds/Glass.aiff",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "command": "afplay /System/Library/Sounds/Glass.aiff",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "node /Users/mizutani/.claude/worktree-guard.mjs",
+            "type": "command"
+          }
+        ],
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "bash '/Users/mizutani/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10,
+            "type": "command"
+          }
+        ],
+        "matcher": "*"
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "command": "afplay /System/Library/Sounds/Glass.aiff",
+            "type": "command"
+          }
+        ]
+      }
+    ]
+  },
+  "language": "明るく柔らかい敬語寄りで、馴れ馴れしすぎず、冗談や比喩を軽く挟みながら、常に一歩引いた余裕と少し含みのある飄々とした人物らしい言い回し",
+  "model": "opus",
   "permissions": {
     "allow": [
       "WebFetch(domain:github.com)",
@@ -38,6 +132,20 @@
       "WebFetch(domain:api.slack.com)",
       "WebFetch(domain:docs.slack.dev)"
     ],
+    "ask": [
+      "Bash(rm *)",
+      "Bash(mv *)",
+      "Bash(cp *)",
+      "Bash(sed *)",
+      "Bash(npx *)",
+      "Bash(git -C *)",
+      "Bash(chmod *)",
+      "Bash(kill *)",
+      "Bash(pkill *)",
+      "Bash(git push *)",
+      "mcp__claude_ai_Slack"
+    ],
+    "defaultMode": "auto",
     "deny": [
       "Read(./.env)",
       "Read(./.env.yml)",
@@ -82,126 +190,30 @@
       "Bash(git reset --hard *)",
       "Bash(git clean -fd *)"
     ],
-    "ask": [
-      "Bash(rm *)",
-      "Bash(mv *)",
-      "Bash(cp *)",
-      "Bash(sed *)",
-      "Bash(npx *)",
-      "Bash(git -C *)",
-      "Bash(chmod *)",
-      "Bash(kill *)",
-      "Bash(pkill *)",
-      "Bash(git push *)",
-      "mcp__claude_ai_Slack"
-    ],
-    "defaultMode": "auto",
     "disableBypassPermissionsMode": "disable"
   },
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write|MultiEdit|NotebookEdit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node /Users/mizutani/.claude/worktree-guard.mjs"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "afplay /System/Library/Sounds/Glass.aiff"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "afplay /System/Library/Sounds/Glass.aiff"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "afplay /System/Library/Sounds/Glass.aiff"
-          }
-        ]
-      }
-    ]
-  },
-  "worktree": {
-    "symlinkDirectories": [
-      "tmp",
-      ".epic"
-    ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "node /Users/mizutani/.claude/statusline.mjs"
-  },
-  "enabledPlugins": {
-    "gopls-lsp@claude-plugins-official": true,
-    "skill-creator@claude-plugins-official": true,
-    "slack@claude-plugins-official": true,
-    "epic@m-mizutani-plugins": true,
-    "sentry-mcp@sentry-mcp": true,
-    "goast-policy@goast": true
-  },
-  "extraKnownMarketplaces": {
-    "m-mizutani-plugins": {
-      "source": {
-        "source": "directory",
-        "path": "/Users/mizutani/.ghq/github.com/m-mizutani/claude-code"
-      }
-    },
-    "anthropic-agent-skills": {
-      "source": {
-        "source": "github",
-        "repo": "anthropics/skills"
-      }
-    },
-    "sentry-mcp": {
-      "source": {
-        "source": "github",
-        "repo": "getsentry/sentry-mcp"
-      }
-    },
-    "goast": {
-      "source": {
-        "source": "github",
-        "repo": "m-mizutani/goast"
-      }
-    }
-  },
-  "language": "明るく柔らかい敬語寄りで、馴れ馴れしすぎず、冗談や比喩を軽く挟みながら、常に一歩引いた余裕と少し含みのある飄々とした人物らしい言い回し",
+  "preferredNotifChannel": "terminal_bell",
   "sandbox": {
-    "enabled": true,
     "autoAllowBashIfSandboxed": false,
-    "network": {
-      "allowedDomains": [
-        "github.com",
-        "proxy.golang.org",
-        "google.golang.org",
-        "ai.google.dev",
-        "cloud.google.com",
-        "*.npmjs.org",
-        "registry.yarnpkg.com",
-        "pypi.org"
-      ],
-      "allowLocalBinding": true
-    },
+    "enabled": true,
+    "excludedCommands": [
+      "git:*",
+      "gh:*",
+      "difit:*",
+      "go get:*",
+      "go test:*",
+      "pnpm test:*",
+      "pnpm lint:*",
+      "pnpm update:*",
+      "pnpm upgrade:*",
+      "gcloud:*",
+      "docker:*",
+      "bq:*",
+      "npx difit:*",
+      "mo:*",
+      "task:*",
+      "zenv:*"
+    ],
     "filesystem": {
       "allowWrite": [
         "//tmp/claude-work",
@@ -211,26 +223,6 @@
         "~/Library/Caches",
         "~/go/pkg/mod/cache",
         "~/.go/pkg/mod/cache"
-      ],
-      "denyWrite": [
-        "//etc",
-        "//usr",
-        "//bin",
-        "//sbin",
-        "//opt",
-        "//var",
-        "//System",
-        "//Library",
-        "~/.ssh",
-        "~/.gnupg",
-        "~/.bashrc",
-        "~/.bash_profile",
-        "~/.zshrc",
-        "~/.zprofile",
-        "~/.profile",
-        "~/.config/fish",
-        "~/.claude/settings.json",
-        "~/.claude/settings.local.json"
       ],
       "denyRead": [
         "~/.ssh",
@@ -295,31 +287,51 @@
         "//etc/sudoers",
         "//etc/ssl/private",
         "//etc/pki"
+      ],
+      "denyWrite": [
+        "//etc",
+        "//usr",
+        "//bin",
+        "//sbin",
+        "//opt",
+        "//var",
+        "//System",
+        "//Library",
+        "~/.ssh",
+        "~/.gnupg",
+        "~/.bashrc",
+        "~/.bash_profile",
+        "~/.zshrc",
+        "~/.zprofile",
+        "~/.profile",
+        "~/.config/fish",
+        "~/.claude/settings.json",
+        "~/.claude/settings.local.json"
       ]
     },
-    "excludedCommands": [
-      "git:*",
-      "gh:*",
-      "difit:*",
-      "go get:*",
-      "go test:*",
-      "pnpm test:*",
-      "pnpm lint:*",
-      "pnpm update:*",
-      "pnpm upgrade:*",
-      "gcloud:*",
-      "docker:*",
-      "bq:*",
-      "npx difit:*",
-      "mo:*",
-      "task:*",
-      "zenv:*"
-    ]
+    "network": {
+      "allowLocalBinding": true,
+      "allowedDomains": [
+        "github.com",
+        "proxy.golang.org",
+        "google.golang.org",
+        "ai.google.dev",
+        "cloud.google.com",
+        "*.npmjs.org",
+        "registry.yarnpkg.com",
+        "pypi.org"
+      ]
+    }
   },
-  "askUserQuestionTimeout": "never",
-  "autoUpdatesChannel": "stable",
-  "preferredNotifChannel": "terminal_bell",
-  "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
-  "model": "opus"
+  "statusLine": {
+    "command": "node /Users/mizutani/.claude/statusline.mjs",
+    "type": "command"
+  },
+  "worktree": {
+    "symlinkDirectories": [
+      "tmp",
+      ".epic"
+    ]
+  }
 }
