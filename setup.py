@@ -101,6 +101,9 @@ def build_groups() -> list[Group]:
         Group("Ghostty", [
             Link("config/ghostty/config", f"{HOME}/.config/ghostty/config"),
         ]),
+        Group("Herdr", [
+            Link("config/herdr/config.toml", f"{HOME}/.config/herdr/config.toml"),
+        ]),
         Group("Bin", [
             Link("bin/gph", f"{HOME}/.local/bin/gph"),
         ]),
