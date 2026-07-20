@@ -42,26 +42,6 @@
     }
   },
   "hooks": {
-    "Notification": [
-      {
-        "hooks": [
-          {
-            "command": "afplay /System/Library/Sounds/Glass.aiff",
-            "type": "command"
-          }
-        ]
-      }
-    ],
-    "PermissionRequest": [
-      {
-        "hooks": [
-          {
-            "command": "afplay /System/Library/Sounds/Glass.aiff",
-            "type": "command"
-          }
-        ]
-      }
-    ],
     "PreToolUse": [
       {
         "hooks": [
@@ -83,16 +63,6 @@
           }
         ],
         "matcher": "*"
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "command": "afplay /System/Library/Sounds/Glass.aiff",
-            "type": "command"
-          }
-        ]
       }
     ]
   },
