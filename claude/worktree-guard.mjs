@@ -11,6 +11,7 @@
 
 import { execFileSync } from 'node:child_process';
 import { resolve, relative, isAbsolute, sep } from 'node:path';
+import { homedir } from 'node:os';
 
 const GUARDED = new Set(['Edit', 'Write', 'MultiEdit', 'NotebookEdit']);
 
@@ -76,6 +77,20 @@ if (gitDir === commonDir) allow();
 const abs = isAbsolute(filePath) ? resolve(filePath) : resolve(cwd, filePath);
 const rel = relative(topLevel, abs);
 const outside = rel === '..' || rel.startsWith(`..${sep}`) || isAbsolute(rel);
+
+// Exception: Claude's persistent memory lives at ~/.claude/projects/<slug>/memory/,
+// which is always outside a worktree. Writing memories must survive worktree
+// isolation, so allow mutations under any such `memory` directory. The scope is
+// kept narrow (projects/*/memory only) so the isolation guarantee stays intact
+// for everything else under ~/.claude.
+const memoryRoot = resolve(homedir(), '.claude', 'projects');
+const memRel = relative(memoryRoot, abs);
+const insideProjects =
+  memRel !== '..' && !memRel.startsWith(`..${sep}`) && !isAbsolute(memRel);
+const segments = memRel.split(sep);
+// projects/<slug>/memory/... => segments[1] === 'memory'
+const isMemory = insideProjects && segments.length >= 3 && segments[1] === 'memory';
+if (isMemory) allow();
 
 if (outside) {
   deny(
