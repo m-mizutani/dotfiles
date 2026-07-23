@@ -1,5 +1,6 @@
 onboarding = false
 keys.prefix = "ctrl+t"
+keys.next_workspace = "cmd+ctrl+tab"
 
 [theme]
 name = "tokyo-night"
