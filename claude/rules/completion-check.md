@@ -18,3 +18,4 @@ Before declaring a task complete:
 - **Documentation is part of completion**: if the change adds/alters features, APIs, config, or env vars, verify the relevant docs were updated before reporting done
 - **After creating or updating a PR, check its CI status** (e.g. `gh pr checks` / the check-pr flow) and fix failures before calling the task complete — "pushed" is not "done"
 - **Do not attribute a CI failure to flakiness until you have reproduced a clean run locally.** Confirm your code is not the cause first
+- **Run each gate once.** This is the set of checks that must have actually run, not a checklist to repeat. A check that passed does not need re-running, and no extra self-review pass on top of these gates is required

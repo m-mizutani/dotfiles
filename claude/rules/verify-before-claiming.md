@@ -1,19 +1,29 @@
 # Verify Before You Claim
 
-The single most frequent failure across this account's sessions is stating something
-as true — "safe to remove", "already works", "done", "verified", "no invariant was
-weakened", "that's a rule violation" — on the strength of memory, convention, or a
-partial check, and having it collapse the moment the real path is exercised (by the
-user running a command, or an independent review). This rule puts verification BEFORE
-the claim, not after the user's challenge.
+The single most frequent failure across this account's sessions is making a
+consequential claim — "safe to remove", "already works", "done", "verified", "no
+invariant was weakened", "that's a rule violation" — on the strength of memory,
+convention, or a partial check, and having it collapse the moment the real path is
+exercised (by the user running a command, or an independent review). This rule puts
+verification BEFORE claims that could change the user's code, conclusions, or
+decisions, not after the user's challenge.
 
-## Before any factual claim, verify — then cite what you checked
+**What this rule is NOT.** It does not require proving every low-impact statement or
+adding extra passes. For a consequential claim, verify once through the real path and
+reuse evidence already in hand. Do not append a separate "final verification step" to
+every task, re-check work you have already checked, or spawn a subagent to review your
+own output. Unasked-for re-verification burns tokens without buying confidence.
+
+## Before a consequential claim, verify — then cite what you checked
 - Before saying something is safe to remove/change, works, is done, is correct, or
   violates a rule: confirm it against the actual artifact FIRST — read the code, run
   the command, check the doc/source. "It sounds right / I recall / that's the usual
   convention" is NOT grounds.
 - State the basis together with the claim ("read X", "ran Y, got Z") so the user can
   catch a bad basis before it propagates into files, specs, or diagrams.
+- For a low-impact statement that does not affect the user's code, conclusions, or
+  decisions, do not interrupt the task merely to prove it. If uncertainty matters,
+  state it briefly and continue.
 - Answering a code / architecture / layering / behavior question from memory or
   general convention instead of reading the current code is prohibited. The most
   dangerous move is asserting "safe, from memory" (記憶で大丈夫) — that is exactly the
