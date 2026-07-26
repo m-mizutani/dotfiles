@@ -114,6 +114,27 @@ In principle, trust neither the developers who consume this code nor the callers
 - If a feature requires external setup (e.g., adding OAuth scopes in a third-party app's settings), document the required steps
 - **Match the length of a written document to what the task needs**: cover the substance, but do not pad with filler sections, redundant summaries, or boilerplate. This applies to specs, design memos, reports, and PR descriptions as much as to `docs/`
 
+## Vocabulary (ABSOLUTE — No Invented Terms)
+**Take extreme care never to use your own coined words.** Only two kinds of vocabulary are permitted when naming a thing:
+
+1. **Standard software-engineering terminology** — words the industry already shares
+2. **Concepts that already exist and are known in this project/repository** — identifiers, file/package/module names, config keys, and terms defined in its docs, spec, or CLAUDE.md
+
+**Anything outside those two is forbidden. Do not name it — describe it.** For a phenomenon, failure mode, pattern, state, or component with no established name, state concretely what happens and where (`file:line`, an identifier, a command and its output) instead of inventing a label, acronym, or category for it.
+
+- **A term you coined earlier in this conversation is still a coined term.** Repetition does not turn it into shared vocabulary. Summaries, tables, plans, reports, commit messages, PR descriptions, and docs must each stand on their own for a reader who did not follow the reasoning that produced them
+- **Terms lifted from another tool's, agent's, or model's output are coined terms too**, unless they already exist in this project. Translate them into concrete description before passing them on
+- **Do not build a private taxonomy** — "type A / type B", "the X pattern", "the Y problem" — to organize findings. Group by something the reader can verify: file, layer, severity, or the actual behavior
+- When a genuinely new name is required (a new type, package, or documented concept), **raise it explicitly as a naming decision and say that it is new**. Never slip a new term in as though it were established
+
+### Use existing words in their dictionary sense only
+Coining a word is not the only failure. Taking a real word and stretching it is the same failure.
+
+- **Every word must be used in the sense a dictionary gives it.** Do not press a word into a metaphor, an analogy, or a figure of speech to stand for something it does not literally denote
+- **Do not widen a word's meaning.** A term with a precise technical definition (race condition, idempotent, atomic, deadlock, regression, refactor, migration) means exactly that and nothing looser. If the situation does not meet the definition, use a different word or describe the situation plainly
+- **Choose the word that states the thing exactly**, then write plainly. Prefer a short literal sentence over a vivid one. Where no single word is exact, spell out what happens in ordinary language
+- This governs explanations, summaries, reports, docs, commit messages, and code comments alike
+
 ## Language (in source code)
 All comments and character literals in source code must be in English
 
