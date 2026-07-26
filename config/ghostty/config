@@ -44,6 +44,11 @@ keybind = super+ctrl+l=goto_split:right
 keybind = super+ctrl+k=goto_split:top
 keybind = super+ctrl+j=goto_split:bottom
 
+# goto_split の前後送りは上の方向指定で足りるため、cmd+[ / cmd+] は
+# herdr の workspace 切り替えに明け渡す
+keybind = super+[=unbind
+keybind = super+]=unbind
+
 # ペインズーム
 keybind = ctrl+z=toggle_split_zoom
 
