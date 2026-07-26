@@ -84,6 +84,7 @@ def build_groups() -> list[Group]:
             Link("claude/settings.json", f"{HOME}/.claude/settings.json"),
             Link("claude/CLAUDE.md", f"{HOME}/.claude/CLAUDE.md"),
             Link("claude/rules", f"{HOME}/.claude/rules"),
+            Link("claude/output-styles", f"{HOME}/.claude/output-styles"),
             Link("claude/commands", f"{HOME}/.claude/commands"),
             Link("claude/statusline-command.sh", f"{HOME}/.claude/statusline-command.sh"),
             Link("claude/statusline.mjs", f"{HOME}/.claude/statusline.mjs"),

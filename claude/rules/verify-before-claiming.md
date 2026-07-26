@@ -51,10 +51,9 @@ own output. Unasked-for re-verification burns tokens without buying confidence.
   schema"; "deployed" != "works".
 - Drive the real path the change was meant to fix: run the exact command the user
   will run; exercise the real user/operational flow end to end.
-- If the project mandates a verification path (integration/DB tests with no skip
-  switch, a second-opinion review, a security scan), it MUST have actually run before
-  you say "done" — never report complete with the mandatory check explicitly unrun,
-  and never substitute a lighter check for it.
+- A project-mandated verification path (integration or DB tests without a skip
+  switch, a second-opinion review, or a security scan) must have actually run
+  before a completion claim. A lighter check does not establish the same result.
 - A blanket assurance ("all green", "no security invariant weakened") carries the
   same evidentiary bar as any other completion claim. Earn it by running the check,
   or do not make it.

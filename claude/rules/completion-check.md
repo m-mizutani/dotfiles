@@ -2,20 +2,17 @@
 
 Before declaring a task complete:
 
-- **WRITE TESTS FIRST — This is MANDATORY, not optional**
-- Run `go vet ./...` and `go fmt ./...` to format Go code
-- Run `golangci-lint run ./...` if the project uses it
-- Run `gosec -exclude-generated -quiet ./...` if the project uses it
-- Run the project's full Go test suite (`go test ./...` or the wrapper the project specifies) — ALL tests must pass
-- **NEVER run `go build` to verify code.** Use `go vet ./...` instead to check for compile errors
-- **MANDATORY whenever any frontend file changes**:
-  - Run the frontend unit-test command (typically `pnpm test`)
-  - Run the frontend lint command (typically `pnpm lint`)
-  - Both MUST pass before declaring the task complete. Do not skip lint even for "trivial" changes — IME / keyboard policies and similar invariants are enforced here, and silent regressions are exactly what lint is for
-- Verify test coverage for your changes — EVERY new function/method MUST be tested
-- **Verification must actually run. An environmental obstacle (a missing daemon, a blocked socket, a sandbox limit) is something to work around — not an excuse to declare a task done unverified.** Try the workaround (start the dependency, adjust the host, request the permission) before reporting you could not verify. A clean `go vet` is not a passing test
-- **Unit tests do not prove operational paths.** When the change touches scripts, migrations, or operational config (compose files, init scripts, task targets), exercise that path end-to-end locally before declaring done
-- **Documentation is part of completion**: if the change adds/alters features, APIs, config, or env vars, verify the relevant docs were updated before reporting done
-- **After creating or updating a PR, check its CI status** (e.g. `gh pr checks` / the check-pr flow) and fix failures before calling the task complete — "pushed" is not "done"
-- **Do not attribute a CI failure to flakiness until you have reproduced a clean run locally.** Confirm your code is not the cause first
-- **Run each gate once.** This is the set of checks that must have actually run, not a checklist to repeat. A check that passed does not need re-running, and no extra self-review pass on top of these gates is required
+- Run the relevant project verification gates once and require them to pass.
+  Language- and framework-specific rules define their own gates
+- When an environmental obstacle blocks a gate, first try the available remedy:
+  start the dependency, adjust the host, or request permission. Report the task
+  as unverified if the real gate still cannot run
+- When changing scripts, migrations, deployment configuration, or task targets,
+  exercise the operational path end to end; unit tests are not a substitute
+- When changing features, APIs, behavior, configuration, dependencies, scopes,
+  or environment variables, confirm that the relevant documentation is current
+- After creating or updating a PR, check its CI status and address failures
+  before reporting completion. Treat a failure as flaky only after reproducing a
+  clean run through the relevant local path
+- Reuse the result of a gate that already ran successfully. Completion does not
+  require an additional self-review or a duplicate verification pass

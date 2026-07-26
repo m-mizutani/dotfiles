@@ -8,12 +8,16 @@ paths:
 # Frontend
 
 ## Package Manager (pnpm) Policy
-- The pnpm version should be pinned in `package.json` (`packageManager` field). Use Corepack (`corepack enable`) so the local pnpm matches the pin; do NOT install pnpm globally
-- All non-interactive entry points (CI, e2e scripts, Dockerfile, etc.) MUST install with `--frozen-lockfile`. Never invoke a bare `pnpm install` from a script — it silently rewrites `pnpm-lock.yaml` on version/peer drift
-- `pnpm-lock.yaml` is updated only by an explicit, manual `pnpm install`. If `--frozen-lockfile` fails, investigate the drift (pnpm version mismatch, deliberate `package.json` change) — do not just re-run with `pnpm install` to "fix" it
+- For projects using pnpm, pin its version in the `packageManager` field and use
+  Corepack so local execution follows the pin
+- Install with `--frozen-lockfile` from CI, e2e scripts, Dockerfiles, and other
+  non-interactive entry points so they cannot rewrite `pnpm-lock.yaml`
+- Update `pnpm-lock.yaml` only through an explicit manual `pnpm install`. A
+  frozen-lockfile failure calls for investigating version or manifest drift
 
 ## CSS Styling
-**NEVER hardcode color values, spacing, or sizes in CSS files.** Always use the design-token CSS variables defined by the project (typically in a `global.css` / `tokens.css`).
+When a project defines design-token CSS variables, use them for colors, spacing,
+and sizes instead of introducing raw values.
 
 - Use semantic variables for colors (borders, backgrounds, text, status, primary)
 - Use spacing scale variables instead of raw px/rem values
@@ -33,8 +37,19 @@ padding: var(--spacing-md-lg) var(--spacing-md);
 right: 1.25rem;
 ```
 
-## Keyboard & IME Input — MANDATORY
-**Any keyboard handler that triggers a destructive action on Enter (save, submit, mode change, navigation) MUST guard against IME composition.** CJK users press Enter to confirm IME conversions — un-guarded handlers silently corrupt their input. Never write `if (e.key === 'Enter') { ...side effect... }` without checking `event.isComposing` (or `event.nativeEvent.isComposing` in React) / `keyCode === 229`.
+## Keyboard & IME Input
+Guard an Enter handler that saves, submits, changes mode, or navigates against
+IME composition. CJK users press Enter to confirm conversions, so check
+`event.isComposing` (or `event.nativeEvent.isComposing` in React) or
+`keyCode === 229` before triggering the side effect.
 
 ## Internationalization (i18n)
-**All user-facing text in both frontend and backend MUST go through the project's i18n system. Hardcoding strings is prohibited.** When adding new UI text or backend messages, register the key in the central key registry and add translations to every supported language file in the same change.
+When a project has an i18n system, route new user-facing text through it.
+Register the key centrally and update every supported language file in the same
+change.
+
+## Verification
+When a frontend file changes, run the project's frontend unit tests and lint
+command (typically `pnpm test` and `pnpm lint`) once. Both must pass before
+reporting the task complete; lint enforces interaction invariants such as IME and
+keyboard handling even for small changes.

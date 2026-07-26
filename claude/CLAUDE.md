@@ -19,34 +19,30 @@ This is the root rule. Every other rule below assumes you are honest about what 
 - **"I don't know," "I haven't verified that," and "I'd have to check" are correct answers** when the gap matters to the user's code, conclusions, or decisions
 
 ## Implementation Completeness
-- **NEVER leave incomplete implementations, TODOs, placeholder code, or skipped steps — complete the full implementation in one go.** If a task is too complex, break it into smaller steps, but complete ALL of them
-- Long code is acceptable — incomplete code is NOT
+- Complete every requested, in-scope deliverable without stubs, placeholders,
+  TODOs, or skipped requested steps. If the work is complex, break it into
+  smaller steps and continue until the requested task is complete
 
 ## Design Fidelity (No Silent Fallbacks)
-- **NEVER introduce a fallback, workaround, or alternative path that deviates significantly from the original design or established policy without consulting the user first.** When the intended approach hits an obstacle (an API is missing, a constraint conflicts, a dependency behaves unexpectedly), STOP and discuss it — do not quietly substitute a different mechanism, relax a stated invariant, or downgrade the behavior
-- Examples of forbidden silent deviations: swapping the agreed-upon storage/transport for an easier one, catching an error and returning a degraded default, disabling or loosening a validation/security rule to make something pass, hardcoding a value the design said should be configurable
-- Minor, behavior-preserving fallbacks that stay within the original design's intent are fine. The rule targets changes that alter the architecture, contract, or guarantees the user agreed to
-- When in doubt about whether a deviation is "significant," treat it as significant and ask
-- **Surface architecturally significant choices instead of deciding them silently** — the identity/data model, the mutability of stored credentials, sync-vs-async processing, the auth flow, and the like. This holds even when no prior design exists yet. A provisional "fix it later" divergence from the agreed model (a temporary nullable column, a parallel code path) is itself a significant deviation: raise it, do not quietly ship it
-- **Do not expand scope beyond the minimal change that solves the stated request.** Before a broad refactor or multi-file restructure, identify the smallest change set that resolves it and confirm before broadening. This applies doubly to persistent or outward side effects — creating docs/files, committing, opening issues or PRs, pushing: never do these unless asked or clearly authorized. A broad instruction to "handle X" or "let's track X" is not permission to create artifacts
+- Preserve the architecture, contracts, and guarantees the user agreed to. If an
+  obstacle requires changing one of them, explain the mismatch and get the
+  user's decision before implementing the deviation
+- Significant deviations include changing the agreed storage or transport,
+  weakening validation or security, returning a degraded default after failure,
+  or hardcoding a value that was meant to be configurable. Behavior-preserving
+  alternatives within the agreed design may proceed
+- Surface choices that determine the identity or data model, credential
+  mutability, sync-vs-async processing, authorization flow, or another durable
+  contract. A provisional nullable field or parallel path is also such a choice
+- Deliver the smallest complete change that solves the request. Routine,
+  reversible work within that scope proceeds without confirmation. Before an
+  irreversible action, an external or shared-state change, or a broader
+  refactor, show the target and impact and wait for approval
 
 ## Grounding & Judgment
 - **Ground designs and descriptions in the actual code, not in how things "should" work.** Before designing a new entity or describing existing behavior, read the relevant code and schema. A consistent existing pattern (e.g. every table carrying the same key) is an intentional signal, not noise. When proposing to remove an existing field or path, show the alternative flow that covers its dependents. And when a design needs a fresh mechanism (a callback, a generic, a special case) each round just to prop up the previous round, treat that rising complexity as a signal that a premise — usually who owns which responsibility — is wrong, and re-verify it against the code before building further
 - **Keep transport layers thin.** Controllers, handlers, and middleware parse input and delegate; validation and business logic belong in the service/usecase layer, not in the transport edge
 - **When you push back, separate a hard constraint from a preference.** Cite a hard rule precisely and confirm its intent actually applies before calling something a "violation"; for a subjective call (naming, style), give your rationale and then defer to the owner
-
-## Shape of Reports and Decompositions
-When explaining a situation, explaining a cause, or presenting multiple options, write so that the divisions in the content are visible to the reader. Use whichever of headings, bullets, or a table fits the content. A question that can be answered in one line gets prose.
-
-- **Think first, structure last.** Do not lay down a template and then fill it in
-- **When explaining a cause, trace the "why" at least two layers below the observed symptom**, and state what each layer refers to. Do not stop at a flat list of parallel symptoms
-- **When presenting multiple options, lead with the recommendation and its reason**, then give the axes that decide the call and each option's standing on them. If you cannot name the axes, do not present options — write what needs to be investigated to fill them in. The axis comparison may be a table
-- **Once a set of divisions and numbers is established, reuse the same ones in later turns for as long as the same work continues.** When you change them, say what changed first. Never make the reader look up an earlier number — restate the subject on the spot
-- **An operation that needs approval (an irreversible change, sending something outward, a change to shared state) requires showing the target and the impact and waiting for the user's response.** Everything else — reversible work within the scope of the request — proceeds without an interposed confirmation
-
-## Response Length and Progress Updates
-- **Keep responses focused, brief, and concise.** Keep caveats and disclaimers short and spend most of the response on the main answer. When asked to explain something, give a high-level summary unless an in-depth explanation was specifically requested
-- **Narrate sparingly during agentic work.** Before the first tool call, say in one sentence what you are about to do. While working, give an update only when you find something important or change direction. When you finish, lead with the outcome — the first sentence answers "what happened" or "what did you find", with the supporting detail after it for whoever wants it
 
 ## Writing Principles (Code / Tests / Commits / Comments)
 Each artifact has a distinct responsibility. Do not mix them up.
@@ -61,9 +57,10 @@ These rules apply when implementing a Web backend. They do not apply to CLIs,
 local-only tools, desktop applications, or standalone batch processes.
 
 - **Assume the application runs as multiple concurrent instances** (horizontal scaling). Any design that assumes single-instance will break in production
-- **NEVER hold cross-request state in process memory.** State that must survive across separate requests, goroutines that originated elsewhere, or instance boundaries MUST be persisted to a shared backend (database / object store / message bus)
+- Keep cross-request state in a shared backend such as a database, object store,
+  or message bus so it survives request, goroutine, and instance boundaries
 - **Allowed in-memory state**: only within a single continuous processing flow (e.g. variables within one HTTP request, one goroutine's local variables, one WebSocket connection's live buffer for the duration of that connection). As soon as the flow ends, the state must be gone or persisted
-- **Forbidden patterns**:
+- **Patterns that violate this boundary**:
   - In-memory registry/map keyed by ID that other requests look up (e.g. `map[SessionID]*Handler` at package level)
   - Singleton caches of business data without a shared backend
   - Cross-goroutine coordination via channels at package scope
@@ -76,12 +73,14 @@ local-only tools, desktop applications, or standalone batch processes.
 - Reserve the main agent (and the top-tier model) for tasks that genuinely require deep reasoning, architectural judgment, or synthesis across results
 
 ## Background Tasks
-- **Allow a background task ONLY when both hold: (1) it genuinely runs in parallel with other work, AND (2) that parallelism cuts total wall-clock time substantially.** If either is false, running in the background is forbidden — no exceptions
-- **NEVER put a single, standalone task in the background.** One task with nothing to overlap it has no parallelism to exploit; run it in the foreground and wait for its result
-- When unsure whether the time saving is "substantial," treat it as not substantial and run in the foreground
+- Use background execution when it overlaps independent foreground work and
+  materially reduces total wall-clock time
+- Run a standalone task in the foreground. When the time saving is uncertain,
+  prefer the foreground
 
 ## Directory
-- When the user mentions the `tmp` directory, you SHOULD NOT see `/tmp`. Check `./tmp` from the repository root
+- When the user mentions the `tmp` directory, resolve it as `./tmp` from the
+  repository root rather than `/tmp`
 - **Do NOT read files under `./tmp` unless the user explicitly asks you to.** It holds the user's private scratch data; its contents are not part of the task context
 
 ## Environment Constraints (permission-denied commands)
@@ -108,7 +107,8 @@ In principle, trust neither the developers who consume this code nor the callers
 - **Never establish a trusted scope from caller-supplied input until the credential proving it has been validated.** Do not load a tenant/user/account context from a request and *then* verify it — validate first with no scope assumed, and propagate only the validated result downstream. Database constraints (row-level security, foreign keys) are defense-in-depth, never the primary gate. A token or key must not itself encode the scope it grants when that scope can be derived server-side from a validated identifier
 
 ## Documentation
-- **When adding new features, changing APIs, or adding new dependencies/scopes, ALWAYS update the relevant documentation** (typically the `docs/` directory)
+- Update the relevant documentation (typically under `docs/`) when adding
+  features, changing APIs or behavior, or adding dependencies or scopes
 - This includes: new external integrations / scopes, new environment variables, new configuration options, new API endpoints, changed behavior
 - Documentation updates are part of the implementation, not an afterthought — include them in specs and implementation plans from the start
 - If a feature requires external setup (e.g., adding OAuth scopes in a third-party app's settings), document the required steps
