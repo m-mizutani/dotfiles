@@ -28,7 +28,7 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch, 
 
 ### Step 2: コードベースの観察
 
-相談内容に関連するコードを徹底的に調べる。Agent（Explore）を活用して並列に調査すると効率的。
+相談内容に関連するコードを徹底的に調べる。基本は自分で読む。調査対象が広範（複数ディレクトリにまたがる、数十ファイル規模）で、かつ読む作業が単調な場合にのみ Agent（Explore）に並列で委譲する。CLAUDE.mdのSubagent Delegation方針に従い、1体で足りるなら1体に留める。
 
 調べるべきこと：
 - **既存の実装パターン**: 同種の処理がすでにどう実装されているか
