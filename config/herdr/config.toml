@@ -6,6 +6,11 @@ keys.next_workspace = "cmd+]"
 keys.next_tab = ["prefix+n", "ctrl+["]
 keys.previous_tab = ["prefix+p", "ctrl+]"]
 
+keys.focus_pane_left = "cmd+ctrl+h"
+keys.focus_pane_down = "cmd+ctrl+j"
+keys.focus_pane_up = "cmd+ctrl+k"
+keys.focus_pane_right = "cmd+ctrl+l"
+
 [theme]
 name = "tokyo-night"
 auto_switch = false
