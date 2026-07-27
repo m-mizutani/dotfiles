@@ -30,6 +30,14 @@ the same failure (not listening precisely) wastes as much time as a bug.
 - **When a real decision is needed, present named, concrete options — not an open-
   ended "it splits two ways, you decide."** Make the user *choose*, do not make them
   *frame* the question ("A: one repo with cmd/, or B: a separate repo — which?")
+- **Do not voice a proposal you cannot yet state in four one-liners**: the problem,
+  the concrete change, the resulting behavior (before → after), and the main downside.
+  An idea that cannot fill all four is an investigation note, not a proposal — keep
+  investigating instead of presenting it
+- **Do not present both sides when the evidence in hand has already decided.** Offering
+  an option you know contradicts a verified fact or an agreed responsibility boundary
+  "for balance" is abdication, not neutrality — state the one conclusion and the
+  evidence behind it
 - **Do not diagnose from indirect clues when the actual content is available for the
   asking.** If you cannot see a file's contents (sandbox-denied, not provided), ask
   for them — do not infer the cause from the filename or extension and risk sending

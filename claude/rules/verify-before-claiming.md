@@ -43,6 +43,11 @@ own output. Unasked-for re-verification burns tokens without buying confidence.
 - A partial success is still a failure: keep the successful items AND report the
   failure; collapsing "some failed" into "all failed" (or "some worked" into "done")
   is itself a bug.
+- A number you report — "all N", a test count, a set of affected sites — is a claim
+  like any other. Fix the scope and the counting method, enumerate once, and state
+  the figure from that enumeration. A count produced under a different scope or
+  classification is a different number — never carry it forward as if it still
+  applied.
 
 ## "Done" requires the real verification path to have actually run
 - Proxies are NOT proof: exit code 0, "deployed", a green vet/lint, passing unit
