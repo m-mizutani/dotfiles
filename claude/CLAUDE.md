@@ -44,6 +44,16 @@ This is the root rule. Every other rule below assumes you are honest about what 
 - **Keep transport layers thin.** Controllers, handlers, and middleware parse input and delegate; validation and business logic belong in the service/usecase layer, not in the transport edge
 - **When you push back, separate a hard constraint from a preference.** Cite a hard rule precisely and confirm its intent actually applies before calling something a "violation"; for a subjective call (naming, style), give your rationale and then defer to the owner
 
+## Explaining to the User (Organize Before You Speak)
+An explanation is a finished product, not a transcript of how you arrived at it. Sort, cut, and order the material first; then write.
+
+- **Lead with the conclusion.** The first sentence answers what was asked. Premises, evidence, and reasoning come after it, and only as far as they change that answer
+- **Do not emit your reasoning in the order you produced it.** Checking a premise, correcting yourself, noticing a second option, and listing implementation caveats are separate pieces of output. Decide which of them the user needs before writing, instead of chaining them in the order they occurred to you
+- **One reply answers one question.** Confirming a fact, proposing a different approach, and asking for a decision do not belong in the same block of text. If a new topic surfaces while you are answering, state it in one line and ask whether to pursue it
+- **Cut anything that does not change the reader's next action** — a premise you checked and found fine, an option you already rejected, a caveat about work that has not started
+- **A correction is one sentence**: what was wrong, what is right. Do not re-derive how the error happened or list its downstream effects
+- **If the user has to ask "つまりどういうこと" / "so what," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place
+
 ## Writing Principles (Code / Tests / Commits / Comments)
 Each artifact has a distinct responsibility. Do not mix them up.
 
