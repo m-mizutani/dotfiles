@@ -1,10 +1,10 @@
 onboarding = false
 keys.prefix = "ctrl+t"
-keys.previous_workspace = "cmd+["
-keys.next_workspace = "cmd+]"
+keys.previous_workspace = "ctrl+["
+keys.next_workspace = "ctrl+]"
 
-keys.next_tab = ["prefix+n", "ctrl+]"]
-keys.previous_tab = ["prefix+p", "ctrl+["]
+keys.next_tab = ["prefix+n", "cmd+]"]
+keys.previous_tab = ["prefix+p", "cmd+["]
 
 keys.focus_pane_left = "cmd+ctrl+h"
 keys.focus_pane_down = "cmd+ctrl+j"
