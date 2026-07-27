@@ -3,6 +3,9 @@ keys.prefix = "ctrl+t"
 keys.previous_workspace = "cmd+["
 keys.next_workspace = "cmd+]"
 
+keys.next_tab = ["prefix+n", "ctrl+["]
+keys.previous_tab = ["prefix+p", "ctrl+]"]
+
 [theme]
 name = "tokyo-night"
 auto_switch = false
