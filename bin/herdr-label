@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# herdr-label: Set the current herdr tab label, and the pane label too when the
+# caller is running inside a pane.
+#
+# Usage: herdr-label "[impl] 認証バグ修正"
+#
+# Exists so an agent can relabel with one command instead of chaining an env
+# var check, a tab rename, and a pane rename: every extra command shows up in
+# the transcript as noise and needs its own permission rule.
+#
+# Never reports failure. A missing herdr environment, an unresponsive socket, or
+# a stale id is not worth interrupting the caller's real task, so every path
+# stays silent and exits 0.
+
+label="$*"
+
+if [ -z "$label" ]; then
+  exit 0
+fi
+
+if [ -n "${HERDR_TAB_ID:-}" ]; then
+  herdr tab rename "$HERDR_TAB_ID" "$label" >/dev/null 2>&1 || true
+fi
+
+if [ -n "${HERDR_PANE_ID:-}" ]; then
+  herdr pane rename "$HERDR_PANE_ID" "$label" >/dev/null 2>&1 || true
+fi
+
+exit 0

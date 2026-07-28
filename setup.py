@@ -98,6 +98,7 @@ def build_groups() -> list[Group]:
             Link("claude/skills/my-code-review", f"{HOME}/.claude/skills/my-code-review"),
             Link("claude/skills/codex-review", f"{HOME}/.claude/skills/codex-review"),
             Link("claude/skills/reflection", f"{HOME}/.claude/skills/reflection"),
+            Link("claude/skills/herdr-tab-name", f"{HOME}/.claude/skills/herdr-tab-name"),
         ]),
         Group("Ghostty", [
             Link("config/ghostty/config", f"{HOME}/.config/ghostty/config"),
@@ -107,6 +108,7 @@ def build_groups() -> list[Group]:
         ]),
         Group("Bin", [
             Link("bin/gph", f"{HOME}/.local/bin/gph"),
+            Link("bin/herdr-label", f"{HOME}/.local/bin/herdr-label"),
         ]),
     ]
 

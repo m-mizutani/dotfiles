@@ -93,8 +93,9 @@ local-only tools, desktop applications, or standalone batch processes.
 
 ## Terminal Tab Name
 - When starting a new task, update the tab name with the `herdr-tab-name` skill.
-  Do the same when the subject of the work clearly changes. Do not update while
-  continuing the same work
+  Do the same when the subject of the work clearly changes, or when the work
+  stage changes (design → implementation, implementation → addressing review
+  comments). Do not update while continuing the same work at the same stage
 - **If the skill has not run even once in the current session, run it immediately**
   — regardless of where in the session you are or how small the task looks. Only
   after it has run once does the "do not update while continuing the same work"
