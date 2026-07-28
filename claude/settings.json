@@ -115,6 +115,8 @@
       "Bash(kill *)",
       "Bash(pkill *)",
       "Bash(git push *)",
+      "Bash(go build *)",
+      "Bash(*/go build *)",
       "mcp__claude_ai_Slack"
     ],
     "defaultMode": "auto",
@@ -148,8 +150,6 @@
       "Bash(*/fish *)",
       "Bash(dash *)",
       "Bash(*/dash *)",
-      "Bash(go build *)",
-      "Bash(*/go build *)",
       "Bash(curl *)",
       "Bash(*/curl *)",
       "Bash(wget *)",
