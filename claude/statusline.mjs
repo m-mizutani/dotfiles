@@ -50,6 +50,12 @@ process.stdin.on("end", () => {
       parts2.push(`\x1b[33m${short}\x1b[0m`);
     }
 
+    // Pull request. Claude Code sends this field only while an open PR exists for
+    // the current branch, so there is nothing to render for the "no PR" case.
+    if (data.pr?.number) {
+      parts2.push(fmtPr(data.pr));
+    }
+
     // Session duration
     const dur = data.cost?.total_duration_ms;
     if (dur != null) {
@@ -88,6 +94,16 @@ function makeBar(label, pct) {
   const pctStr = pct.toFixed(0).padStart(3) + "%";
 
   return `${label} ${color}${bar}\x1b[0m ${pctStr}`;
+}
+
+function fmtPr(pr) {
+  const marks = {
+    approved: "\x1b[32m ✓\x1b[0m",
+    changes_requested: "\x1b[31m ✗\x1b[0m",
+    draft: "\x1b[2m draft\x1b[0m",
+  };
+  const mark = marks[pr.review_state] ?? "";
+  return `\x1b[35mPR #${pr.number}\x1b[0m${mark}`;
 }
 
 function fmtDuration(ms) {
