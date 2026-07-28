@@ -26,7 +26,8 @@ function fish_user_key_bindings
 end
 
 set -x GO111MODULE auto
-set -x CLAUDE_CODE_DISABLE_TERMINAL_TITLE 1
+# Leave the terminal title to Claude Code: herdr detects the "working" state
+# from the braille spinner it writes there (osc_title_working rule).
 set -x CLAUDE_CODE_NO_FLICKER 1
 
 if test -e $HOME/local/bin

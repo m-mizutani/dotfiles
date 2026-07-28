@@ -14,3 +14,6 @@ keys.focus_pane_right = "cmd+ctrl+l"
 [theme]
 name = "tokyo-night"
 auto_switch = false
+
+[ui.toast]
+delivery = "herdr"
