@@ -87,6 +87,7 @@
       "Bash(go doc:*)",
       "Bash(go add:*)",
       "Bash(go checkout:*)",
+      "Bash(herdr tab rename:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
@@ -182,6 +183,7 @@
       "bq:*",
       "npx difit:*",
       "mo:*",
+      "herdr tab rename:*",
       "task:*",
       "zenv:*"
     ],

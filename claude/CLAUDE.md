@@ -91,6 +91,11 @@ local-only tools, desktop applications, or standalone batch processes.
 - Run a standalone task in the foreground. When the time saving is uncertain,
   prefer the foreground
 
+## Terminal Tab Name
+- When starting a new task, update the tab name with the `herdr-tab-name` skill.
+  Do the same when the subject of the work clearly changes. Do not update while
+  continuing the same work
+
 ## Directory
 - When the user mentions the `tmp` directory, resolve it as `./tmp` from the
   repository root rather than `/tmp`
