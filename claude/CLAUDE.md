@@ -95,6 +95,10 @@ local-only tools, desktop applications, or standalone batch processes.
 - When starting a new task, update the tab name with the `herdr-tab-name` skill.
   Do the same when the subject of the work clearly changes. Do not update while
   continuing the same work
+- **If the skill has not run even once in the current session, run it immediately**
+  — regardless of where in the session you are or how small the task looks. Only
+  after it has run once does the "do not update while continuing the same work"
+  rule apply
 
 ## Directory
 - When the user mentions the `tmp` directory, resolve it as `./tmp` from the
