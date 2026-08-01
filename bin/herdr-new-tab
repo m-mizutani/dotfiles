@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+# herdr-new-tab: Open a herdr tab that starts in the main repository root when
+# the source pane sits in a linked git worktree, and in the source pane's
+# directory otherwise.
+#
+# Bound to the new-tab key in config.toml because herdr's terminal.new_cwd is a
+# single global policy: it cannot branch on tab-vs-pane or on the git state of
+# the source directory. Splits keep using new_cwd = "follow", so a new pane
+# stays inside the same worktree without any wrapper.
+#
+# The source directory is read from the focused pane rather than from
+# HERDR_PANE_ID: a key-bound shell command runs detached, so the pane it belongs
+# to is not guaranteed to be visible in its environment.
+#
+# Every unexpected condition falls back to a plain tab instead of guessing a
+# directory, so a failed lookup still leaves a usable tab.
+
+set -uo pipefail
+
+source_cwd=$(herdr pane list 2>/dev/null |
+  jq -r 'first(.result.panes[] | select(.focused == true) | .cwd) // empty' 2>/dev/null)
+
+if [ -z "$source_cwd" ] || [ ! -d "$source_cwd" ]; then
+  herdr tab create --focus >/dev/null 2>&1 || true
+  exit 0
+fi
+
+target="$source_cwd"
+
+git_dir=$(git -C "$source_cwd" rev-parse --path-format=absolute --git-dir 2>/dev/null)
+common_dir=$(git -C "$source_cwd" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)
+
+# The two paths differ only inside a linked worktree, where the common dir
+# belongs to the main checkout. Its parent is the main working tree unless the
+# main repository is bare, hence the toplevel check before adopting it.
+if [ -n "$git_dir" ] && [ -n "$common_dir" ] && [ "$git_dir" != "$common_dir" ]; then
+  main_root=$(dirname "$common_dir")
+  main_toplevel=$(git -C "$main_root" rev-parse --path-format=absolute --show-toplevel 2>/dev/null)
+  if [ "$main_toplevel" = "$main_root" ]; then
+    target="$main_root"
+  fi
+fi
+
+herdr tab create --cwd "$target" --focus >/dev/null 2>&1 || true
+exit 0

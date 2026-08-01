@@ -11,9 +11,22 @@ keys.focus_pane_down = "cmd+ctrl+j"
 keys.focus_pane_up = "cmd+ctrl+k"
 keys.focus_pane_right = "cmd+ctrl+l"
 
+# The built-in new tab always uses terminal.new_cwd, a single global policy that
+# cannot pick a directory from the source pane's git state. Release the key so
+# herdr-new-tab can open the tab in the main repository root instead.
+keys.new_tab = ""
+
+[[keys.command]]
+key = "prefix+c"
+type = "shell"
+command = "herdr-new-tab"
+
 [theme]
 name = "tokyo-night"
 auto_switch = false
+
+[ui]
+prompt_new_tab_name = false
 
 [ui.toast]
 delivery = "herdr"
