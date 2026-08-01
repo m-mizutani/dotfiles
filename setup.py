@@ -109,6 +109,7 @@ def build_groups() -> list[Group]:
         Group("Bin", [
             Link("bin/gph", f"{HOME}/.local/bin/gph"),
             Link("bin/herdr-label", f"{HOME}/.local/bin/herdr-label"),
+            Link("bin/herdr-new-tab", f"{HOME}/.local/bin/herdr-new-tab"),
         ]),
     ]
 
