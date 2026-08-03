@@ -1,0 +1,214 @@
+#!/usr/bin/env bash
+
+# codex-worktree: Start a Codex session inside a fresh git worktree of the
+# current repository, the way `claude --worktree` does for Claude Code.
+#
+# Codex has no worktree option of its own, so the pieces `claude --worktree`
+# bundles have to be assembled here: cut the worktree from the checkout you are
+# looking at, link the untracked scratch directories that are shared with the
+# main checkout, and launch codex with its working directory inside the result.
+#
+# Worktrees live under <main checkout>/.codex/worktrees/ so that a single
+# gitignore entry hides all of them, mirroring the .claude/worktrees layout
+# already in use. Codex reads project-level skills from <repo>/.codex/skills
+# only, so checkouts placed next to that directory are not picked up as skills.
+#
+# Codex trusts projects by absolute path (`[projects."<path>"]` in
+# config.toml), so a brand-new worktree path is not covered by the trust granted
+# to the main checkout and codex may ask about it on the first run. That
+# question is left to the user on purpose: this script does not write trust
+# entries.
+#
+# Usage:
+#   codex-worktree                          # random name, then start codex
+#   codex-worktree my-feature               # explicit name
+#   codex-worktree my-feature -- --search   # everything after -- goes to codex
+#   codex-worktree list                     # show existing worktrees
+#   codex-worktree rm my-feature            # remove one (keeps its branch)
+
+set -euo pipefail
+
+# Untracked directories shared with the main checkout, linked into every new
+# worktree. Matches Claude Code's worktree.symlinkDirectories setting.
+SYMLINK_DIRS=(tmp)
+
+ADJECTIVES=(bright calm clever eager fluent gentle humble keen lucid modest
+  patient quiet rapid solid steady vivid warm witty)
+GERUNDS=(basking blooming charting drifting gliding humming mapping polishing
+  roaming sailing sketching soaring sprouting stirring tracing weaving)
+NOUNS=(anchor beacon canyon delta ember harbor lantern meadow orchard prairie
+  quarry ridge summit thicket valley willow)
+
+die() {
+  printf 'codex-worktree: %s\n' "$1" >&2
+  exit 1
+}
+
+usage() {
+  cat <<'EOF'
+Usage:
+  codex-worktree [name] [-- codex-args...]   create a worktree and start codex
+  codex-worktree list                        show existing worktrees
+  codex-worktree rm <name>                   remove a worktree (keeps branch)
+EOF
+}
+
+# Resolves the main checkout even when called from inside a linked worktree:
+# there the common dir belongs to the main checkout, so its parent is that
+# checkout unless the repository is bare.
+main_root() {
+  local common root toplevel
+  common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) ||
+    die 'not inside a git repository'
+  root=$(dirname "$common")
+  toplevel=$(git -C "$root" rev-parse --path-format=absolute --show-toplevel 2>/dev/null) ||
+    die "cannot locate the main working tree (bare repository at $root?)"
+  [ "$toplevel" = "$root" ] ||
+    die "cannot locate the main working tree (got $toplevel for $root)"
+  printf '%s' "$root"
+}
+
+random_name() {
+  printf '%s-%s-%s' \
+    "${ADJECTIVES[RANDOM % ${#ADJECTIVES[@]}]}" \
+    "${GERUNDS[RANDOM % ${#GERUNDS[@]}]}" \
+    "${NOUNS[RANDOM % ${#NOUNS[@]}]}"
+}
+
+branch_exists() {
+  git -C "$1" show-ref --verify --quiet "refs/heads/$2"
+}
+
+cmd_create() {
+  local root name path branch start_point tries
+  root=$(main_root)
+
+  name=""
+  if [ $# -gt 0 ] && [ "$1" != "--" ] && [ "${1#-}" = "$1" ]; then
+    name=$1
+    shift
+  fi
+  if [ "${1:-}" = "--" ]; then
+    shift
+  fi
+
+  if [ -n "$name" ]; then
+    case "$name" in
+      *[!a-zA-Z0-9._-]* | .* | -*)
+        die "invalid worktree name: $name (use letters, digits, . _ -)"
+        ;;
+    esac
+    if [ -e "$root/.codex/worktrees/$name" ]; then
+      die "worktree already exists: $root/.codex/worktrees/$name"
+    fi
+    if branch_exists "$root" "worktree-$name"; then
+      die "branch already exists: worktree-$name"
+    fi
+  else
+    tries=0
+    while :; do
+      name=$(random_name)
+      if [ ! -e "$root/.codex/worktrees/$name" ] &&
+        ! branch_exists "$root" "worktree-$name"; then
+        break
+      fi
+      tries=$((tries + 1))
+      [ "$tries" -lt 20 ] || die 'could not find an unused random name'
+    done
+  fi
+
+  command -v codex >/dev/null 2>&1 || die 'codex is not on PATH'
+
+  # Branch from what the caller is looking at, not from the main checkout's
+  # HEAD, so running this from a feature branch keeps that history.
+  start_point=$(git rev-parse HEAD 2>/dev/null) ||
+    die 'the current HEAD has no commit to branch from'
+
+  path="$root/.codex/worktrees/$name"
+  branch="worktree-$name"
+
+  mkdir -p "$root/.codex/worktrees"
+  git -C "$root" worktree add -b "$branch" "$path" "$start_point" >/dev/null
+
+  local dir
+  for dir in "${SYMLINK_DIRS[@]}"; do
+    if [ -d "$root/$dir" ] && [ ! -e "$path/$dir" ]; then
+      ln -s "$root/$dir" "$path/$dir"
+    fi
+  done
+
+  printf 'worktree %s\nbranch   %s\nbase     %s\n\n' \
+    "$path" "$branch" "$(git -C "$root" rev-parse --short "$start_point")"
+
+  cd "$path"
+  exec codex "$@"
+}
+
+cmd_list() {
+  local root base path name branch state
+  root=$(main_root)
+  base="$root/.codex/worktrees"
+
+  if [ ! -d "$base" ]; then
+    printf 'no worktrees under %s\n' "$base"
+    return 0
+  fi
+
+  local found=0
+  for path in "$base"/*; do
+    [ -d "$path" ] || continue
+    found=1
+    name=$(basename "$path")
+    branch=$(git -C "$path" rev-parse --abbrev-ref HEAD 2>/dev/null || printf '?')
+    if [ -n "$(git -C "$path" status --porcelain 2>/dev/null)" ]; then
+      state='modified'
+    else
+      state='clean'
+    fi
+    printf '%-32s %-40s %s\n' "$name" "$branch" "$state"
+  done
+
+  [ "$found" -eq 1 ] || printf 'no worktrees under %s\n' "$base"
+}
+
+# Removes the checkout only. The branch is left behind because deleting it can
+# discard commits, and a clean worktree holds nothing that the branch does not.
+cmd_rm() {
+  local root name path branch
+  [ $# -eq 1 ] || die 'usage: codex-worktree rm <name>'
+  name=$1
+  root=$(main_root)
+  path="$root/.codex/worktrees/$name"
+
+  [ -d "$path" ] || die "no such worktree: $path"
+
+  if [ -n "$(git -C "$path" status --porcelain 2>/dev/null)" ]; then
+    printf 'codex-worktree: %s has uncommitted changes:\n' "$name" >&2
+    git -C "$path" status --short >&2
+    die 'commit or discard them first; nothing was removed'
+  fi
+
+  branch=$(git -C "$path" rev-parse --abbrev-ref HEAD 2>/dev/null || printf '?')
+  git -C "$root" worktree remove "$path"
+
+  printf 'removed %s\n' "$path"
+  printf 'branch %s is kept; delete it with: git -C %s branch -d %s\n' \
+    "$branch" "$root" "$branch"
+}
+
+case "${1:-}" in
+  list)
+    shift
+    cmd_list "$@"
+    ;;
+  rm)
+    shift
+    cmd_rm "$@"
+    ;;
+  -h | --help | help)
+    usage
+    ;;
+  *)
+    cmd_create "$@"
+    ;;
+esac
