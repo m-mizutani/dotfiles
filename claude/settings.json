@@ -108,13 +108,9 @@
     "ask": [
       "Bash(rm *)",
       "Bash(mv *)",
-      "Bash(cp *)",
-      "Bash(sed *)",
       "Bash(npx *)",
       "Bash(git -C *)",
       "Bash(chmod *)",
-      "Bash(kill *)",
-      "Bash(pkill *)",
       "Bash(git push *)",
       "Bash(go build *)",
       "Bash(*/go build *)",
