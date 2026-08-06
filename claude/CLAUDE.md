@@ -171,3 +171,5 @@ Informal, non-committed artifacts (planning notes, design memos, scratch docs) i
 - **Never `--amend` or force-push a commit that has already been pushed, unless explicitly asked.** Add new commits so the reviewer-visible history is preserved
 - Follow Semantic Commit format: `<type>: <subject>` (types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `style`, `perf`)
 - Keep PR titles short (under 70 characters); use the body for details
+- **When a change is split into multiple PRs, they MUST be stacked PRs.** Each PR after the first sets its base to the previous PR's branch (`gh pr create --base <previous-branch>`), never the default branch, so each diff shows only its own change. Never open parallel PRs from the default branch for parts of one split change
+- In each stacked PR's description, state its position in the stack and its base branch, and list the other PRs in the stack in merge order
