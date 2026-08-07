@@ -109,7 +109,6 @@
       "Bash(rm *)",
       "Bash(mv *)",
       "Bash(npx *)",
-      "Bash(git -C *)",
       "Bash(chmod *)",
       "Bash(git push *)",
       "Bash(go build *)",
