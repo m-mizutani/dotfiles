@@ -48,7 +48,6 @@ keybind = ctrl+z=toggle_split_zoom
 
 keybind = ctrl+cmd+equal=equalize_splits
 
-macos-titlebar-style = tabs
 
 quick-terminal-position = "center"
 quick-terminal-screen = "main"
@@ -56,4 +55,7 @@ quick-terminal-animation-duration = 0.3
 keybind = "global:shift+ctrl+enter=toggle_quick_terminal"
 
 term = xterm-256color
+
+# macos-titlebar-style = tabs
+macos-titlebar-style = hidden
 
