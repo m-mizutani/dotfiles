@@ -30,3 +30,7 @@ prompt_new_tab_name = false
 
 [ui.toast]
 delivery = "herdr"
+
+[experimental]
+switch_ascii_input_source_in_prefix = true
+
