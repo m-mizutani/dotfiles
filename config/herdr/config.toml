@@ -22,12 +22,13 @@ type = "shell"
 command = "herdr-new-tab"
 
 [theme]
-name = "nord"
+name = "one-dark"
 auto_switch = false
 
 [ui]
 prompt_new_tab_name = false
 
+agent_panel_sort = "spaces"
 [ui.toast]
 delivery = "herdr"
 
