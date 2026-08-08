@@ -22,7 +22,7 @@ type = "shell"
 command = "herdr-new-tab"
 
 [theme]
-name = "tokyo-night"
+name = "nord"
 auto_switch = false
 
 [ui]
