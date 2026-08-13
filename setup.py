@@ -91,6 +91,7 @@ def build_groups() -> list[Group]:
             Link("claude/worktree-guard.mjs", f"{HOME}/.claude/worktree-guard.mjs"),
             Link("claude/skills/check-pr", f"{HOME}/.claude/skills/check-pr"),
             Link("claude/skills/dev", f"{HOME}/.claude/skills/dev"),
+            Link("claude/skills/implement", f"{HOME}/.claude/skills/implement"),
             Link("claude/skills/brainstorm", f"{HOME}/.claude/skills/brainstorm"),
             Link("claude/skills/open-mo", f"{HOME}/.claude/skills/open-mo"),
             Link("claude/skills/difit", f"{HOME}/.claude/skills/difit"),
