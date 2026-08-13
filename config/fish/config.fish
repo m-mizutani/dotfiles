@@ -29,7 +29,7 @@ set -x GO111MODULE auto
 # Leave the terminal title to Claude Code: herdr detects the "working" state
 # from the braille spinner it writes there (osc_title_working rule).
 set -x CLAUDE_CODE_NO_FLICKER 1
-set -x ZENV_REDACT 1
+# set -x ZENV_REDACT 1
 
 if test -e $HOME/local/bin
   set -x PATH $HOME/local/bin $PATH
