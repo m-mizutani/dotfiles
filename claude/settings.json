@@ -12,6 +12,7 @@
       "WebSearch",
       "Bash(npm run lint)",
       "Bash(npm run test:*)",
+      "Bash(go commit:*)",
       "Bash(go test:*)",
       "Bash(go run:*)",
       "Bash(go mod:*)",
