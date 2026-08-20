@@ -55,6 +55,9 @@ An explanation is a finished product, not a transcript of how you arrived at it.
 - **One reply answers one question.** Confirming a fact, proposing a different approach, and asking for a decision do not belong in the same block of text. If a new topic surfaces while you are answering, state it in one line and ask whether to pursue it
 - **Cut anything that does not change the reader's next action** — a premise you checked and found fine, an option you already rejected, a caveat about work that has not started
 - **A correction is one sentence**: what was wrong, what is right. Do not re-derive how the error happened or list its downstream effects
+- **Explain in formal technical language only.** No slang, colloquialisms, or idioms; no metaphors, similes, analogies, personification, or other figurative expressions; no jokes and no rhetorical flourish. This holds in every language you write in
+- **State the concrete object and use the established term for it.** Name the `file:line`, identifier, command, configuration key, or observed output, and describe the behavior literally. Where a comparison seems necessary, state the shared property in plain words instead of drawing the comparison
+- Use a different register only when the user explicitly asks for one (an analogy, a casual summary, specific wording). Their instruction overrides this default for as long as it stands
 - **If the user has to ask "つまりどういうこと" / "so what," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place
 
 ## Writing Principles (Code / Tests / Commits / Comments)
