@@ -3,8 +3,6 @@ tap "argoproj/tap"
 tap "cue-lang/tap"
 tap "delphinus/sfmono-square"
 tap "hashicorp/tap"
-tap "homebrew/bundle"
-tap "homebrew/services"
 tap "k1low/tap", "https://github.com/k1LoW/homebrew-tap"
 tap "m-mizutani/tap"
 tap "manaflow-ai/cmux"
@@ -31,8 +29,6 @@ brew "fish"
 brew "fnox"
 # GitHub command-line tool
 brew "gh"
-# Image format providing lossless and lossy compression for web images
-brew "webp"
 # Remote repository management made easy
 brew "ghq"
 # Audit git repos for secrets
@@ -97,6 +93,8 @@ brew "tree"
 brew "trivy"
 # Find and verify credentials
 brew "trufflehog"
+# Image format providing lossless and lossy compression for web images
+brew "webp"
 # Enhanced env command to manage environment variables in CLI
 brew "m-mizutani/tap/zenv", trusted: true
 # Command-line interface for 1Password
@@ -111,5 +109,13 @@ cask "codex"
 cask "devtunnel"
 # Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Desktop automation application
+cask "hammerspoon"
+# Control your tools with a few keystrokes
+cask "raycast"
+# Move and resize windows using keyboard shortcuts or snap areas
+cask "rectangle"
+# System monitor for the menu bar
+cask "stats"
 # Developer experience toolkit used to check, test, merge, and monitor code
 cask "trunk-io"
