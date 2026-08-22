@@ -147,3 +147,10 @@ if not string match -q -- "$PNPM_HOME/bin" $PATH
   set -gx PATH "$PNPM_HOME/bin" $PATH
 end
 # pnpm end
+
+set --universal hydro_color_pwd 8aadf4
+set --universal hydro_color_git a6da95
+set --universal hydro_color_prompt c6a0f6 --bold
+set --universal hydro_color_duration eed49f
+set --universal hydro_color_error ed8796
+
