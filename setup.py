@@ -63,6 +63,7 @@ def build_groups() -> list[Group]:
             Link("config/fish/config.fish", f"{HOME}/.config/fish/config.fish"),
             Link("config/fish/functions/fish_title.fish", f"{HOME}/.config/fish/functions/fish_title.fish"),
             Link("config/fish/functions/wcd.fish", f"{HOME}/.config/fish/functions/wcd.fish"),
+            Link("config/fish/completions/cwr.fish", f"{HOME}/.config/fish/completions/cwr.fish"),
         ]),
         Group("Emacs", [
             Link("emacs.d/init.el", f"{HOME}/.emacs.d/init.el"),
@@ -116,6 +117,7 @@ def build_groups() -> list[Group]:
             Link("bin/herdr-label", f"{HOME}/.local/bin/herdr-label"),
             Link("bin/herdr-new-tab", f"{HOME}/.local/bin/herdr-new-tab"),
             Link("bin/codex-worktree", f"{HOME}/.local/bin/codex-worktree"),
+            Link("bin/cwr", f"{HOME}/.local/bin/cwr"),
         ]),
     ]
 

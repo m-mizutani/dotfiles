@@ -1,0 +1,155 @@
+#!/usr/bin/env bash
+
+# cwr: Resume the Claude Code session of a worktree created by `claude --worktree`,
+# without leaving the main checkout.
+#
+# `claude --worktree <name> --continue` already does the whole job: passing a name
+# that already exists reuses that worktree instead of creating a new one, and
+# --continue resolves the session from the resulting working directory, so the
+# caller never has to cd. The only missing piece is the name, because
+# `claude --worktree` generates a random one. This script supplies it: it lists
+# the worktrees, feeds shell completion, and defaults to the one used most
+# recently.
+#
+# Usage:
+#   cwr                        resume the most recently used worktree
+#   cwr <name>                 resume that worktree
+#   cwr <name> -- <args...>    extra arguments passed to claude
+#   cwr list                   show the worktrees and their last session time
+#   cwr --complete             name<TAB>description lines for shell completion
+
+set -euo pipefail
+
+WORKTREE_SUBDIR=.claude/worktrees
+PROJECTS_DIR="$HOME/.claude/projects"
+
+die() {
+  printf 'cwr: %s\n' "$1" >&2
+  exit 1
+}
+
+usage() {
+  cat <<'EOF'
+Usage:
+  cwr [name] [-- claude-args...]   resume a worktree session (default: most recent)
+  cwr list                         show worktrees and their last session time
+EOF
+}
+
+# Resolves the main checkout even when called from inside a linked worktree:
+# there the common dir belongs to the main checkout, so its parent is that
+# checkout unless the repository is bare.
+main_root() {
+  local common root toplevel
+  common=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null) ||
+    die 'not inside a git repository'
+  root=$(dirname "$common")
+  toplevel=$(git -C "$root" rev-parse --path-format=absolute --show-toplevel 2>/dev/null) ||
+    die "cannot locate the main working tree (bare repository at $root?)"
+  [ "$toplevel" = "$root" ] ||
+    die "cannot locate the main working tree (got $toplevel for $root)"
+  printf '%s' "$root"
+}
+
+# Claude Code keeps one session log directory per working directory, named after
+# that path with the separators folded into '-'. Only ordering and the listing
+# depend on this derivation; the resume itself goes through `claude --continue`,
+# so a derivation that stops matching degrades to a worktree-mtime timestamp
+# instead of resuming the wrong session.
+project_dir_for() {
+  printf '%s/%s' "$PROJECTS_DIR" "$(printf '%s' "$1" | tr -C 'A-Za-z0-9-' '-')"
+}
+
+last_activity_epoch() {
+  local path="$1" project newest
+  project=$(project_dir_for "$path")
+  if [ -d "$project" ]; then
+    newest=$(ls -t "$project"/*.jsonl 2>/dev/null | head -1 || true)
+    if [ -n "$newest" ]; then
+      stat -f %m "$newest"
+      return
+    fi
+  fi
+  stat -f %m "$path"
+}
+
+# epoch<TAB>name<TAB>branch, most recent first.
+list_entries() {
+  local root base path name branch epoch
+  root=$(main_root)
+  base="$root/$WORKTREE_SUBDIR"
+  [ -d "$base" ] || return 0
+
+  for path in "$base"/*; do
+    [ -d "$path" ] || continue
+    name=$(basename "$path")
+    branch=$(git -C "$path" rev-parse --abbrev-ref HEAD 2>/dev/null || printf '?')
+    epoch=$(last_activity_epoch "$path")
+    printf '%s\t%s\t%s\n' "$epoch" "$name" "$branch"
+  done | sort -rn
+}
+
+cmd_list() {
+  local entries epoch name branch
+  entries=$(list_entries)
+  if [ -z "$entries" ]; then
+    printf 'no worktrees under %s/%s\n' "$(main_root)" "$WORKTREE_SUBDIR"
+    return 0
+  fi
+  while IFS=$'\t' read -r epoch name branch; do
+    printf '%-32s %-40s %s\n' "$name" "$branch" "$(date -r "$epoch" '+%Y-%m-%d %H:%M')"
+  done <<<"$entries"
+}
+
+# Completion runs on every TAB press, including outside a repository, so any
+# failure has to stay silent rather than printing into the command line.
+cmd_complete() {
+  local epoch name branch
+  while IFS=$'\t' read -r epoch name branch; do
+    [ -n "$name" ] || continue
+    printf '%s\t%s %s\n' "$name" "$branch" "$(date -r "$epoch" '+%m-%d %H:%M')"
+  done < <(list_entries 2>/dev/null || true)
+}
+
+cmd_resume() {
+  local root name path
+
+  name=""
+  if [ $# -gt 0 ] && [ "$1" != "--" ]; then
+    name=$1
+    shift
+  fi
+  if [ "${1:-}" = "--" ]; then
+    shift
+  fi
+
+  root=$(main_root)
+
+  if [ -z "$name" ]; then
+    name=$(list_entries | head -1 | cut -f2)
+    [ -n "$name" ] || die "no worktree under $root/$WORKTREE_SUBDIR"
+  fi
+
+  path="$root/$WORKTREE_SUBDIR/$name"
+  [ -d "$path" ] || die "no such worktree: $path"
+
+  command -v claude >/dev/null 2>&1 || die 'claude is not on PATH'
+
+  exec claude --worktree "$name" --continue "$@"
+}
+
+case "${1:-}" in
+  list)
+    shift
+    cmd_list "$@"
+    ;;
+  --complete)
+    cmd_complete
+    ;;
+  -h | --help | help)
+    usage
+    ;;
+  *)
+    cmd_resume "$@"
+    ;;
+esac
