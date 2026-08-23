@@ -101,6 +101,7 @@ def build_groups() -> list[Group]:
             Link("claude/skills/codex-review", f"{HOME}/.claude/skills/codex-review"),
             Link("claude/skills/reflection", f"{HOME}/.claude/skills/reflection"),
             Link("claude/skills/herdr-tab-name", f"{HOME}/.claude/skills/herdr-tab-name"),
+            Link("claude/skills/build-review-report", f"{HOME}/.claude/skills/build-review-report"),
         ]),
         Group("Codex", [
             Link("codex/AGENTS.md", f"{HOME}/.codex/AGENTS.md"),

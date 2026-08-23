@@ -1,0 +1,290 @@
+<title>{{変更の主題}} レビューレポート</title>
+<style>
+  /* ライトを基準に全トークンを定義する。ダークは後続ブロックで値だけ差し替える */
+  :root {
+    --bg: #ffffff;
+    --surface: #f5f6f8;
+    --fg: #1a1d21;
+    --fg-dim: #5d646c;
+    --border: #dfe3e8;
+    --edge: #8f979f;
+    --st-ok: #2f7d54;        --st-ok-bg: #e7f3ec;
+    --st-weak: #a9720f;      --st-weak-bg: #fbf1de;
+    --st-deferred: #6b7280;  --st-deferred-bg: #eceef1;
+    --st-missing: #bc2f2f;   --st-missing-bg: #fbe9e9;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16191d;
+      --surface: #1f242a;
+      --fg: #e6e9ed;
+      --fg-dim: #9aa2ab;
+      --border: #2f363d;
+      --edge: #7d858e;
+      --st-ok: #5fbe89;        --st-ok-bg: #1b2f24;
+      --st-weak: #dfa640;      --st-weak-bg: #332914;
+      --st-deferred: #9aa2ab;  --st-deferred-bg: #262b31;
+      --st-missing: #ef7676;   --st-missing-bg: #331d1d;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16191d;
+    --surface: #1f242a;
+    --fg: #e6e9ed;
+    --fg-dim: #9aa2ab;
+    --border: #2f363d;
+    --edge: #7d858e;
+    --st-ok: #5fbe89;        --st-ok-bg: #1b2f24;
+    --st-weak: #dfa640;      --st-weak-bg: #332914;
+    --st-deferred: #9aa2ab;  --st-deferred-bg: #262b31;
+    --st-missing: #ef7676;   --st-missing-bg: #331d1d;
+  }
+
+  body { background: var(--bg); color: var(--fg); }
+  .rr {
+    max-width: 60rem; margin: 0 auto; padding: 1.5rem 1.2rem 4rem;
+    line-height: 1.75;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  }
+  .rr h1 { font-size: 1.6rem; margin: 0 0 .4rem; }
+  .rr h2 {
+    font-size: 1.2rem; margin: 2.6rem 0 .8rem;
+    padding-bottom: .3rem; border-bottom: 1px solid var(--border);
+  }
+  .rr h3 { font-size: 1rem; margin: 1.6rem 0 .5rem; }
+  .rr .target {
+    color: var(--fg-dim); font-size: .9rem; margin: 0 0 1.6rem;
+  }
+  .rr code {
+    background: var(--surface); padding: .1rem .35rem; border-radius: 3px;
+    font-size: .88em;
+  }
+  .rr pre {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 6px; padding: .7rem .9rem; overflow-x: auto;
+    font-size: .84rem; line-height: 1.6;
+  }
+  .rr pre code { background: none; padding: 0; }
+  .rr mark {
+    background: var(--st-ok-bg); color: var(--fg);
+    outline: 1px solid var(--st-ok); border-radius: 2px;
+  }
+
+  /* 第1層の総括。3つの問いを並置し、どれも読み飛ばされないようにする */
+  .sum { display: grid; gap: .9rem; margin: 1.2rem 0 2rem; }
+  .sum > div {
+    border-left: 4px solid var(--border); background: var(--surface);
+    padding: .7rem 1rem; border-radius: 0 5px 5px 0;
+  }
+  .sum h3 { margin: 0 0 .3rem; font-size: .95rem; color: var(--fg-dim); }
+  .sum p { margin: 0; }
+
+  /* 図 */
+  figure.dia { margin: 1.4rem 0; }
+  figure.dia svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  figure.dia figcaption {
+    color: var(--fg-dim); font-size: .84rem; margin-top: .5rem; text-align: center;
+  }
+  svg .n { fill: var(--fg); font-size: 12.5px; font-weight: 600; }
+  svg .s { fill: var(--fg-dim); font-size: 11px; }
+
+  /* 充足度の帯 */
+  .bar {
+    display: flex; height: 2.2rem; border-radius: 5px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .bar .seg {
+    display: flex; align-items: center; justify-content: center;
+    font-size: .82rem; font-weight: 700; min-width: 1.6rem;
+  }
+  .seg.ok       { background: var(--st-ok-bg);       color: var(--st-ok); }
+  .seg.weak     { background: var(--st-weak-bg);     color: var(--st-weak); }
+  .seg.deferred { background: var(--st-deferred-bg); color: var(--st-deferred); }
+  .seg.missing  { background: var(--st-missing-bg);  color: var(--st-missing); }
+
+  /* 凡例。色と枠線の意味が伝わらない図は認知負荷を上げるだけなので必ず添える */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: .5rem 1.1rem;
+    font-size: .82rem; color: var(--fg-dim); margin: .8rem 0 0;
+    padding: .6rem .8rem; background: var(--surface); border-radius: 5px;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: .35rem; }
+  .legend i {
+    width: .9rem; height: .9rem; border-radius: 3px; display: inline-block;
+    border: 1.5px solid currentColor;
+  }
+  .legend .l-ok       { color: var(--st-ok); }
+  .legend .l-ok i     { background: var(--st-ok-bg); }
+  .legend .l-weak     { color: var(--st-weak); }
+  .legend .l-weak i   { background: var(--st-weak-bg); }
+  .legend .l-def      { color: var(--st-deferred); }
+  .legend .l-def i    { background: var(--st-deferred-bg); }
+  .legend .l-mis      { color: var(--st-missing); }
+  .legend .l-mis i    { background: var(--st-missing-bg); }
+
+  /* 表。幅の広い表は表だけを横スクロールさせ、ページ本体は横に流さない */
+  .tw { overflow-x: auto; margin: 1rem 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .89rem; }
+  th, td {
+    border: 1px solid var(--border); padding: .45rem .6rem;
+    text-align: left; vertical-align: top;
+  }
+  th { background: var(--surface); font-weight: 600; white-space: nowrap; }
+  table.mx tr.r-ok       td:first-child { border-left: 4px solid var(--st-ok); }
+  table.mx tr.r-weak     td:first-child { border-left: 4px solid var(--st-weak); }
+  table.mx tr.r-deferred td:first-child { border-left: 4px solid var(--st-deferred); }
+  table.mx tr.r-missing  td:first-child { border-left: 4px solid var(--st-missing); }
+  table.mx tr.r-ok       { background: var(--st-ok-bg); }
+  table.mx tr.r-weak     { background: var(--st-weak-bg); }
+  table.mx tr.r-deferred { background: var(--st-deferred-bg); }
+  table.mx tr.r-missing  { background: var(--st-missing-bg); }
+
+  /* before/after 対比 */
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: .9rem; }
+  @media (max-width: 44rem) { .ba { grid-template-columns: 1fr; } }
+  .ba-col h4 { margin: 0 0 .35rem; font-size: .85rem; color: var(--fg-dim); }
+
+  /* 第4層の項目 */
+  .item {
+    border: 1px solid var(--border); border-left-width: 4px;
+    border-radius: 0 5px 5px 0; padding: .7rem .9rem; margin: .8rem 0;
+    background: var(--surface);
+  }
+  .item.missing  { border-left-color: var(--st-missing); }
+  .item.weak     { border-left-color: var(--st-weak); }
+  .item.deferred { border-left-color: var(--st-deferred); }
+  .item h4 { margin: 0 0 .35rem; font-size: .95rem; }
+  .item dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: .1rem .7rem; font-size: .86rem; }
+  .item dt { color: var(--fg-dim); white-space: nowrap; }
+  .item dd { margin: 0; }
+</style>
+
+<article class="rr">
+  <h1>{{変更の主題}} レビューレポート</h1>
+  <p class="target">
+    対象: {{ブランチ名 / PR番号}} — {{基準}} からの差分 {{N}} ファイル{{（＋未コミット分）}} ／
+    検証要求の導出根拠: {{spec あり: .spec/{slug}/spec.html ＋ 変更の性質 | spec なし: 変更の性質のみ}}
+  </p>
+
+  <!-- ============ 第1層: 総括と図 ============ -->
+  <h2>1. 総括</h2>
+  <div class="sum">
+    <div>
+      <h3>何がどう変わったか</h3>
+      <p>{{観測できる挙動の変化として3〜5行。差分の要約ではなく「入力 A に対する結果が B から C に変わった」の形}}</p>
+    </div>
+    <div>
+      <h3>検証が届いている範囲</h3>
+      <p>{{このテスト群が通ることで何を信じてよいかの宣言。個別のテスト内容ではない}}</p>
+    </div>
+    <div>
+      <h3>届いていない範囲</h3>
+      <p>{{点の列挙ではなく傾向として。意図的な見送りと未判断の欠落を区別して書く}}</p>
+    </div>
+  </div>
+
+  <!-- 構造を示す図（変更の形に応じて 図A / 図C / 図D / 図E から1枚を選ぶ。
+       references/diagrams.md の選択基準に従う） -->
+  <figure class="dia">
+    {{構造を示す図}}
+    <figcaption>{{図の説明。太枠は本変更で変わった箇所、破線は変わっていないが影響を受ける箇所}}</figcaption>
+  </figure>
+
+  <!-- 分布を示す図（必ず置く） -->
+  <figure class="dia">
+    <div class="bar" role="img" aria-label="要求される検証{{N}}件のうち、検証済み{{a}}件、弱い{{b}}件、見送り{{c}}件、欠落{{d}}件">
+      <span class="seg ok"       style="flex:{{a}}">{{a}}</span>
+      <span class="seg weak"     style="flex:{{b}}">{{b}}</span>
+      <span class="seg deferred" style="flex:{{c}}">{{c}}</span>
+      <span class="seg missing"  style="flex:{{d}}">{{d}}</span>
+    </div>
+    <figcaption>要求される検証 {{N}} 件の内訳</figcaption>
+  </figure>
+
+  <div class="legend">
+    <span class="l-ok"><i></i>検証済み（値まで検証し、壊れたら落ちる）</span>
+    <span class="l-weak"><i></i>弱い（存在するが壊れても落ちない可能性）</span>
+    <span class="l-def"><i></i>見送り（明示的な判断がある）</span>
+    <span class="l-mis"><i></i>欠落（要求があるのに検証がない）</span>
+  </div>
+
+  <!-- ============ 第2層: 挙動の変化 ============ -->
+  <h2>2. 挙動の変化</h2>
+  <p>{{1〜2行の導入。挙動を変えない変更が含まれる場合はその旨を明示する}}</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>対象</th><th>変更前</th><th>変更後</th><th>観測点</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>{{pkg.Func}}</code><br><span style="color:var(--fg-dim);font-size:.85em">{{file:line}}</span></td>
+          <td>{{変更前の挙動}}</td>
+          <td>{{変更後の挙動}}</td>
+          <td>{{外から何を見れば違いが分かるか}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>挙動を変えない変更</h3>
+  <p>{{リファクタリング部分。変更前から挙動を固定するテストが存在していたかを述べる。
+      テストが変更と同時に追加された場合は、変更前の挙動を保証したことにならない点を明記する}}</p>
+
+  <h3>変更されていないが影響を受ける箇所</h3>
+  <p>{{呼び出し元、共有される状態、同じスキーマを読む別経路。差分に現れないため明示する}}</p>
+
+  <!-- ============ 第3層: 要求される検証と充足状況 ============ -->
+  <h2>3. 要求される検証と充足状況</h2>
+  <div class="tw">
+    <table class="mx">
+      <thead>
+        <tr><th>#</th><th>検証すべきこと</th><th>導出根拠</th><th>状態</th><th>テスト</th></tr>
+      </thead>
+      <tbody>
+        <tr class="r-ok">
+          <td>1</td>
+          <td>{{検証すべき挙動}}</td>
+          <td>{{変更の性質（機能追加）| spec 2. 設計/境界条件}}</td>
+          <td>✅ 検証済み</td>
+          <td><code>{{file:line}}</code></td>
+        </tr>
+        <tr class="r-weak">
+          <td>2</td><td>{{...}}</td><td>{{...}}</td>
+          <td>⚠️ 弱い</td><td><code>{{file:line}}</code></td>
+        </tr>
+        <tr class="r-deferred">
+          <td>3</td><td>{{...}}</td><td>{{...}}</td>
+          <td>⏭️ 見送り</td><td>{{根拠: spec テスト計画 todo / t.Skip / build tag}}</td>
+        </tr>
+        <tr class="r-missing">
+          <td>4</td><td>{{...}}</td><td>{{...}}</td>
+          <td>❌ 欠落</td><td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>テストの実行条件</h3>
+  <p>{{build tag、環境変数、t.Skip、CI 設定。実行されないテストは検証していないのと同じなので必ず記載する。
+      外部依存がモックのみで実接続の確認がない場合もここに書く}}</p>
+
+  <!-- ============ 第4層: 詳細 ============ -->
+  <h2>4. 未充足の詳細</h2>
+
+  <div class="item missing">
+    <h4>{{欠落している検証}}</h4>
+    <dl>
+      <dt>対象</dt><dd><code>{{file:line}}</code></dd>
+      <dt>要求の根拠</dt><dd>{{変更の性質 / spec の節}}</dd>
+      <dt>検証されないと何が起きるか</dt><dd>{{壊れても検知されない具体的な挙動}}</dd>
+    </dl>
+  </div>
+
+  <h2>5. 見送られている検証</h2>
+  <div class="item deferred">
+    <h4>{{見送られた検証}}</h4>
+    <dl>
+      <dt>根拠</dt><dd>{{spec テスト計画の todo / test.go:12 の build tag integration}}</dd>
+      <dt>記録されている理由</dt><dd>{{spec やコメントに理由があれば引用。無ければ「記載なし」}}</dd>
+    </dl>
+  </div>
+</article>
