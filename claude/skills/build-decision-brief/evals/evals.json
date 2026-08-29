@@ -1,0 +1,26 @@
+{
+  "skill_name": "build-decision-brief",
+  "evals": [
+    {
+      "id": 0,
+      "name": "skill-role-overlap-explicit",
+      "prompt": "claude/skills の dev / brainstorm / implement の SKILL.md を読んでほしい。この3つ、役割が重なってきている気がしていて、今のまま3つに分けておくか、dev と brainstorm を1つにまとめるか決めたい。判断材料を artifact でまとめて見せて。",
+      "expected_output": "実際の3つの SKILL.md を読んだうえで、判断を分ける軸を3〜5本立て、その軸の上に選択肢を並べた artifact を公開する。artifact 内で回答できる。ターミナル側は要約とURLだけ。",
+      "files": []
+    },
+    {
+      "id": 1,
+      "name": "setup-script-implicit",
+      "prompt": "setup.py 見てくれる？ dotfiles のインストールを今の python スクリプトのままにするか、Makefile か shell script に置き換えるか迷ってて。どっちがいいと思う？",
+      "expected_output": "明示的に artifact を求められていないが、選択肢が複数あり比較が要るためスキルが発動し、実ファイルを読んだうえでブリーフを公開する。あるいは、後戻りが容易な軽い判断と判断して AskUserQuestion で済ませ、その理由を述べる。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "audit-log-destination",
+      "prompt": "Go で書いてる社内向けの Web API に監査ログを入れることになった。誰がいつどのリソースを操作したかを残すやつ。書き込み先を、今使ってる PostgreSQL に audit_logs テーブルを作るか、標準出力に JSON Lines で吐いてログ基盤側で拾うかで決めきれてない。あとで監査部門から「特定ユーザーの操作を全部出して」と言われる想定はある。整理して判断できるようにしてほしい。",
+      "expected_output": "アーキテクチャ判断なので推奨ラベルを付けず、優先する軸ごとの条件付き対応を示す。確認できていない前提（ログ基盤の保持期間、検索性など）を明示する。",
+      "files": []
+    }
+  ]
+}

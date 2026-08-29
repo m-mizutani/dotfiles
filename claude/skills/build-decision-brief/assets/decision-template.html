@@ -1,0 +1,436 @@
+<title>{{判断の主題}}</title>
+
+<!--
+  判断依頼ブリーフのテンプレート。
+
+  編集するのは下の <script type="application/json" id="brief-state"> の中身だけ。
+  スタイルと描画スクリプトには手を入れない。ページはこの JSON から描画され、
+  ユーザーがページ上で選択すると、選択結果を書き込んだ JSON で自分自身を
+  publish し直す（Artifact ツールに capabilities {"artifact": {}} を渡すこと）。
+
+  JSON の各フィールドの意味は references/answering.md を参照。
+-->
+
+<div id="app"></div>
+
+<script type="application/json" id="brief-state">
+{
+  "title": "{{判断の主題}}",
+  "question": "{{何をどう決めるのかを1文で。「XをAにするかBにするか」の形}}",
+  "blocked": "{{決まらないと止まること。止まらないなら、そもそも今聞く判断ではない}}",
+  "context": "{{なぜ今この分岐が出たのか。1〜3文。経緯ではなく、分岐を生んだ事実を書く}}",
+  "deadline": "",
+
+  "figureSvg": "",
+  "figureCaption": "",
+
+  "axes": [
+    { "name": "{{軸の名前}}", "detail": "{{選択によって何がどう変わるのか。観測できる形で}}" },
+    { "name": "{{軸の名前}}", "detail": "{{同上}}" },
+    { "name": "{{軸の名前}}", "detail": "{{同上}}" }
+  ],
+
+  "options": [
+    {
+      "id": "a",
+      "label": "{{案の名前。造語を作らず、実際の技術名か「案A」}}",
+      "summary": "{{1文で。この案が何をするものか}}",
+      "stance": [
+        "{{軸1でのこの案の位置づけ}}",
+        "{{軸2でのこの案の位置づけ}}",
+        "{{軸3でのこの案の位置づけ}}"
+      ],
+      "change": "{{具体的な変更。どのファイルの何がどうなるか}}",
+      "before": "{{現在の観測できる挙動}}",
+      "after": "{{この案を採ったあとの観測できる挙動。変わらないなら「変わらない」}}",
+      "cost": "{{この案で諦めるもの。「特になし」と書きたくなったら軸の抽出が足りていない}}",
+      "reversibility": "{{後から別案に変えるときに必要になること}}",
+      "next": "{{これが選ばれた場合に直ちに着手すること}}"
+    },
+    {
+      "id": "b",
+      "label": "{{案の名前}}",
+      "summary": "{{1文}}",
+      "stance": ["{{軸1}}", "{{軸2}}", "{{軸3}}"],
+      "change": "{{...}}",
+      "before": "{{...}}",
+      "after": "{{...}}",
+      "cost": "{{...}}",
+      "reversibility": "{{...}}",
+      "next": "{{...}}"
+    }
+  ],
+
+  "recommendation": null,
+
+  "conditional": [
+    { "priority": "{{どの軸を優先するなら}}", "optionId": "a" },
+    { "priority": "{{どの軸を優先するなら}}", "optionId": "b" }
+  ],
+
+  "assumptions": [
+    { "text": "{{前提や根拠}}", "status": "確認済み", "evidence": "{{file:line}}" },
+    { "text": "{{確認できていないこと}}", "status": "未確認", "evidence": "" }
+  ],
+
+  "dropped": [],
+  "later": [],
+
+  "decision": { "optionId": null, "note": "", "at": null }
+}
+</script>
+
+<script id="brief-boot">
+(function () {
+  var FONTS = 'https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700' +
+    '&family=Noto+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap';
+
+  var STYLE = [
+    ':root{',
+    '--bg:#fbfcfd;--surface:#eef1f4;--surface2:#e3e8ed;--fg:#171b1f;--fg-dim:#5a636c;',
+    '--border:#d8dee4;--edge:#8b949d;--accent:#23517f;--accent-bg:#e6eef6;',
+    '--warn:#8f5c0c;--warn-bg:#f8efdd;--ok:#1f6b48;--ok-bg:#e3f0e9;',
+    '--o1:#23517f;--o1-bg:#e6eef6;--o2:#7a3f96;--o2-bg:#f0e8f5;',
+    '--o3:#0d6f75;--o3-bg:#e0f0f1;--o4:#96520f;--o4-bg:#f7ebdd;',
+    '--sans:"Noto Sans JP",-apple-system,BlinkMacSystemFont,"Hiragino Sans",sans-serif;',
+    '--display:"Zen Kaku Gothic New","Noto Sans JP","Hiragino Sans",sans-serif;',
+    '--mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;',
+    '}',
+    '@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){',
+    '--bg:#14171a;--surface:#1d2126;--surface2:#252b31;--fg:#e4e8ec;--fg-dim:#99a2ab;',
+    '--border:#2c333a;--edge:#79828b;--accent:#7db3e8;--accent-bg:#17242f;',
+    '--warn:#d9a24a;--warn-bg:#2e2413;--ok:#5cba86;--ok-bg:#152b20;',
+    '--o1:#7db3e8;--o1-bg:#17242f;--o2:#c08ddc;--o2-bg:#271d30;',
+    '--o3:#54bec3;--o3-bg:#11282a;--o4:#d99757;--o4-bg:#2b2015;',
+    '}}',
+    ':root[data-theme="dark"]{',
+    '--bg:#14171a;--surface:#1d2126;--surface2:#252b31;--fg:#e4e8ec;--fg-dim:#99a2ab;',
+    '--border:#2c333a;--edge:#79828b;--accent:#7db3e8;--accent-bg:#17242f;',
+    '--warn:#d9a24a;--warn-bg:#2e2413;--ok:#5cba86;--ok-bg:#152b20;',
+    '--o1:#7db3e8;--o1-bg:#17242f;--o2:#c08ddc;--o2-bg:#271d30;',
+    '--o3:#54bec3;--o3-bg:#11282a;--o4:#d99757;--o4-bg:#2b2015;',
+    '}',
+    'body{background:var(--bg);color:var(--fg);}',
+    '.db{max-width:62rem;margin:0 auto;padding:2rem 1.2rem 4rem;line-height:1.8;',
+    'font-family:var(--sans);}',
+    '.db h1{font-family:var(--display);font-weight:700;font-size:1.6rem;',
+    'margin:0 0 1rem;line-height:1.4;text-wrap:balance;letter-spacing:.01em;}',
+    '.db h2{font-family:var(--display);font-weight:700;font-size:1.12rem;',
+    'margin:2.6rem 0 .7rem;padding-bottom:.35rem;border-bottom:1px solid var(--border);}',
+    '.db h3{font-family:var(--display);font-weight:500;font-size:1rem;margin:1.4rem 0 .4rem;}',
+    '.db p{margin:.5rem 0;}',
+    '.db code{font-family:var(--mono);background:var(--surface);padding:.1rem .35rem;',
+    'border-radius:3px;font-size:.85em;}',
+    '.db :focus-visible{outline:2px solid var(--accent);outline-offset:2px;}',
+    '.ask{border:1px solid var(--accent);background:var(--accent-bg);border-radius:7px;',
+    'padding:1rem 1.15rem;margin:0 0 1.2rem;}',
+    '.ask .lbl{font-size:.76rem;letter-spacing:.12em;color:var(--accent);',
+    'font-weight:700;margin:0 0 .3rem;}',
+    '.ask .q{font-family:var(--display);font-size:1.12rem;font-weight:500;margin:0;line-height:1.65;}',
+    '.meta{display:grid;gap:.5rem;margin:1rem 0 1.6rem;}',
+    '.meta > div{border-left:3px solid var(--border);background:var(--surface);',
+    'padding:.5rem .85rem;border-radius:0 5px 5px 0;font-size:.92rem;}',
+    '.meta h4{margin:0 0 .15rem;font-size:.78rem;letter-spacing:.06em;',
+    'color:var(--fg-dim);font-weight:700;}',
+    '.meta p{margin:0;}',
+    '.tw{overflow-x:auto;margin:1rem 0;}',
+    'table{border-collapse:collapse;width:100%;font-size:.89rem;}',
+    'th,td{border:1px solid var(--border);padding:.5rem .65rem;text-align:left;vertical-align:top;}',
+    'th{background:var(--surface);font-weight:600;}',
+    'table.mx th.axis{white-space:nowrap;width:1%;}',
+    'table.mx thead th.opt{border-top-width:4px;}',
+    'table.mx thead th.opt small{display:block;font-weight:400;color:var(--fg-dim);',
+    'font-size:.82em;line-height:1.5;margin-top:.15rem;}',
+    'table.mx td.axis small{display:block;color:var(--fg-dim);font-weight:400;font-size:.88em;}',
+    'figure.dia{margin:1.4rem 0;}',
+    'figure.dia svg{max-width:100%;height:auto;display:block;margin:0 auto;}',
+    'figure.dia figcaption{color:var(--fg-dim);font-size:.84rem;margin-top:.5rem;text-align:center;}',
+    '.answer{border:1px solid var(--border);border-radius:7px;background:var(--surface);',
+    'padding:1rem 1.1rem;margin:1.4rem 0;}',
+    '.answer h3{margin:0 0 .2rem;font-size:1rem;}',
+    '.answer .hint{color:var(--fg-dim);font-size:.85rem;margin:0 0 .8rem;}',
+    '.picks{display:flex;flex-wrap:wrap;gap:.6rem;margin:.6rem 0;}',
+    '.picks button{font-family:var(--sans);font-size:.92rem;font-weight:700;cursor:pointer;',
+    'padding:.55rem 1rem;border-radius:6px;border:1.5px solid var(--edge);',
+    'background:var(--bg);color:var(--fg);}',
+    '.picks button:hover{border-color:var(--accent);}',
+    '.picks button[aria-pressed="true"]{border-color:var(--ok);background:var(--ok-bg);color:var(--ok);}',
+    '.picks button[disabled]{opacity:.55;cursor:default;}',
+    '.answer textarea{width:100%;box-sizing:border-box;font:inherit;font-size:.9rem;',
+    'padding:.5rem .6rem;border-radius:6px;border:1px solid var(--border);',
+    'background:var(--bg);color:var(--fg);min-height:3.4rem;margin-top:.5rem;}',
+    '.answer .state{font-size:.86rem;margin:.6rem 0 0;color:var(--fg-dim);}',
+    '.answer .state.done{color:var(--ok);font-weight:600;}',
+    '.answer .state.warn{color:var(--warn);}',
+    '.decided{border:1px solid var(--ok);background:var(--ok-bg);color:var(--ok);',
+    'border-radius:7px;padding:.7rem 1rem;margin:0 0 1.2rem;font-weight:600;font-size:.95rem;}',
+    '.decided span{font-weight:400;color:var(--fg-dim);display:block;font-size:.85rem;margin-top:.2rem;}',
+    '.opts{display:grid;gap:1rem;margin:1rem 0;}',
+    '@media (min-width:52rem){.opts{grid-template-columns:repeat(2,minmax(0,1fr));}}',
+    '.opt{border:1px solid var(--border);border-top-width:4px;border-radius:6px;',
+    'padding:.9rem 1rem;background:var(--surface);}',
+    '.opt h3{margin:0 0 .1rem;font-size:1.02rem;}',
+    '.opt .sm{color:var(--fg-dim);font-size:.9rem;margin:0 0 .6rem;}',
+    '.opt dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.3rem .8rem;font-size:.88rem;}',
+    '.opt dt{color:var(--fg-dim);white-space:nowrap;}',
+    '.opt dd{margin:0;}',
+    '.opt.chosen{outline:2px solid var(--ok);outline-offset:2px;}',
+    '.cond{margin:1rem 0;padding-left:1.1rem;}',
+    '.cond li{margin:.3rem 0;}',
+    '.asm{font-size:.9rem;}',
+    '.asm .st{font-weight:600;white-space:nowrap;}',
+    '.asm .st.unver{color:var(--warn);}',
+    '.asm .st.ver{color:var(--ok);}',
+    '.note{color:var(--fg-dim);font-size:.88rem;}',
+    'ul.plain{padding-left:1.1rem;margin:.5rem 0;}'
+  ].join('');
+
+  var BRIEF = JSON.parse(document.getElementById('brief-state').textContent);
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+  function has(s) { return s != null && String(s).trim() !== ''; }
+  function optIndex(b, id) {
+    for (var i = 0; i < b.options.length; i++) { if (b.options[i].id === id) return i; }
+    return -1;
+  }
+  function optLabel(b, id) {
+    var i = optIndex(b, id);
+    return i < 0 ? id : b.options[i].label;
+  }
+  function fmtTime(iso) {
+    if (!has(iso)) return '';
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return String(iso);
+    function p(n) { return (n < 10 ? '0' : '') + n; }
+    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+      ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+  function tone(i) { return 'var(--o' + ((i % 4) + 1) + ')'; }
+  function toneBg(i) { return 'var(--o' + ((i % 4) + 1) + '-bg)'; }
+
+  function renderBody(b) {
+    var h = [];
+    h.push('<article class="db">');
+    h.push('<h1>' + esc(b.title) + '</h1>');
+
+    if (b.decision && b.decision.optionId) {
+      h.push('<div class="decided">決定: ' + esc(optLabel(b, b.decision.optionId)));
+      h.push('<span>' + esc(fmtTime(b.decision.at)) +
+        (has(b.decision.note) ? ' ／ メモ: ' + esc(b.decision.note) : '') + '</span></div>');
+    }
+
+    h.push('<div class="ask"><p class="lbl">決めてほしいこと</p><p class="q">' +
+      esc(b.question) + '</p></div>');
+
+    h.push('<div class="meta">');
+    if (has(b.blocked)) {
+      h.push('<div><h4>決まらないと止まること</h4><p>' + esc(b.blocked) + '</p></div>');
+    }
+    if (has(b.context)) {
+      h.push('<div><h4>この分岐が出た理由</h4><p>' + esc(b.context) + '</p></div>');
+    }
+    if (has(b.deadline)) {
+      h.push('<div><h4>期限・制約</h4><p>' + esc(b.deadline) + '</p></div>');
+    }
+    h.push('</div>');
+
+    // 軸 × 選択肢の対比
+    h.push('<h2>選択肢の対比</h2>');
+    h.push('<div class="tw"><table class="mx"><thead><tr><th class="axis">判断を分ける軸</th>');
+    b.options.forEach(function (o, i) {
+      h.push('<th class="opt" style="border-top-color:' + tone(i) + ';background:' + toneBg(i) + '">' +
+        esc(o.label) + '<small>' + esc(o.summary) + '</small></th>');
+    });
+    h.push('</tr></thead><tbody>');
+    (b.axes || []).forEach(function (ax, ai) {
+      h.push('<tr><td class="axis"><strong>' + esc(ax.name) + '</strong>' +
+        (has(ax.detail) ? '<small>' + esc(ax.detail) + '</small>' : '') + '</td>');
+      b.options.forEach(function (o) {
+        h.push('<td>' + esc((o.stance || [])[ai]) + '</td>');
+      });
+      h.push('</tr>');
+    });
+    h.push('</tbody></table></div>');
+
+    if (has(b.figureSvg)) {
+      h.push('<figure class="dia">' + b.figureSvg +
+        (has(b.figureCaption) ? '<figcaption>' + esc(b.figureCaption) + '</figcaption>' : '') +
+        '</figure>');
+    }
+
+    if (b.recommendation && b.recommendation.optionId) {
+      h.push('<p><strong>推奨: ' + esc(optLabel(b, b.recommendation.optionId)) + '</strong> — ' +
+        esc(b.recommendation.reason) + '</p>');
+    }
+
+    // 回答欄
+    h.push('<div class="answer"><h3>回答</h3>');
+    h.push('<p class="hint">このページで選ぶと、選択が記録され、作業中のセッションに伝わる。ターミナルで直接答えても構わない。</p>');
+    h.push('<div class="picks" id="picks" hidden>');
+    b.options.forEach(function (o) {
+      var on = b.decision && b.decision.optionId === o.id;
+      h.push('<button type="button" data-opt="' + esc(o.id) + '" aria-pressed="' +
+        (on ? 'true' : 'false') + '">' + (on ? '選択中: ' : '') + esc(o.label) + '</button>');
+    });
+    h.push('</div>');
+    h.push('<textarea id="note" placeholder="補足があれば（任意）">' +
+      esc(b.decision ? b.decision.note : '') + '</textarea>');
+    h.push('<p class="state" id="state">回答の記録を準備しています…</p>');
+    h.push('</div>');
+
+    // 各選択肢の詳細
+    h.push('<h2>各選択肢の詳細</h2><div class="opts">');
+    b.options.forEach(function (o, i) {
+      var chosen = b.decision && b.decision.optionId === o.id;
+      h.push('<div class="opt' + (chosen ? ' chosen' : '') + '" style="border-top-color:' + tone(i) + '">');
+      h.push('<h3>' + esc(o.label) + '</h3><p class="sm">' + esc(o.summary) + '</p><dl>');
+      h.push('<dt>具体的な変更</dt><dd>' + esc(o.change) + '</dd>');
+      h.push('<dt>変更前</dt><dd>' + esc(o.before) + '</dd>');
+      h.push('<dt>変更後</dt><dd>' + esc(o.after) + '</dd>');
+      h.push('<dt>失うもの</dt><dd>' + esc(o.cost) + '</dd>');
+      h.push('<dt>後戻りコスト</dt><dd>' + esc(o.reversibility) + '</dd>');
+      h.push('<dt>選ばれたら</dt><dd>' + esc(o.next) + '</dd>');
+      h.push('</dl></div>');
+    });
+    h.push('</div>');
+
+    if ((b.conditional || []).length) {
+      h.push('<h2>優先する軸ごとの対応</h2><ul class="cond">');
+      b.conditional.forEach(function (c) {
+        h.push('<li>' + esc(c.priority) + ' → <strong>' + esc(optLabel(b, c.optionId)) + '</strong></li>');
+      });
+      h.push('</ul>');
+    }
+
+    if ((b.assumptions || []).length) {
+      h.push('<h2>前提と根拠</h2><div class="tw"><table class="asm"><thead><tr>' +
+        '<th>前提</th><th>状態</th><th>根拠</th></tr></thead><tbody>');
+      b.assumptions.forEach(function (a) {
+        var un = a.status !== '確認済み';
+        h.push('<tr><td>' + esc(a.text) + '</td><td class="st ' + (un ? 'unver' : 'ver') + '">' +
+          esc(a.status) + '</td><td>' + (has(a.evidence) ? '<code>' + esc(a.evidence) + '</code>' : '—') +
+          '</td></tr>');
+      });
+      h.push('</tbody></table></div>');
+    }
+
+    if ((b.dropped || []).length) {
+      h.push('<h2>検討して落とした案</h2><ul class="plain note">');
+      b.dropped.forEach(function (d) {
+        h.push('<li><strong>' + esc(d.label) + '</strong> — ' + esc(d.reason) + '</li>');
+      });
+      h.push('</ul>');
+    }
+
+    if ((b.later || []).length) {
+      h.push('<h2>この判断の後に別途決めること</h2><ul class="plain">');
+      b.later.forEach(function (t) { h.push('<li>' + esc(t) + '</li>'); });
+      h.push('</ul>');
+    }
+
+    h.push('</article>');
+    return h.join('');
+  }
+
+  // ページ自身のソースを組み立て直す。live DOM は直列化しない（描画結果には
+  // 閲覧側の状態が混ざるため）。状態は JSON に、描画規則はこのスクリプトに
+  // 閉じているので、この2つを埋め込めば同じページが再現できる。
+  function renderDoc(b) {
+    var json = JSON.stringify(b, null, 2).replace(/</g, '\\u003c');
+    var boot = document.getElementById('brief-boot').textContent;
+    return '<!doctype html>\n<html><head><meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+      '<title>' + esc(b.title) + '</title></head><body>' +
+      '<div id="app"></div>' +
+      '<script type="application/json" id="brief-state">' + json + '<\/script>' +
+      '<script id="brief-boot">' + boot + '<\/script>' +
+      '</body></html>';
+  }
+
+  function mount() {
+    if (!document.getElementById('brief-fonts')) {
+      var ln = document.createElement('link');
+      ln.id = 'brief-fonts';
+      ln.rel = 'stylesheet';
+      ln.href = FONTS;
+      document.head.appendChild(ln);
+    }
+    if (!document.getElementById('brief-style')) {
+      var st = document.createElement('style');
+      st.id = 'brief-style';
+      st.textContent = STYLE;
+      document.head.appendChild(st);
+    }
+    document.getElementById('app').innerHTML = renderBody(BRIEF);
+    wire();
+  }
+
+  function wire() {
+    var stateEl = document.getElementById('state');
+    var picks = document.getElementById('picks');
+    var note = document.getElementById('note');
+
+    function say(msg, cls) {
+      stateEl.textContent = msg;
+      stateEl.className = 'state' + (cls ? ' ' + cls : '');
+    }
+    function readOnly() {
+      picks.hidden = true;
+      note.disabled = true;
+      say('このビューからは回答を記録できません。ターミナルで回答してください。', 'warn');
+    }
+
+    if (BRIEF.decision && BRIEF.decision.optionId) {
+      say('記録済み: ' + optLabel(BRIEF, BRIEF.decision.optionId) + '（別の案に変更もできます）', 'done');
+    } else {
+      say('回答の記録を準備しています…');
+    }
+
+    if (!(window.claude && typeof window.claude.use === 'function')) { readOnly(); return; }
+
+    window.claude.use('artifact').then(function (artifact) {
+      if (!artifact) { readOnly(); return; }
+      picks.hidden = false;
+      if (!(BRIEF.decision && BRIEF.decision.optionId)) { say('案を選んでください。'); }
+
+      picks.addEventListener('click', function (ev) {
+        var btn = ev.target.closest('button[data-opt]');
+        if (!btn || btn.disabled) return;
+        var id = btn.getAttribute('data-opt');
+        Array.prototype.forEach.call(picks.querySelectorAll('button'), function (x) { x.disabled = true; });
+        say('記録しています…');
+
+        var next = JSON.parse(JSON.stringify(BRIEF));
+        next.decision = {
+          optionId: id,
+          note: note.value || '',
+          at: new Date().toISOString()
+        };
+
+        artifact.publish(renderDoc(next)).catch(function (err) {
+          var code = err && err.code;
+          // conflict は誰かが先に publish しただけ。全ビューが勝者に再読み込みされる
+          if (code === 'conflict') return;
+          if (code === 'not_writer' || code === 'not_granted' ||
+              code === 'not_declared' || code === 'capability_disabled') {
+            readOnly();
+            return;
+          }
+          Array.prototype.forEach.call(picks.querySelectorAll('button'), function (x) { x.disabled = false; });
+          say('記録できませんでした（' + (code || 'unknown') + '）。ターミナルで回答してください。', 'warn');
+        });
+      });
+    }, function () { readOnly(); });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mount);
+  } else {
+    mount();
+  }
+})();
+</script>
