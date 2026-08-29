@@ -64,6 +64,13 @@ the same failure (not listening precisely) wastes as much time as a bug.
   config, or shell commands must be emitted as raw, copyable text inside a fenced
   block — never rendered inline in the reply, which destroys the source the user
   wanted to lift
+- **Separate every bare URL from the surrounding text with a space on both sides.**
+  Terminals auto-link URLs by scanning to the next whitespace, so an adjacent
+  closing parenthesis, bracket, quote, comma, or period (half-width or full-width)
+  is absorbed into the link and the resulting URL is wrong. Never write
+  `(https://example.com/foo)` or `https://example.com/foo。` — write
+  `( https://example.com/foo )`, or take the URL out of the parentheses and put it
+  on its own line
 
 ## Register: Formal Technical Language Only
 - **Explanations contain no slang and no figurative language.** No colloquialisms,
