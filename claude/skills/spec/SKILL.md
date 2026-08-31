@@ -1,5 +1,5 @@
 ---
-name: dev
+name: spec
 description: "spec-driven development の計画フェーズを担う。開発タスクの spec（要求事項・基本設計・設計判断・テスト計画・詳細設計・実装計画）を作成・更新してユーザーの承認を得るところまでを1つの作業とする。実装・commit・PR作成はこのスキルでは行わず `implement` skill に引き渡す。ユーザーが開発タスクについて言及したとき、feature branchでの作業を始めるとき、specを作りたい・見直したいときに必ずこのスキルを使うこと。"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch, Artifact, Skill
 ---

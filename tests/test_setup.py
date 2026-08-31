@@ -1,6 +1,7 @@
 import contextlib
 import importlib.util
 import io
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -53,7 +54,7 @@ class SetupTests(unittest.TestCase):
                 second = setup.run(home=home)
 
             self.assertEqual(first.failed, 0)
-            self.assertTrue((home / ".agents/skills/dev").is_symlink())
+            self.assertTrue((home / ".agents/skills/spec").is_symlink())
             self.assertEqual(second.created, 0)
             self.assertGreater(second.skipped, 0)
 
@@ -65,7 +66,38 @@ class SetupTests(unittest.TestCase):
 
             self.assertEqual(stats.failed, 0)
             self.assertGreater(stats.created, 0)
-            self.assertFalse((home / ".agents/skills/dev").exists())
+            self.assertFalse((home / ".agents/skills/spec").exists())
+
+    def test_run_removes_managed_legacy_skill_links(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            home = Path(temporary_directory)
+            claude_legacy = home / ".claude/skills/dev"
+            codex_legacy = home / ".agents/skills/dev"
+            claude_legacy.parent.mkdir(parents=True)
+            codex_legacy.parent.mkdir(parents=True)
+            os.symlink(setup.REPO / "claude/skills/dev", claude_legacy)
+            os.symlink(setup.REPO / "codex/skills/dev", codex_legacy)
+
+            with contextlib.redirect_stdout(io.StringIO()):
+                stats = setup.run(home=home)
+
+            self.assertEqual(stats.failed, 0)
+            self.assertEqual(stats.removed, 2)
+            self.assertFalse(os.path.lexists(claude_legacy))
+            self.assertFalse(os.path.lexists(codex_legacy))
+
+    def test_run_preserves_an_unmanaged_legacy_skill_path(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            home = Path(temporary_directory)
+            legacy = home / ".agents/skills/dev"
+            legacy.parent.mkdir(parents=True)
+            legacy.write_text("keep")
+
+            with contextlib.redirect_stdout(io.StringIO()):
+                stats = setup.run(home=home)
+
+            self.assertEqual(stats.failed, 1)
+            self.assertEqual(legacy.read_text(), "keep")
 
 
 if __name__ == "__main__":

@@ -4,7 +4,7 @@
     {
       "id": 0,
       "name": "skill-role-overlap-explicit",
-      "prompt": "claude/skills の dev / brainstorm / implement の SKILL.md を読んでほしい。この3つ、役割が重なってきている気がしていて、今のまま3つに分けておくか、dev と brainstorm を1つにまとめるか決めたい。判断材料を artifact でまとめて見せて。",
+      "prompt": "claude/skills の spec / brainstorm / implement の SKILL.md を読んでほしい。この3つ、役割が重なってきている気がしていて、今のまま3つに分けておくか、spec と brainstorm を1つにまとめるか決めたい。判断材料を artifact でまとめて見せて。",
       "expected_output": "実際の3つの SKILL.md を読んだうえで、判断を分ける軸を3〜5本立て、その軸の上に選択肢を並べた artifact を公開する。artifact 内で回答できる。ターミナル側は要約とURLだけ。",
       "files": []
     },

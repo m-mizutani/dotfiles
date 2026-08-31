@@ -1,5 +1,5 @@
 ---
-name: dev
+name: spec
 description: "spec-driven developmentを開始・継続する。新しい開発タスク、specの作成、実装の開始・再開など、開発に関わるあらゆるフェーズで使用せよ。ユーザーが開発タスクについて言及したとき、feature branchでの作業を始めるとき、実装を進めたいときに必ずこのスキルを使うこと。"
 metadata:
   short-description: spec-driven development の開始・継続

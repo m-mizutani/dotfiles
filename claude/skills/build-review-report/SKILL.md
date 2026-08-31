@@ -183,7 +183,7 @@ ls .github/workflows/ && grep -rn "go test\|npm test" .github/workflows/
 
 図の実装上の制約：
 
-- **mermaid は使わない。** 検証状態を色で重ねる、変更箇所を枠線で示すといった表現が必要で、それには inline SVG または HTML+CSS のほうが適する。`dev` skill も同じ方針を採っている
+- **mermaid は使わない。** 検証状態を色で重ねる、変更箇所を枠線で示すといった表現が必要で、それには inline SVG または HTML+CSS のほうが適する。`spec` skill も同じ方針を採っている
 - ASCII Art は使わない
 - 図は theme-aware にする（ライト・ダーク両方で読める配色。トークン定義はテンプレートに含まれている）
 - 凡例のない図は置かない。色と枠線の意味が読み手に伝わらなければ、図は認知負荷を上げるだけになる

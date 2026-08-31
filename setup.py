@@ -68,7 +68,7 @@ CODEX_SKILLS = (
     "build-review-report",
     "check-pr",
     "codex-review",
-    "dev",
+    "spec",
     "implement",
     "my-code-review",
     "refine-rules",
@@ -149,6 +149,7 @@ def build_groups(home: Path = HOME) -> list[Group]:
 class Stats:
     created: int = 0
     replaced: int = 0
+    removed: int = 0
     skipped: int = 0
     failed: int = 0
 
@@ -211,6 +212,34 @@ def create_symlink(link: Link, stats: Stats, dry_run: bool = False, force: bool 
     stats.created += 1
 
 
+def remove_legacy_skill(
+    home: Path,
+    skill_root: str,
+    source: str,
+    stats: Stats,
+    dry_run: bool = False,
+) -> None:
+    dst = home / skill_root / "skills" / "dev"
+    src = REPO / source
+    label = f"{C.DIM}{dst}{C.RESET}"
+
+    if not dst.exists() and not dst.is_symlink():
+        return
+
+    if dst.is_symlink() and dst.resolve() == src.resolve():
+        if dry_run:
+            print(f"  {icon_replace()} {label} {C.DIM}(would remove legacy link){C.RESET}")
+        else:
+            dst.unlink()
+            print(f"  {icon_replace()} {label} {C.DIM}(removed legacy link){C.RESET}")
+        stats.removed += 1
+        return
+
+    print(f"  {icon_fail()} {label}")
+    print(f"       legacy dev path is not the managed symlink")
+    stats.failed += 1
+
+
 def run(dry_run: bool = False, force: bool = False, home: Path = HOME) -> Stats:
     groups = build_groups(home)
     stats = Stats()
@@ -236,6 +265,9 @@ def run(dry_run: bool = False, force: bool = False, home: Path = HOME) -> Stats:
             create_symlink(link, stats, dry_run=dry_run, force=force)
         print()
 
+    remove_legacy_skill(home, ".claude", "claude/skills/dev", stats, dry_run)
+    remove_legacy_skill(home, ".agents", "codex/skills/dev", stats, dry_run)
+
     # Summary
     print(f"{C.BOLD}Summary{C.RESET}")
     parts = []
@@ -245,6 +277,9 @@ def run(dry_run: bool = False, force: bool = False, home: Path = HOME) -> Stats:
     if stats.replaced > 0:
         verb = "would replace" if dry_run else "replaced"
         parts.append(f"{C.YELLOW}{stats.replaced} {verb}{C.RESET}")
+    if stats.removed > 0:
+        verb = "would remove" if dry_run else "removed"
+        parts.append(f"{C.YELLOW}{stats.removed} {verb}{C.RESET}")
     if stats.skipped > 0:
         parts.append(f"{C.YELLOW}{stats.skipped} skipped{C.RESET}")
     if stats.failed > 0:
