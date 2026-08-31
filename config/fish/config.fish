@@ -20,6 +20,7 @@ alias gtt='go tool task'
 alias ghn='gh pr new --web'
 alias ghw='gh pr view --web'
 alias ccw='claude --worktree --enable-auto-mode'
+alias cdw='codex-worktree'
 
 function fish_user_key_bindings
   bind \cr 'peco_select_history (commandline -b)'
