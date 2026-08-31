@@ -14,6 +14,22 @@ SPEC.loader.exec_module(setup)
 
 
 class SetupTests(unittest.TestCase):
+    def test_codex_group_registers_configuration(self):
+        home = Path("/tmp/test-home")
+        groups = {group.name: group for group in setup.build_groups(home)}
+
+        codex_links = {link.dst: link.src for link in groups["Codex"].links}
+
+        self.assertEqual(codex_links[f"{home}/.codex/config.toml"], "codex/config.toml")
+
+    def test_codex_auto_review_settings_are_top_level(self):
+        content = (setup.REPO / "codex/config.toml").read_text()
+        top_level = content.split("[projects.", 1)[0]
+
+        self.assertIn('approval_policy = "on-request"', top_level)
+        self.assertIn('approvals_reviewer = "auto_review"', top_level)
+        self.assertIn('default_permissions = ":workspace"', top_level)
+
     def test_skill_groups_register_all_managed_skills(self):
         home = Path("/tmp/test-home")
         groups = {group.name: group for group in setup.build_groups(home)}

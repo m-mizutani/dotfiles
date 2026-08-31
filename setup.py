@@ -117,6 +117,7 @@ def build_groups(home: Path = HOME) -> list[Group]:
             ],
         ]),
         Group("Codex", [
+            Link("codex/config.toml", f"{home}/.codex/config.toml"),
             Link("codex/AGENTS.md", f"{home}/.codex/AGENTS.md"),
             *[
                 Link(f"claude/skills/{skill}", f"{home}/.agents/skills/{skill}")
