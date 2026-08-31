@@ -56,69 +56,89 @@ class Group:
 HOME = Path.home()
 REPO = Path(__file__).resolve().parent
 
+SHARED_SKILLS = (
+    "difit",
+    "herdr-tab-name",
+    "open-mo",
+)
 
-def build_groups() -> list[Group]:
+CODEX_SKILLS = (
+    "brainstorm",
+    "build-decision-brief",
+    "build-review-report",
+    "check-pr",
+    "codex-review",
+    "dev",
+    "implement",
+    "my-code-review",
+    "refine-rules",
+    "reflection",
+)
+
+CLAUDE_SKILLS = SHARED_SKILLS + CODEX_SKILLS
+
+
+def build_groups(home: Path = HOME) -> list[Group]:
     return [
         Group("Fish Shell", [
-            Link("config/fish/config.fish", f"{HOME}/.config/fish/config.fish"),
-            Link("config/fish/functions/fish_title.fish", f"{HOME}/.config/fish/functions/fish_title.fish"),
-            Link("config/fish/functions/wcd.fish", f"{HOME}/.config/fish/functions/wcd.fish"),
-            Link("config/fish/completions/cwr.fish", f"{HOME}/.config/fish/completions/cwr.fish"),
+            Link("config/fish/config.fish", f"{home}/.config/fish/config.fish"),
+            Link("config/fish/functions/fish_title.fish", f"{home}/.config/fish/functions/fish_title.fish"),
+            Link("config/fish/functions/wcd.fish", f"{home}/.config/fish/functions/wcd.fish"),
+            Link("config/fish/completions/cwr.fish", f"{home}/.config/fish/completions/cwr.fish"),
         ]),
         Group("Emacs", [
-            Link("emacs.d/init.el", f"{HOME}/.emacs.d/init.el"),
+            Link("emacs.d/init.el", f"{home}/.emacs.d/init.el"),
         ]),
         Group("Hammerspoon", [
-            Link("hammerspoon/init.lua", f"{HOME}/.hammerspoon/init.lua"),
+            Link("hammerspoon/init.lua", f"{home}/.hammerspoon/init.lua"),
         ]),
         Group("Terminal & Shell", [
-            Link("tmux.conf", f"{HOME}/.tmux.conf"),
-            Link("bashrc", f"{HOME}/.bashrc"),
-            Link("hyper.js", f"{HOME}/.hyper.js"),
-            Link("wezterm.lua", f"{HOME}/.wezterm.lua"),
+            Link("tmux.conf", f"{home}/.tmux.conf"),
+            Link("bashrc", f"{home}/.bashrc"),
+            Link("hyper.js", f"{home}/.hyper.js"),
+            Link("wezterm.lua", f"{home}/.wezterm.lua"),
         ]),
         Group("Git", [
-            Link("gitconfig", f"{HOME}/.gitconfig"),
-            Link("gitignore", f"{HOME}/.config/git/ignore"),
+            Link("gitconfig", f"{home}/.gitconfig"),
+            Link("gitignore", f"{home}/.config/git/ignore"),
         ]),
         Group("Claude Code", [
-            Link("claude/settings.json", f"{HOME}/.claude/settings.json"),
-            Link("claude/CLAUDE.md", f"{HOME}/.claude/CLAUDE.md"),
-            Link("claude/rules", f"{HOME}/.claude/rules"),
-            Link("claude/output-styles", f"{HOME}/.claude/output-styles"),
-            Link("claude/commands", f"{HOME}/.claude/commands"),
-            Link("claude/statusline-command.sh", f"{HOME}/.claude/statusline-command.sh"),
-            Link("claude/statusline.mjs", f"{HOME}/.claude/statusline.mjs"),
-            Link("claude/worktree-guard.mjs", f"{HOME}/.claude/worktree-guard.mjs"),
-            Link("claude/skills/check-pr", f"{HOME}/.claude/skills/check-pr"),
-            Link("claude/skills/dev", f"{HOME}/.claude/skills/dev"),
-            Link("claude/skills/implement", f"{HOME}/.claude/skills/implement"),
-            Link("claude/skills/brainstorm", f"{HOME}/.claude/skills/brainstorm"),
-            Link("claude/skills/open-mo", f"{HOME}/.claude/skills/open-mo"),
-            Link("claude/skills/difit", f"{HOME}/.claude/skills/difit"),
-            Link("claude/skills/refine-rules", f"{HOME}/.claude/skills/refine-rules"),
-            Link("claude/skills/my-code-review", f"{HOME}/.claude/skills/my-code-review"),
-            Link("claude/skills/codex-review", f"{HOME}/.claude/skills/codex-review"),
-            Link("claude/skills/reflection", f"{HOME}/.claude/skills/reflection"),
-            Link("claude/skills/herdr-tab-name", f"{HOME}/.claude/skills/herdr-tab-name"),
-            Link("claude/skills/build-review-report", f"{HOME}/.claude/skills/build-review-report"),
+            Link("claude/settings.json", f"{home}/.claude/settings.json"),
+            Link("claude/CLAUDE.md", f"{home}/.claude/CLAUDE.md"),
+            Link("claude/rules", f"{home}/.claude/rules"),
+            Link("claude/output-styles", f"{home}/.claude/output-styles"),
+            Link("claude/commands", f"{home}/.claude/commands"),
+            Link("claude/statusline-command.sh", f"{home}/.claude/statusline-command.sh"),
+            Link("claude/statusline.mjs", f"{home}/.claude/statusline.mjs"),
+            Link("claude/worktree-guard.mjs", f"{home}/.claude/worktree-guard.mjs"),
+            *[
+                Link(f"claude/skills/{skill}", f"{home}/.claude/skills/{skill}")
+                for skill in CLAUDE_SKILLS
+            ],
         ]),
         Group("Codex", [
-            Link("codex/AGENTS.md", f"{HOME}/.codex/AGENTS.md"),
-            Link("codex/skills/dev", f"{HOME}/.codex/skills/dev"),
+            Link("codex/AGENTS.md", f"{home}/.codex/AGENTS.md"),
+            *[
+                Link(f"claude/skills/{skill}", f"{home}/.agents/skills/{skill}")
+                for skill in SHARED_SKILLS
+            ],
+            *[
+                Link(f"codex/skills/{skill}", f"{home}/.agents/skills/{skill}")
+                for skill in CODEX_SKILLS
+            ],
         ]),
         Group("Ghostty", [
-            Link("config/ghostty/config", f"{HOME}/.config/ghostty/config"),
+            Link("config/ghostty/config", f"{home}/.config/ghostty/config"),
         ]),
         Group("Herdr", [
-            Link("config/herdr/config.toml", f"{HOME}/.config/herdr/config.toml"),
+            Link("config/herdr/config.toml", f"{home}/.config/herdr/config.toml"),
         ]),
         Group("Bin", [
-            Link("bin/gph", f"{HOME}/.local/bin/gph"),
-            Link("bin/herdr-label", f"{HOME}/.local/bin/herdr-label"),
-            Link("bin/herdr-new-tab", f"{HOME}/.local/bin/herdr-new-tab"),
-            Link("bin/codex-worktree", f"{HOME}/.local/bin/codex-worktree"),
-            Link("bin/cwr", f"{HOME}/.local/bin/cwr"),
+            Link("bin/gph", f"{home}/.local/bin/gph"),
+            Link("bin/herdr-label", f"{home}/.local/bin/herdr-label"),
+            Link("bin/herdr-new-tab", f"{home}/.local/bin/herdr-new-tab"),
+            Link("bin/codex-worktree", f"{home}/.local/bin/codex-worktree"),
+            Link("bin/cwr", f"{home}/.local/bin/cwr"),
         ]),
     ]
 
@@ -191,8 +211,8 @@ def create_symlink(link: Link, stats: Stats, dry_run: bool = False, force: bool 
     stats.created += 1
 
 
-def run(dry_run: bool = False, force: bool = False) -> Stats:
-    groups = build_groups()
+def run(dry_run: bool = False, force: bool = False, home: Path = HOME) -> Stats:
+    groups = build_groups(home)
     stats = Stats()
 
     flags = []
@@ -207,7 +227,7 @@ def run(dry_run: bool = False, force: bool = False) -> Stats:
     print()
     print(f"{C.BOLD}Dotfiles Setup{C.RESET} [{mode}]")
     print(f"{C.DIM}repo: {REPO}{C.RESET}")
-    print(f"{C.DIM}home: {HOME}{C.RESET}")
+    print(f"{C.DIM}home: {home}{C.RESET}")
     print()
 
     for group in groups:
