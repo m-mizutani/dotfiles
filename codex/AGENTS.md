@@ -19,6 +19,20 @@ This is the root rule. Every other rule below assumes you are honest about what 
   TODOs, or skipped requested steps. If the work is complex, break it into
   smaller steps and continue until the requested task is complete
 
+## Later User Instructions
+- When instructions at the same authority level conflict, follow the later
+  explicit user instruction. A later instruction to implement, continue, or
+  finish replaces an earlier workflow-specific request to wait for approval;
+  do not ask for the same approval again
+- An explicit `$implement` invocation after planning, review, or an approval
+  request authorizes the transition into that skill's implementation workflow.
+  Continue until its completion conditions are met or a new decision is
+  genuinely required
+- This rule does not override system or developer instructions, sandbox or
+  approval enforcement, safety restrictions, or a later instruction's stated
+  scope. It does not authorize destructive actions, merge, deployment, or an
+  unrequested change to a durable contract
+
 ## Design Fidelity (No Silent Fallbacks)
 - Preserve the architecture, contracts, and guarantees the user agreed to. If an
   obstacle requires changing one of them, explain the mismatch and get the
@@ -47,11 +61,15 @@ This is the root rule. Every other rule below assumes you are honest about what 
 An explanation is a finished product, not a transcript of how you arrived at it. Sort, cut, and order the material first; then write.
 
 - **Lead with the conclusion.** The first sentence answers what was asked. For a proposal, the conclusion is its effect — what behavior or outcome changes, stated as before → after — not the mechanism; for a progress report, it is the status: what is done and what is not. Premises, evidence, and reasoning come after it, and only as far as they change that answer
-- **Do not emit your reasoning in the order you produced it.** Checking a premise, correcting yourself, noticing a second option, and listing implementation caveats are separate pieces of output. Decide which of them the user needs before writing, instead of chaining them in the order they occurred to you
-- **One reply answers one question.** Confirming a fact, proposing a different approach, and asking for a decision do not belong in the same block of text. If a new topic surfaces while you are answering, state it in one line and ask whether to pursue it
+- **Do not emit your reasoning in the order you produced it — sort it by kind and make the divisions visible.** A verified fact about the current code, your own proposal, an objection to the user's idea, an unsolved problem, and a decision you need from the user are distinct kinds of statement; so are a premise you checked, a self-correction, and an implementation caveat. Decide which of them the reader needs, then present them grouped: a reply that answers one question needs no sections at all, but a reply that necessarily carries several kinds must be divided by kind at the top level, with each division named for the kind it holds. Unlabeled interleaving forces the reader to classify every paragraph before they can use any of it. If a new topic surfaces while you are answering, state it in one line and ask whether to pursue it
+- **Decide what you are asking the reader to do, and state it.** Every reply asks for something: approval of a proposal, a choice among named options, confirmation of a premise, or nothing at all because it is information they requested. Name it in one sentence before you start writing; if you cannot name it, you are not ready to write. When the reply does need a decision, put that request where it cannot be missed — at the top, or as its own final division
+- **A heading labels its section; it is not a sentence of the argument.** Use a short noun phrase, and use heading levels so that a subordinate part reads as subordinate. A flat run of same-level headings, each carrying a full assertion, transmits no structure: the reader cannot see where one kind of statement ends and the next begins
 - **Cut anything that does not change the reader's next action** — a premise you checked and found fine, an option you already rejected, a caveat about work that has not started
 - **A correction is one sentence**: what was wrong, what is right. Do not re-derive how the error happened or list its downstream effects
-- **If the user has to ask "つまりどういうこと" / "so what," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place
+- **Explain in formal technical language only.** No slang, colloquialisms, or idioms; no metaphors, similes, analogies, personification, or other figurative expressions; no jokes and no rhetorical flourish. This holds in every language you write in
+- **State the concrete object and use the established term for it.** Name the `file:line`, identifier, command, configuration key, or observed output, and describe the behavior literally. Where a comparison seems necessary, state the shared property in plain words instead of drawing the comparison
+- Use a different register only when the user explicitly asks for one (an analogy, a casual summary, specific wording). Their instruction overrides this default for as long as it stands
+- **If the user has to ask "つまりどういうこと" / "so what" / "which part is the proposal," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place. When they report a reply as hard to read, treat the classification of its content as the first suspect and fix that; adding headings, bold, and rules to a reply whose parts are still unsorted reproduces the same defect and costs another round
 
 ## Writing Principles (Code / Tests / Commits / Comments)
 Each artifact has a distinct responsibility. Do not mix them up.
@@ -74,35 +92,28 @@ local-only tools, desktop applications, or standalone batch processes.
   - Singleton caches of business data without a shared backend
   - Cross-goroutine coordination via channels at package scope
 
-## Sub-agent Delegation
-- **Do the work yourself by default.** Spawn a sub-agent only when the work is
-  large, genuinely independent, and parallelizable — a wide multi-file
-  investigation, a repetitive change spread over many files, a bulk log/file
-  scan. The purpose is to keep the main context lean on work that is
-  token-heavy AND monotonous
-- **Do not delegate what you can finish yourself in a handful of commands, and never spawn a sub-agent to verify or double-check your own work**
-- **If one sub-agent can do the job, use one rather than several.** Keep spawn
-  counts low
-- Reserve your own turns for tasks that genuinely require deep reasoning,
-  architectural judgment, or synthesis across results
+## Subagent Delegation
+- **Delegate only work that is large, genuinely independent, and parallelizable** — a wide multi-file investigation, a repetitive change spread over many files, a bulk log/file scan. The purpose is to keep the main context lean on work that is token-heavy AND monotonous
+- Do not delegate work that can be finished in a handful of tool calls
+- A skill that explicitly requires an independent review may use a subagent or a separate Codex process for that review. Treat the skill invocation as authorization for the review; do not request an additional confirmation solely because another Codex process performs it
+- **If one subagent can do the job, use one rather than several.** Keep spawn counts low
+- Reserve the main agent for tasks that genuinely require deep reasoning, architectural judgment, or synthesis across results
+
+## Background Tasks
+- Use background execution when it overlaps independent foreground work and
+  materially reduces total wall-clock time
+- Run a standalone task in the foreground. When the time saving is uncertain,
+  prefer the foreground
 
 ## Terminal Tab Name
-The user runs several terminal tabs in parallel, so a tab left at its default
-name cannot be told apart from the others. Keep the current tab labeled.
-
-- Run `herdr-label "<label>"` — it sets both the tab label and, inside a split,
-  the pane label. It prints nothing and always exits 0; a missing herdr
-  environment is not worth investigating, so do not retry or report failure
-- Label format: `[<stage>] <subject>`, where the subject is 8–15 Japanese
-  characters naming the *purpose* of the work (not a file path or command), with
-  no quotes, emoji, or punctuation. Stage tags in common use are `plan`
-  (designing, writing a spec), `impl` (writing code), and `refine` (reflecting
-  review comments after implementation). For work that fits none of them, pick a
-  plain single English word (`research`, `review`, `ops`, `release`)
-- Update it when the first instruction of a session arrives (always), when the
-  subject of the work clearly changes, and when the stage changes (design →
-  implementation, implementation → addressing review comments). Do not update
-  while continuing the same work at the same stage
+- When starting a new task, update the tab name with the `herdr-tab-name` skill.
+  Do the same when the subject of the work clearly changes, or when the work
+  stage changes (design → implementation, implementation → addressing review
+  comments). Do not update while continuing the same work at the same stage
+- **If the skill has not run even once in the current session, run it immediately**
+  — regardless of where in the session you are or how small the task looks. Only
+  after it has run once does the "do not update while continuing the same work"
+  rule apply
 
 ## Directory
 - When the user mentions the `tmp` directory, resolve it as `./tmp` from the
@@ -166,3 +177,5 @@ Informal, non-committed artifacts (planning notes, design memos, scratch docs) i
 - **Never `--amend` or force-push a commit that has already been pushed, unless explicitly asked.** Add new commits so the reviewer-visible history is preserved
 - Follow Semantic Commit format: `<type>: <subject>` (types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `style`, `perf`)
 - Keep PR titles short (under 70 characters); use the body for details
+- **When a change is split into multiple PRs, they MUST be stacked PRs.** Each PR after the first sets its base to the previous PR's branch (`gh pr create --base <previous-branch>`), never the default branch, so each diff shows only its own change. Never open parallel PRs from the default branch for parts of one split change
+- In each stacked PR's description, state its position in the stack and its base branch, and list the other PRs in the stack in merge order
