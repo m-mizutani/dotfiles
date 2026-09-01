@@ -62,6 +62,39 @@ class SetupTests(unittest.TestCase):
             content = (source_dir / "SKILL.md").read_text()
             self.assertIn(f"name: {skill}", content)
 
+    def test_herdr_tab_name_uses_agent_specific_instructions(self):
+        home = Path("/tmp/test-home")
+        groups = {group.name: group for group in setup.build_groups(home)}
+
+        claude_links = {link.dst: link.src for link in groups["Claude Code"].links}
+        codex_links = {link.dst: link.src for link in groups["Codex"].links}
+
+        self.assertEqual(
+            claude_links[f"{home}/.claude/skills/herdr-tab-name"],
+            "claude/skills/herdr-tab-name",
+        )
+        self.assertEqual(
+            codex_links[f"{home}/.agents/skills/herdr-tab-name"],
+            "codex/skills/herdr-tab-name",
+        )
+
+    def test_run_migrates_managed_herdr_tab_name_link(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            home = Path(temporary_directory)
+            destination = home / ".agents/skills/herdr-tab-name"
+            destination.parent.mkdir(parents=True)
+            os.symlink(setup.REPO / "claude/skills/herdr-tab-name", destination)
+
+            with contextlib.redirect_stdout(io.StringIO()):
+                stats = setup.run(home=home)
+
+            self.assertEqual(stats.failed, 0)
+            self.assertEqual(stats.replaced, 1)
+            self.assertEqual(
+                destination.resolve(),
+                setup.REPO / "codex/skills/herdr-tab-name",
+            )
+
     def test_run_creates_symlinks_and_is_idempotent(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             home = Path(temporary_directory)

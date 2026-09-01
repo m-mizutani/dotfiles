@@ -42,6 +42,7 @@ class Link:
     """A single symlink: src (relative to repo root) -> dst (absolute)."""
     src: str
     dst: str
+    legacy_sources: tuple[str, ...] = ()
 
 
 @dataclass
@@ -58,7 +59,6 @@ REPO = Path(__file__).resolve().parent
 
 SHARED_SKILLS = (
     "difit",
-    "herdr-tab-name",
     "open-mo",
 )
 
@@ -68,6 +68,7 @@ CODEX_SKILLS = (
     "build-review-report",
     "check-pr",
     "codex-review",
+    "herdr-tab-name",
     "spec",
     "implement",
     "my-code-review",
@@ -124,7 +125,13 @@ def build_groups(home: Path = HOME) -> list[Group]:
                 for skill in SHARED_SKILLS
             ],
             *[
-                Link(f"codex/skills/{skill}", f"{home}/.agents/skills/{skill}")
+                Link(
+                    f"codex/skills/{skill}",
+                    f"{home}/.agents/skills/{skill}",
+                    legacy_sources=("claude/skills/herdr-tab-name",)
+                    if skill == "herdr-tab-name"
+                    else (),
+                )
                 for skill in CODEX_SKILLS
             ],
         ]),
@@ -180,6 +187,18 @@ def create_symlink(link: Link, stats: Stats, dry_run: bool = False, force: bool 
     if dst.is_symlink() and dst.resolve() == src.resolve():
         print(f"  {icon_skip()} {label} {C.DIM}(already linked){C.RESET}")
         stats.skipped += 1
+        return
+
+    legacy_sources = {(REPO / source).resolve() for source in link.legacy_sources}
+    if dst.is_symlink() and dst.resolve() in legacy_sources:
+        if dry_run:
+            print(f"  {icon_replace()} {label} {C.DIM}(would replace managed link){C.RESET}")
+            stats.replaced += 1
+            return
+        dst.unlink()
+        os.symlink(src, dst)
+        print(f"  {icon_replace()} {label} {C.DIM}(replaced managed link){C.RESET}")
+        stats.replaced += 1
         return
 
     # Something else exists at dst
