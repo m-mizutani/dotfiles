@@ -22,5 +22,11 @@ trust_level = "trusted"
 [projects."/Users/mizutani/.ghq/github.com/ubie-inc/hecatoncheires"]
 trust_level = "trusted"
 
+[projects."/Users/mizutani/.ghq/github.com/secmon-lab/hecatoncheires"]
+trust_level = "trusted"
+
+[projects."/Users/mizutani/.ghq/github.com/m-mizutani/octify"]
+trust_level = "trusted"
+
 [mcp_servers.sentry]
 url = "https://mcp.sentry.dev/mcp"

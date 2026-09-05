@@ -20,8 +20,9 @@ Use `--force` only when an existing destination should be replaced.
 python3 setup.py --force
 ```
 
-The setup script manages `~/.codex/config.toml` from `codex/config.toml`. Use
-`--force` once when replacing an existing unmanaged Codex configuration file.
+The setup script manages `~/.codex/config.toml` from `codex/config.toml` and
+`~/.codex/AGENTS.md` from `codex/AGENTS.md`. Use `--force` once when replacing
+an existing unmanaged Codex file.
 
 ## Agent skills
 
