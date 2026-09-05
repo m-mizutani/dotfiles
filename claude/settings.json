@@ -2,6 +2,7 @@
   "env": {
     "CLAUDE_AFK_COUNTDOWN_MS": "2147483647",
     "CLAUDE_AFK_TIMEOUT_MS": "2147483647",
+    "CLAUDE_CODE_THRIFTY_SONIC": "false",
     "ENABLE_TOOL_SEARCH": "true"
   },
   "permissions": {
