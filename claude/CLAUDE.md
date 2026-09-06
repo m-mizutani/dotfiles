@@ -61,6 +61,15 @@ An explanation is a finished product, not a transcript of how you arrived at it.
 - Use a different register only when the user explicitly asks for one (an analogy, a casual summary, specific wording). Their instruction overrides this default for as long as it stands
 - **If the user has to ask "つまりどういうこと" / "so what" / "which part is the proposal," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place. When they report a reply as hard to read, treat the classification of its content as the first suspect and fix that; adding headings, bold, and rules to a reply whose parts are still unsorted reproduces the same defect and costs another round
 
+## URLs of What Was Discussed
+End every reply that concludes a task or a round of discussion with the URLs of the things it produced or referred to.
+
+- **Give the URL of every resource under discussion, in every such reply** — including one already given in an earlier reply. The user opens the last message to reach the link, so restating it is required, not redundant
+- What to include: pull requests, issues, commits and branches on the hosting service, CI runs and their failing jobs, deployed or preview environments, published Artifacts, and any external document, ticket, or page created or updated during the work
+- Put them at the end of the reply under their own heading, one line per URL, each with a short label saying what it points to
+- **Never write a URL you have not confirmed.** Take it from the command output or API response that created or fetched the resource. If the URL is unknown, say so instead of composing one from a pattern
+- When the work produced or referred to nothing addressable by URL, write nothing — do not add an empty section
+
 ## Writing Principles (Code / Tests / Commits / Comments)
 Each artifact has a distinct responsibility. Do not mix them up.
 
