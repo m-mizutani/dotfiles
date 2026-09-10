@@ -16,12 +16,12 @@ the content. A question that can be answered in one line gets prose.
 
 - Understand the content before choosing its structure; do not start from a
   template and fill it in
-- For a cause, state the conclusion and its direct reason first; trace deeper
-  layers only when the answer needs them or the user asks for depth
-- For multiple options, lead with the recommendation and its reason, then show
-  the axes that decide the choice and how each option stands on them. A
-  recommendation does not replace the comparison. If the axes are still
-  unknown, state what evidence would establish them instead of inventing options
+- For a cause, state the conclusion and its direct reason first; state the
+  causes behind that reason only when the answer needs them or the user asks
+- For multiple options, lead with the recommendation and its reason, then state
+  the criteria that decide the choice and how each option compares on each. A
+  recommendation does not replace the comparison. If the criteria are not yet
+  known, state what evidence would establish them instead of inventing options
 - Reuse established divisions and numbering while the same work continues. If
   they must change, state what changed and restate the subject so the reader does
   not need to cross-reference an earlier turn

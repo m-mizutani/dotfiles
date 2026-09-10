@@ -25,7 +25,7 @@ If the project already standardizes on a different library (existing imports, `g
 ## Error Handling
 - Use `github.com/m-mizutani/goerr/v2` for error handling
 - Must wrap errors with `goerr.Wrap` to maintain error context
-- **Always propagate the variables needed to debug the failure via `goerr.V`** (key IDs, sizes, states, the offending input shape). An error without the context to diagnose it is half an error
+- **Always propagate the variables needed to debug the failure via `goerr.V`** (key IDs, sizes, states, the structure of the input that caused the failure). An error carrying none of that context cannot be diagnosed from the log alone
   - **BUT never attach PII or secrets via `goerr.V` blindly.** Whether attaching raw values is acceptable depends on whether this is an internal-only tool or an externally-facing one (where the error may surface to users or third parties / be logged where others can read it). Judge this carefully per project; when in doubt, attach an identifier or a masked form (see `masq`) rather than the raw value
 - Propagate operation failures to the caller with `goerr.Wrap` or return them
   directly, including from GraphQL resolvers and partial-success paths. A
@@ -50,7 +50,7 @@ If the project already standardizes on a different library (existing imports, `g
 
 ## Background Goroutines
 - Background goroutines launch via the project's async-dispatch helper (panic recovery + logger context propagation + error reporting), never raw `go func(){...}()`
-- Tests that exercise async tails must wait deterministically (e.g. via the helper's `Wait()` primitive). Do not rely on `time.Sleep`
+- Tests that exercise work continuing in a background goroutine after the call returns must wait deterministically (e.g. via the helper's `Wait()` method). Do not rely on `time.Sleep`
 
 ## Code Visibility
 - Do not export methods, structs, or variables that outside consumers do not need. Assume anything exported will be depended on and changed
@@ -60,7 +60,7 @@ If the project already standardizes on a different library (existing imports, `g
   functions
   - Default values should be controlled at the caller's level (e.g., CLI flags, configuration)
   - Internal functions should receive all necessary parameters from their callers
-  - This ensures configurability and avoids hidden magic values
+  - This keeps the value configurable and avoids a hardcoded constant buried in an internal function
 - Use `os.LookupEnv` instead of `os.Getenv` whenever "unset" and "empty" must be distinguished
 
 ## Testing

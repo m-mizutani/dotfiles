@@ -51,5 +51,5 @@ change.
 ## Verification
 When a frontend file changes, run the project's frontend unit tests and lint
 command (typically `pnpm test` and `pnpm lint`) once. Both must pass before
-reporting the task complete; lint enforces interaction invariants such as IME and
-keyboard handling even for small changes.
+reporting the task complete; lint enforces the IME and keyboard-handling
+requirements above even for small changes.
