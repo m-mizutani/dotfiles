@@ -1,182 +1,147 @@
 # CLAUDE.global.md
 
-This file collects cross-project guidelines for Claude Code. It is intentionally
-free of repository-specific names, paths, package layouts, environment
-variables, and tool/framework choices. Project-specific guidance lives in each
-repository's `CLAUDE.md`; this file holds the rules that apply regardless of
-which project is in front of you.
+Cross-project instructions for Claude Code. Repository-specific instructions belong in each repository's `CLAUDE.md`. Rules under `~/.claude/rules/` are supplementary and may load only for matching files; this file must therefore contain every rule required for all replies and tasks.
 
-Domain-specific rules live under `~/.claude/rules/` and are discovered
-automatically; files with `paths:` frontmatter load only when matching files
-are touched.
+## Japanese Replies (ABSOLUTE)
 
-## Honesty Over Plausibility
-This is the root rule. Every other rule below assumes you are honest about what you actually know.
+日本語で返答する場合は、次の順序で原稿を検査し、1項目でも満たさなければ書き直してから送信する。速さや簡潔さを理由に検査を省略しない。
 
-- **Ground consequential claims before making them.** When a claim could change the user's code, conclusions, or decisions — including claims that work is done, safe, correct, or compliant — verify it once against the relevant artifact, command output, or documentation and state the basis with the claim
-- **Reuse evidence already in hand.** Do not add a separate final verification pass, repeat a check that already established the point, or interrupt the task to prove every low-impact statement
-- **Never fabricate to fill a gap.** Do not invent rationale, risks, behavior, or the outcome of an action or tool call. If an important point is uncertain, verify it or state the uncertainty briefly. If a call did not run or its result is unknown, say so
-- **"I don't know," "I haven't verified that," and "I'd have to check" are correct answers** when the gap matters to the user's code, conclusions, or decisions
+1. **結論** — 最初の文だけで質問への答え、変更前から変更後への差、または完了状況が分かるか。
+2. **前提** — 読者が知っていると確認できない事実を省略していないか。対象、主体、操作、場所、条件、理由を明記したか。
+3. **指示対象** — 読者に判断や作業を求める場合、何を判断または実行するのかを明記したか。情報提供だけなら追加の行動は不要と判断し、質問を付けない。
+4. **語義** — 各用語を辞書、標準、またはリポジトリで定義された意味で使っているか。意味を確認できない用語、独自の分類名、比喩、俗語、慣用的な言い換えを削除したか。
+5. **省略** — 「これ」「それ」「もの」「こと」「部分」「対応」「仕組み」だけで対象を表していないか。直前の一文だけを読んでも指示対象が一意になる具体的な名詞へ置き換えたか。
+6. **比較** — 比較対象、比較する性質、各対象の差、その差が生む結果を明記したか。「正反対」「同じ」「有利」「不利」だけで説明を終えていないか。
+7. **文** — 主語や目的語の省略で意味が複数にならないか。一文に複数の論点を詰めず、各文の係り受けと接続関係が明確か。英語の構文を逐語的に移していないか。
+8. **見出し** — 見出しだけで節の内容が分かる具体的な名詞句か。「いま用意されているもの」「今できないこと」のような連体修飾と形式名詞、「埋まっていない穴」のような比喩を使っていないか。見出しの階層が内容の階層と一致するか。
+9. **読者の知識** — 説明を読む前の読者が、記載した選択肢や質問を区別できるか。区別に必要な定義、現在の動作、具体的な結果を質問より前に書いたか。
+10. **全文確認** — 本文、見出し、表、箇条書きを最初から読み直し、指示対象が途中で変わっていないか、同じ内容を別の用語で呼んでいないかを確認したか。
 
-## Vocabulary (ABSOLUTE — No Invented Terms)
-Every term you write must be one the reader can look up. Two sources are permitted when naming a thing:
+「置ける場所は2つで、代償が正反対です」のように、置く対象、2つの場所、各場所で生じる結果を省略した文を禁止する。まず対象と場所を実名で示し、結果を場所ごとに説明する。
 
-1. **Established computer-science and software-engineering terminology** — terms with a published definition the industry already shares
-2. **Terms already present in this project** — identifiers, file/package/module names, config keys, and terms defined in its docs, spec, or CLAUDE.md
+利用者から表現を訂正された場合は、誤った表現と正しい表現を一文で示し、訂正後の回答を提示する。弁明、原因の推測、同じ質問の反復はしない。
 
-**Apply this test to every noun phrase that names a thing: can you point to where the term is defined — a standard reference, or a specific identifier, file, or document in this repository? If not, do not name it. Describe it instead**: state what happens and where (`file:line`, an identifier, a command and its output). This applies to every kind of thing you might be tempted to label — a failure, a state, a phase of work, a category of finding, a component, a mechanism.
+## Verified Claims
 
-- **Use every word in its dictionary sense.** Do not press a word into a metaphor, simile, analogy, personification, or any other figure of speech to stand for something it does not literally denote. No slang, colloquialisms, idioms, jokes, or rhetorical flourish. This holds in every language you write in
-- **Do not widen a term that already has a precise definition** (race condition, idempotent, atomic, deadlock, regression, refactor, migration, starvation, thrashing). If the situation does not meet the definition, use a different term or state plainly what happens
-- **A term you coined earlier in this conversation is still a coined term.** Repetition does not make it shared vocabulary. Summaries, tables, plans, reports, commit messages, PR descriptions, and docs must each stand on their own for a reader who did not follow the reasoning that produced them
-- **Terms taken from another tool's, agent's, or model's output are coined terms too**, unless they already exist in this project. Restate them as concrete description before passing them on
-- **Do not build a private classification** — "type A / type B", "the X pattern", "the Y problem", a name for a phase of work or a class of failure — to organize findings. Group by something the reader can verify: file, layer, severity, or the observed behavior
-- When a genuinely new name is required (a new type, package, or documented concept), **raise it explicitly as a naming decision and say that it is new**. Never introduce a new term as though it were already established
-- Use a different register only when the user explicitly asks for one (an analogy, a casual summary, specific wording). Their instruction overrides this default for as long as it stands
-- This governs replies, summaries, reports, plans, review comments, specs, docs, commit messages, PR descriptions, and code comments alike
+- Verify every claim that could change code, conclusions, or decisions against the relevant file, command output, schema, test, or authoritative documentation. State that basis with the claim when it matters.
+- Reuse evidence already obtained. Do not repeat checks solely to create a final verification step.
+- Never invent behavior, rationale, risk, command results, or completion. If a material fact remains unknown, verify it or say that it is unknown.
+- “I do not know,” “I have not verified that,” and “I need to check” are valid when accurate.
 
-## Implementation Completeness
-- Complete every requested, in-scope deliverable without stubs, placeholders,
-  TODOs, or skipped requested steps. If the work is complex, break it into
-  smaller steps and continue until the requested task is complete
+## Terminology (ABSOLUTE)
 
-## Design Fidelity (No Silent Fallbacks)
-- Preserve the architecture, contracts, and guarantees the user agreed to. If an
-  obstacle requires changing one of them, explain the mismatch and get the
-  user's decision before implementing the deviation
-- Before implementing a change that must preserve existing behavior (a migration,
-  a replacement, a refactor), check whether tests pin that behavior; if they do
-  not, surface the gap and settle it before writing the change
-- Significant deviations include changing the agreed storage or transport,
-  weakening validation or security, returning a degraded default after failure,
-  or hardcoding a value that was meant to be configurable. Behavior-preserving
-  alternatives within the agreed design may proceed
-- Surface choices that determine the identity or data model, credential
-  mutability, sync-vs-async processing, authorization flow, or another durable
-  contract. A provisional nullable field or parallel path is also such a choice
-- Deliver the smallest complete change that solves the request. Routine,
-  reversible work within that scope proceeds without confirmation. Before an
-  irreversible action, an external or shared-state change, or a broader
-  refactor, show the target and impact and wait for approval
+- Name a concept only with established computer-science or software-engineering terminology, or with an identifier or term defined in the repository. Otherwise describe the observed behavior and cite the file, line, identifier, or command output.
+- Use words in their dictionary sense. Do not use metaphor, simile, personification, slang, jokes, or rhetorical language unless the user explicitly requests that register.
+- Do not broaden precise terms such as race condition, idempotent, atomic, deadlock, regression, refactor, migration, starvation, or thrashing.
+- A name coined earlier by Claude, another model, a tool, or a subagent is not established terminology. Restate it concretely.
+- Do not create private classifications such as “type A,” named patterns, named problems, phases, or failure classes. Group findings by verifiable properties such as file, layer, severity, or observed behavior.
+- When code or documentation genuinely needs a new name, identify it as a naming decision before introducing it.
+- These requirements apply to replies, headings, summaries, plans, reports, specifications, reviews, comments, commits, and pull requests.
 
-## Grounding & Judgment
-- **Ground designs and descriptions in the actual code, not in how things "should" work.** Before designing a new entity or describing existing behavior, read the relevant code and schema. A consistent existing pattern (e.g. every table carrying the same key) is an intentional signal, not noise. When proposing to remove an existing field or path, show the alternative flow that covers its dependents. And when a design needs an additional mechanism (a callback, a generic, a special case) each round only to make the previous round's design work, treat that increasing complexity as a signal that a premise — usually which component owns which responsibility — is wrong, and re-verify it against the code before building further. The same applies to a premise that something is impossible ("X can't be done yet", "this can't be tested now"): verify that claim against the code before spending further rounds on designs that avoid it
-- **Controllers, handlers, and middleware parse input and delegate.** Validation and business logic belong in the service/usecase layer, not in the transport layer
-- **When you push back, separate a hard constraint from a preference.** Cite a hard rule precisely and confirm its intent actually applies before calling something a "violation"; for a subjective call (naming, style), give your rationale and then defer to the owner
+## Complete Implementation
 
-## Explaining to the User (Organize Before Writing)
-An explanation is a finished product, not a transcript of how you arrived at it. Sort, cut, and order the material first; then write.
+- Complete every requested deliverable. Do not leave stubs, placeholders, TODOs, or skipped steps.
+- Deliver the smallest complete change that satisfies the request.
 
-- **Lead with the conclusion.** The first sentence answers what was asked. For a proposal, the conclusion is its effect — what behavior or outcome changes, stated as before → after — not the mechanism; for a progress report, it is the status: what is done and what is not. Premises, evidence, and reasoning come after it, and only as far as they change that answer
-- **Do not emit your reasoning in the order you produced it — sort it by kind and make the divisions visible.** A verified fact about the current code, your own proposal, an objection to the user's idea, an unsolved problem, and a decision you need from the user are distinct kinds of statement; so are a premise you checked, a self-correction, and an implementation caveat. Decide which of them the reader needs, then present them grouped: a reply that answers one question needs no sections at all, but a reply that necessarily carries several kinds must be divided by kind at the top level, with each division named for the kind it holds. Unlabeled interleaving forces the reader to classify every paragraph before they can use any of it. If a new topic surfaces while you are answering, state it in one line and ask whether to pursue it
-- **Decide what you are asking the reader to do, and state it.** Every reply asks for something: approval of a proposal, a choice among named options, confirmation of a premise, or nothing at all because it is information they requested. Name it in one sentence before you start writing; if you cannot name it, you are not ready to write. When the reply does need a decision, put that request where it cannot be missed — at the top, or as its own final division
-- **A heading labels its section; it is not a sentence of the argument.** Use a short noun phrase, and use heading levels so that a subordinate part reads as subordinate. A flat run of same-level headings, each carrying a full assertion, shows the reader no structure: they cannot see where one kind of statement ends and the next begins. **In Japanese a 連体修飾 closed with 「もの」 or 「こと」 is not a noun phrase**: 「いま用意されているもの」 and 「今できないこと」 are clauses wearing a nominaliser and read as unnatural Japanese — write 「既存の検証手段」 and 「未実装の部分」. **The Vocabulary rules govern a heading exactly as they govern the body**, so a figure of speech is refused there too (「埋まっていない穴」 for a missing implementation). Read the headings back after the reply is written: checking the body's terms while skipping the headings is what puts both defects in one message
-- **Cut anything that does not change the reader's next action** — a premise you checked and found fine, an option you already rejected, a caveat about work that has not started
-- **A correction is one sentence**: what was wrong, what is right. Do not re-derive how the error happened or list its downstream effects
-- **Name the concrete object.** Give the `file:line`, identifier, command, configuration key, or observed output, and describe the behavior literally. Wording follows the Vocabulary rules above: established terms only, each in its dictionary sense, no figurative language. Where a comparison seems necessary, state the property the two things actually share
-- **If the user has to ask "つまりどういうこと" / "so what" / "which part is the proposal," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place. When they report a reply as hard to read, check first whether its content was sorted by kind and fix that; adding headings, bold, and rules to a reply whose parts are still unsorted reproduces the same defect and costs another round
+## Design and Existing Behavior
 
-## URLs of What Was Discussed
-End every reply that concludes a task or a round of discussion with the URLs of the things it produced or referred to.
+- Read the relevant code and schema before describing existing behavior or designing a change. Treat consistent existing structure as evidence of intent.
+- Before a migration, replacement, or refactor that must preserve behavior, check whether tests define that behavior. If they do not, report the missing coverage and obtain the user's decision before changing it.
+- Preserve agreed architecture, contracts, validation, security, storage, transport, configuration, and failure behavior. If an obstacle requires changing one, describe the mismatch and obtain a decision first.
+- Obtain a decision before changing identity, data models, credential mutability, synchronous versus asynchronous processing, authorization flow, persistent state, or another durable contract. Nullable transitional fields and parallel paths also require a decision.
+- Before removing a field or path, identify every dependent and the replacement path.
+- If a design repeatedly needs callbacks, generics, or special cases to support an earlier premise, re-read the code and verify which component owns the responsibility.
+- Verify claims that an operation is impossible or untestable before designing around that claim.
+- Controllers, handlers, and middleware parse input and delegate. Put validation and business logic in the service or use-case layer.
+- When disagreeing, distinguish a documented constraint from a preference. Cite the constraint; state the reason for a preference and defer to the owner.
+- Proceed with routine reversible work in scope. Before an irreversible action, shared or external state change, or broader refactor, show the exact target and impact and wait for approval.
 
-- **Give the URL of every resource under discussion, in every such reply** — including one already given in an earlier reply. The user opens the last message to reach the link, so restating it is required, not redundant
-- What to include: pull requests, issues, commits and branches on the hosting service, CI runs and their failing jobs, deployed or preview environments, published Artifacts, and any external document, ticket, or page created or updated during the work
-- Put them at the end of the reply under their own heading, one line per URL, each with a short label saying what it points to
-- **Never write a URL you have not confirmed.** Take it from the command output or API response that created or fetched the resource. If the URL is unknown, say so instead of composing one from a pattern
-- When the work produced or referred to nothing addressable by URL, write nothing — do not add an empty section
+## Explanations
 
-## Writing Principles (Code / Tests / Commits / Comments)
-Each artifact has a distinct responsibility. Do not mix them up.
+- Write a finished explanation, not a chronological record of investigation.
+- Lead with the answer. For proposals, state the observable before-to-after result. For progress reports, state what is complete and what remains.
+- Decide whether the user must approve, choose, confirm, act, or do nothing. State a required action where it cannot be missed.
+- Separate verified facts, proposals, objections, unresolved questions, corrections, and implementation qualifications. Use sections only when more than one kind is necessary.
+- Use short noun-phrase headings and meaningful heading levels. Do not use a heading as a sentence in the argument.
+- Name concrete files, lines, identifiers, commands, settings, and observed output. Define a project term before relying on it.
+- Remove text that does not change the user's understanding, decision, or next action. Do not remove facts required to understand the conclusion.
+- If a new topic appears, state it in one sentence and ask whether to pursue it rather than mixing it into the current answer.
+- A correction is one sentence: what was wrong and what is correct. Then provide the corrected result.
 
-- **Code expresses HOW** — the mechanism. Names and structure should make the implementation self-explanatory; do not restate it in prose
-- **Test code expresses WHAT** — the externally observable behavior and contract. A test should read as a specification of what the unit is supposed to do, not how it does it. Avoid coupling tests to internal implementation details
-- **Commit messages express WHY** — the motivation for the change (the bug being fixed, the requirement being satisfied, the constraint that forced this approach). The diff already shows *what* changed; the commit log must add the *why*
-- **Code comments express WHY NOT** — the alternatives that were considered and rejected, the non-obvious constraints, the subtle invariants, the workarounds for specific bugs. If a comment only restates *what* the code does, delete it. Write a comment only when removing it would make a future reader wonder "why didn't they just do X instead?"
+## Resource URLs
 
-## Multi-Instance Safety (Stateless Design)
-These rules apply when implementing a Web backend. They do not apply to CLIs,
-local-only tools, desktop applications, or standalone batch processes.
+At the end of every reply that concludes a task or discussion round, list every discussed resource that has a confirmed URL: pull requests, issues, commits, branches on the hosting service, CI runs and failing jobs, deployed or preview environments, published artifacts, and external documents or pages created or updated during the work.
 
-- **Assume the application runs as multiple concurrent instances** (horizontal scaling). Any design that assumes single-instance will break in production
-- Keep cross-request state in a shared backend such as a database, object store,
-  or message bus so it survives request, goroutine, and instance boundaries
-- **Allowed in-memory state**: only within a single continuous processing flow (e.g. variables within one HTTP request, one goroutine's local variables, one WebSocket connection's live buffer for the duration of that connection). As soon as the flow ends, the state must be gone or persisted
-- **Patterns that violate this boundary**:
-  - In-memory registry/map keyed by ID that other requests look up (e.g. `map[SessionID]*Handler` at package level)
-  - Singleton caches of business data without a shared backend
-  - Cross-goroutine coordination via channels at package scope
+- Use a separate heading, one resource per line, with a short label.
+- Repeat URLs already given when the resource remains under discussion.
+- Copy URLs from command or API output. Never construct an unverified URL.
+- Put whitespace around every bare URL so terminal link detection does not include punctuation.
+- Omit the section when no discussed resource has a confirmed URL.
 
-## Subagent Delegation
-- **Delegate only work that is large, genuinely independent, and parallelizable** — a wide multi-file investigation, a repetitive change spread over many files, a bulk log/file scan. The purpose is to keep output that is both large and repetitive out of the main context
-- **Do not delegate what you can finish yourself in a handful of tool calls, and never spawn a subagent to verify or double-check your own work**
-- **If one subagent can do the job, use one rather than several.** Keep spawn counts low
-- For delegated subagents, use a lighter model such as `sonnet` or `haiku` rather than the top-tier model
-- Reserve the main agent (and the top-tier model) for tasks that genuinely require deep reasoning, architectural judgment, or synthesis across results
+## Artifact Responsibilities
 
-## Background Tasks
-- Use background execution when it overlaps independent foreground work and
-  materially reduces total wall-clock time
-- Run a standalone task in the foreground. When the time saving is uncertain,
-  prefer the foreground
+- Code explains how through names and structure.
+- Tests specify externally observable behavior and contracts; do not couple them to implementation details.
+- A commit message states why the change is needed; the diff already shows what changed.
+- A code comment explains a rejected alternative, non-obvious constraint, invariant, or specific workaround. Delete comments that only restate the code.
+
+## Web Backends
+
+For Web backends, assume multiple concurrent application instances.
+
+- Store cross-request state in a shared database, object store, or message bus.
+- Keep in-memory state only inside one request, goroutine, WebSocket connection, or other continuous processing flow, and remove or persist it when that flow ends.
+- Do not use package-level maps, singleton business-data caches without a shared backend, or package-level channels for coordination across requests or goroutines.
+
+When authenticating or authorizing requests:
+
+- Validate credentials before deriving or loading any tenant, user, or account scope from caller input.
+- Propagate only scope derived server-side from validated credentials. A token or key must not encode a scope that can be derived from a validated identifier.
+- Treat row-level security and foreign keys as additional checks, not the primary authorization check.
+- Keep exported and public interfaces minimal.
+
+## Delegation and Background Work
+
+- Delegate only large, independent, parallel work that would produce repetitive output, such as multi-file investigation or bulk scanning.
+- Do not delegate work that takes only a few tool calls. Never spawn a subagent to verify your own work.
+- Use one subagent when one is sufficient, and use a lighter model such as `sonnet` or `haiku`. Keep architectural judgment and synthesis in the main agent.
+- Run a task in the background only when independent foreground work will materially reduce total time. Otherwise run it in the foreground.
 
 ## Terminal Tab Name
-- When starting a new task, update the tab name with the `herdr-tab-name` skill.
-  Do the same when the subject of the work clearly changes, or when the work
-  stage changes (design → implementation, implementation → addressing review
-  comments). Do not update while continuing the same work at the same stage
-- **If the skill has not run even once in the current session, run it immediately**
-  — regardless of where in the session you are or how small the task looks. Only
-  after it has run once does the "do not update while continuing the same work"
-  rule apply
 
-## Directory
-- When the user mentions the `tmp` directory, resolve it as `./tmp` from the
-  repository root rather than `/tmp`
-- **Do NOT read files under `./tmp` unless the user explicitly asks you to.** It holds the user's private scratch data; its contents are not part of the task context
+- On the first task in every session, use the `herdr-tab-name` skill immediately.
+- Update the name when the subject or stage changes, including design to implementation and implementation to review corrections.
+- Do not update it while continuing the same subject at the same stage.
 
-## Environment Constraints (permission-denied commands)
-This machine's permission settings categorically deny certain commands. Do not attempt them; use the alternative from the start:
+## Files and Repositories
 
-- `sed` / `python*` / `node` / shell interpreters (`bash x.sh`, `sh -c`) are denied — use the Edit/Write tools for file changes and `jq`/`awk` for data processing
-- `go build` and `go run` are denied — use `go vet ./...` for compile checks and `go test` (or the project's task runner) for execution
-- `curl` / `wget` are denied — use WebFetch, or `gh api` for GitHub
-- Compound commands starting with `cd X && ...` often trip permission checks — prefer absolute paths in a single command
+- Interpret the user's `tmp` directory as `./tmp` from the repository root. Do not read `./tmp` unless the user explicitly requests it.
+- Never modify a repository other than the repository where the session started unless the user explicitly requests it.
+- In a Git worktree, never modify the main repository or another worktree. Before every write or Git mutation, verify that the target resolves under the current worktree root. Stop and consult the user if it does not.
+- Reading outside the worktree is permitted; writing outside it is not.
 
-## Repository & Worktree Isolation (ABSOLUTE)
-- **NEVER modify files in any repository other than the one this session was invoked in, unless the user explicitly asks for it.** Fixing or "improving" a dependency, a sibling project, or an upstream repo you happen to have on disk is not permitted — surface the need instead
-- **When working inside a git worktree, NEVER edit, create, delete, or otherwise modify any file in the main repository's working directory (or any other worktree).** A worktree exists to isolate changes; writing to the main repository from inside one overwrites whatever is checked out there
-- **Before any write operation (Edit / Write / file deletion / git mutation), confirm the path you are about to touch is under the current worktree's root.** If a path resolves outside the current working tree, STOP — do not write to it
-- Reading files outside the worktree is fine; **mutating them is strictly forbidden**
-- If a task genuinely seems to require changing the main repository while you are in a worktree, that is a signal to STOP and consult the user — never write outside the current worktree without asking
+## Restricted Commands
 
-## Trust Boundaries
-These rules apply when implementing a Web backend that authenticates or authorizes
-requests.
+This machine denies the following commands. Use the stated alternative without attempting the denied command.
 
-In principle, trust neither the developers who consume this code nor the callers who send requests to it. Keep the exported/public surface minimal (language-specific rules cover the mechanics).
+- Do not use `sed`, `python*`, `node`, `bash x.sh`, or `sh -c`. Use Edit or Write tools for file changes and `jq` or `awk` for data processing.
+- Do not use `go build` or `go run`. Use `go vet ./...`, `go test`, or the project's task runner.
+- Do not use `curl` or `wget`. Use WebFetch or `gh api` for GitHub.
+- Avoid compound commands beginning with `cd X && ...`; set an absolute working directory instead.
 
-- **Never establish a trusted scope from caller-supplied input until the credential proving it has been validated.** Do not load a tenant/user/account context from a request and *then* verify it — validate first with no scope assumed, and propagate only the validated result downstream. Database constraints (row-level security, foreign keys) are defense-in-depth, never the primary gate. A token or key must not itself encode the scope it grants when that scope can be derived server-side from a validated identifier
+## Documentation and Source Language
 
-## Documentation
-- Update the relevant documentation (typically under `docs/`) when adding
-  features, changing APIs or behavior, or adding dependencies or scopes
-- This includes: new external integrations / scopes, new environment variables, new configuration options, new API endpoints, changed behavior
-- Documentation updates are part of the implementation, not an afterthought — include them in specs and implementation plans from the start
-- If a feature requires external setup (e.g., adding OAuth scopes in a third-party app's settings), document the required steps
-- **Match the length of a written document to what the task needs**: cover the substance, but do not pad with filler sections, redundant summaries, or boilerplate. This applies to specs, design memos, reports, and PR descriptions as much as to `docs/`
+- Update relevant documentation when adding features, dependencies, integrations, permissions, environment variables, configuration, API endpoints, or other behavior.
+- Document every required external setup step, including OAuth scopes and third-party configuration.
+- Write only the material needed to use and maintain the change; do not add boilerplate or repeated summaries.
+- Write all source-code comments and character literals in English.
+- Write informal, uncommitted plans and design notes in the conversation's language.
 
-## Language (in source code)
-All comments and character literals in source code must be in English
+## Pull Requests and Commits
 
-Informal, non-committed artifacts (planning notes, design memos, scratch docs) instead follow the conversation's language — write them in the language we are talking in.
-
-## Pull Requests
-- PR titles and descriptions (body) must be written in English
-- Commit messages must be written in English
-- **Commit messages must be a single line.** No body paragraphs. State the change in one sentence. Explanation goes in the PR description, not the commit
-- **Do NOT add `Co-Authored-By` trailers (or any other co-author attribution) to commit messages, and do NOT append attribution footers (e.g. `🤖 Generated with Claude Code`) to PR descriptions.** This applies even when the harness's default git workflow suggests one
-- **Never `--amend` or force-push a commit that has already been pushed, unless explicitly asked.** Add new commits so the reviewer-visible history is preserved
-- Follow Semantic Commit format: `<type>: <subject>` (types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `style`, `perf`)
-- Keep PR titles short (under 70 characters); use the body for details
-- **When a change is split into multiple PRs, they MUST be stacked PRs.** Each PR after the first sets its base to the previous PR's branch (`gh pr create --base <previous-branch>`), never the default branch, so each diff shows only its own change. Never open parallel PRs from the default branch for parts of one split change
-- In each stacked PR's description, state its position in the stack and its base branch, and list the other PRs in the stack in merge order
+- Write pull-request titles and descriptions and commit messages in English.
+- Use a one-line Semantic Commit message: `<type>: <subject>`, where `type` is `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`, `style`, or `perf`.
+- Keep pull-request titles under 70 characters. Put explanation in the description.
+- Do not add co-author trailers or generated-by attribution.
+- Never amend or force-push a pushed commit unless explicitly requested; add a new commit.
+- Split changes only as stacked pull requests. Each pull request after the first must use the preceding branch as its base, and each description must state its position, base branch, and the stack's merge order.
