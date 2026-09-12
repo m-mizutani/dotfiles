@@ -26,6 +26,7 @@
       "Bash(go checkout:*)",
       "Bash(herdr-label:*)",
       "Bash(herdr tab rename:*)",
+      "Bash(codex exec:*)",
       "Bash(find:*)",
       "Bash(grep:*)",
       "Bash(head:*)",
@@ -302,7 +303,8 @@
       "herdr-label:*",
       "herdr tab rename:*",
       "task:*",
-      "zenv:*"
+      "zenv:*",
+      "codex exec:*"
     ]
   },
   "effortLevel": "high",

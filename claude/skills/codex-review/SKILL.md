@@ -1,12 +1,12 @@
 ---
 name: codex-review
-description: "OpenAI Codex を MCP 経由（mcp__codex__codex）で呼び出し、セカンドオピニオンとしてコードレビュー・調査をさせるスキル。引数がなければ現在のリポジトリの変更（staged/unstaged含む）またはdefault branchとの差分をレビューさせ、引数（テーマ・ファイル・バグの症状など）があればそれについて調査・レビューさせる。観点は保守性・テスト十分性・spec適合・実装の筋の良さなど。結果をそのまま流すのではなく、最後に各指摘の採否判断を表でまとめ、修正プランまで提示する。ユーザーが「codexでレビューして」「codexに見てもらって」「codexで調べて」「別のモデルの意見も欲しい」「セカンドオピニオン」と言ったとき、あるいは自分のレビューを別視点で裏取りしたいときに使う。トリガー: codex-review, codexレビュー, codexで見て, /codex-review"
-allowed-tools: Read, Bash, Grep, Glob, AskUserQuestion, mcp__codex__codex, mcp__codex__codex-reply
+description: "OpenAI Codex を `codex exec` コマンド経由で呼び出し、セカンドオピニオンとしてコードレビュー・調査をさせるスキル。引数がなければ現在のリポジトリの変更（staged/unstaged含む）またはdefault branchとの差分をレビューさせ、引数（テーマ・ファイル・バグの症状など）があればそれについて調査・レビューさせる。観点は保守性・テスト十分性・spec適合・実装の筋の良さなど。結果をそのまま流すのではなく、最後に各指摘の採否判断を表でまとめ、修正プランまで提示する。ユーザーが「codexでレビューして」「codexに見てもらって」「codexで調べて」「別のモデルの意見も欲しい」「セカンドオピニオン」と言ったとき、あるいは自分のレビューを別視点で裏取りしたいときに使う。トリガー: codex-review, codexレビュー, codexで見て, /codex-review"
+allowed-tools: Read, Write, Bash, Grep, Glob, AskUserQuestion
 ---
 
 # Codex コードレビュースキル
 
-OpenAI Codex を **MCP 経由**（`mcp__codex__codex`）で呼び出し、コードレビューや調査を「別のモデルの目」で実施させるスキル。
+OpenAI Codex を **`codex exec` コマンド**で呼び出し、コードレビューや調査を「別のモデルの目」で実施させるスキル。
 Claude 自身がレビュー対象（差分／調査テーマ）を確定し、観点を添えた依頼文を組み立てて Codex に渡す。Codex は read-only サンドボックスでリポジトリを自分で読み、レビュー結果を返す。
 
 レビュー本体を書くのは Codex。Claude の役割は **(1) 対象を確定して依頼する → (2) 結果を提示する → (3) 各指摘を採用するか判断し、修正プランに落とす** の3つ。
@@ -61,12 +61,46 @@ git --no-pager diff --stat HEAD                # 未コミット分
 
 ### Step 2: Codex への依頼文を組み立てる
 
-`mcp__codex__codex` を次の設定で呼ぶ：
+組み立てた依頼文はファイルに書き出し、`codex exec` に stdin から渡す。数千文字の依頼文を argv に載せると
+クォートとシェル展開で壊れるため、必ずファイル経由にする。
 
-- `sandbox`: `"read-only"` — 読み取り専用。Codex にファイルを書き換えさせない
-- `cwd`: Step 1 で取得したリポジトリルートの**絶対パス**
-- `approval-policy`: `"never"` — 対話的な承認を挟まず最後まで実行させる
-- `prompt`: 下記テンプレートに沿って、対象範囲＋観点を明記した依頼文
+まず作業ディレクトリを作り、**出力された絶対パスを控える**：
+
+```bash
+mktemp -d "$TMPDIR/codex-review.XXXXXX"
+```
+
+シェル変数は Bash 呼び出しをまたいで残らないので、以降は変数ではなく、ここで出た絶対パスを
+そのまま書く（以下の `<WORK_DIR>` を置き換える）。
+
+1. `<WORK_DIR>/prompt.md` に依頼文を Write で書き出す
+2. 次を実行する
+
+```bash
+codex exec \
+  --sandbox read-only \
+  -c approval_policy="never" \
+  --cd "<Step 1 で取得したリポジトリルートの絶対パス>" \
+  --output-last-message "<WORK_DIR>/out.md" \
+  - < "<WORK_DIR>/prompt.md" > /dev/null 2> "<WORK_DIR>/log.txt"
+```
+
+| オプション | 役割 |
+|---|---|
+| `--sandbox read-only` | 読み取り専用。Codex にファイルを書き換えさせない |
+| `-c approval_policy="never"` | 承認要求を挟まず最後まで実行させる |
+| `--cd <絶対パス>` | Codex の作業ルート。worktree で作業している場合はその worktree のルートを渡す |
+| `--output-last-message <file>` | Codex の最終応答（＝レビュー本文）だけをこのファイルに書く |
+| `-` | 依頼文を stdin から読む |
+
+**終了コードを必ず確認する。** 非ゼロなら `<WORK_DIR>/log.txt` を Read で読み、失敗内容（未ログイン、
+設定不備、ネットワーク障害など）をユーザーに報告して中断する。空の `out.md` を「指摘なし」と解釈してはならない。
+
+成功したら `<WORK_DIR>/out.md` を Read で読み、その内容を Step 4 で提示する。
+`<WORK_DIR>/log.txt` には進捗ログとヘッダが入る。**継続に使う `session id: <uuid>` はここにある**ので、
+Step 3 で追撃する可能性があるなら控えておく。
+
+依頼文の中身（対象範囲・最優先の評価基準・観点・姿勢・出力形式）は従来のテンプレートをそのまま使う。
 
 依頼文には必ず以下を含める：
 
@@ -126,7 +160,19 @@ git --no-pager diff --stat HEAD                # 未コミット分
 
 ### Step 3: Codex を実行し、必要なら追撃する
 
-`mcp__codex__codex` を呼ぶ。応答が浅い・対象を取り違えている・追加で掘りたい点がある場合は、返ってきた `threadId`（または `conversationId`）を使って `mcp__codex__codex-reply` で追撃する（例: 「観点2のテストについてもう少し具体的に」「そのファイルの◯◯関数も見て」）。
+応答が浅い・対象を取り違えている・追加で掘りたい点がある場合は、`<WORK_DIR>/log.txt` から拾った
+session id を使って同じ会話を継続する。追撃の依頼文も Write で `<WORK_DIR>/followup.md` に書き出す。
+
+```bash
+codex exec resume "<session id>" \
+  -c approval_policy="never" \
+  --output-last-message "<WORK_DIR>/out2.md" \
+  - < "<WORK_DIR>/followup.md" > /dev/null 2> "<WORK_DIR>/log2.txt"
+```
+
+`resume` には `--sandbox` と `--cd` が無く、元のセッションの設定を引き継ぐ。
+session id を控えていない場合は `--last` で直近のセッションを継げるが、これは**現在のシェルの作業ディレクトリで
+絞り込む**ため、worktree などで cwd がリポジトリルートと違うと別のセッションを拾いうる。session id を明示するのが既定。
 
 ### Step 4: Codex の結果を提示する
 
@@ -201,6 +247,7 @@ Codex の出力を、ユーザーが読みやすい形で提示する。
 ## やらないこと
 
 - **承認前のコード修正。** これはレビュー・調査スキル。Codex にも read-only で実行させる。Step 6 のプランを出したうえでユーザーの指示を待つ
+- **`--dangerously-bypass-approvals-and-sandbox`、および `--sandbox workspace-write` / `danger-full-access` の使用。** Codex にファイルを書かせないことがこのスキルの前提
 - **Codex の指摘の勝手な取捨選択・改変。** 却下するなら表に載せたうえで理由付きで却下する。黙って落とすのは禁止
 - **読まずに下す採否判断。** 「妥当そう」で採用も却下もしない。該当箇所を読んでから判断する
 - **PR のレビューコメント対応。** それは `/check-pr` の役割

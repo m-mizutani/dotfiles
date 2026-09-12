@@ -178,11 +178,11 @@ specがある場合（引数の指示を実装対象とする場合はその指�
 
 ## `codex-review` が使えない場合は `code-review` にフォールバックする
 
-`codex-review` は `mcp__codex__codex` に依存するため、Codex の MCP サーバーが接続されていないセッションでは実行できない。次のいずれかに当たったら、組み込みの `code-review` skill に切り替える。
+`codex-review` は `codex` コマンドに依存するため、codex CLI が使えないセッションでは実行できない。次のいずれかに当たったら、組み込みの `code-review` skill に切り替える。
 
 - 利用可能な skill の一覧に `codex-review` がない
-- `mcp__codex__codex` が利用可能なツールに含まれていない
-- `codex-review` を起動したが `mcp__codex__codex` の呼び出しがエラーで失敗する
+- `codex` コマンドが PATH にない、または未ログイン（`codex exec` が認証エラーで終了する）
+- `codex-review` を起動したが `codex exec` が非ゼロで終了する
 
 切り替えるときの扱い:
 
