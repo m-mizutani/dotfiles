@@ -30,3 +30,6 @@ trust_level = "trusted"
 
 [mcp_servers.sentry]
 url = "https://mcp.sentry.dev/mcp"
+
+[tui.model_availability_nux]
+gpt-6-astra = 1
