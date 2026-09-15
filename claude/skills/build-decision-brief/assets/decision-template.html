@@ -18,8 +18,19 @@
   "title": "{{判断の主題}}",
   "question": "{{何をどう決めるのかを1文で。「XをAにするかBにするか」の形}}",
   "blocked": "{{決まらないと止まること。止まらないなら、そもそも今聞く判断ではない}}",
-  "context": "{{なぜ今この分岐が出たのか。1〜3文。経緯ではなく、分岐を生んだ事実を書く}}",
   "deadline": "",
+
+  "problem": {
+    "subject": "{{この判断が関わるシステムまたはコンポーネントが何をするものか。案件を知らない読者向けに1〜2文}}",
+    "current": "{{現在の構造と動作。どの要素がどの責務を持ち、どこから呼ばれているか}}",
+    "conflict": "{{どの要求とどの制約が衝突しているのか。現在の構造のままでは何が満たせないのか}}",
+    "difficulty": "{{単純な解が無い理由。どの案を採っても何を失うことになるのか}}",
+    "terms": [
+      { "term": "{{リポジトリ固有の識別子や語}}", "meaning": "{{その意味。この語を知らない読者が以降を読めるように}}" }
+    ],
+    "figureSvg": "",
+    "figureCaption": ""
+  },
 
   "figureSvg": "",
   "figureCaption": "",
@@ -61,7 +72,19 @@
     }
   ],
 
-  "recommendation": null,
+  "optimal": {
+    "ideal": {
+      "optionId": "a",
+      "reason": "{{長期的な保守性・モデルの整合性・抽象化の適切さから、既存実装を前提にせずに選ぶとこれになる理由}}",
+      "cost": "{{この基準でこの案を採ったときに引き受ける不利。実装量、破壊的変更の範囲など}}"
+    },
+    "practical": {
+      "optionId": "b",
+      "reason": "{{実装コスト・破壊的変更の回避と保守性の均衡で選ぶとこれになる理由}}",
+      "cost": "{{この基準でこの案を採ったときに引き受ける不利。残る構造上の歪みなど}}"
+    },
+    "gap": "{{2つの基準が別の案を指す場合、現実解を採ったときに残る差と、後からあるべき姿へ移すために必要になること。同じ案を指す場合は空文字}}"
+  },
 
   "conditional": [
     { "priority": "{{どの軸を優先するなら}}", "optionId": "a" },
@@ -133,6 +156,24 @@
     '.meta h4{margin:0 0 .15rem;font-size:.78rem;letter-spacing:.06em;',
     'color:var(--fg-dim);font-weight:700;}',
     '.meta p{margin:0;}',
+    '.pb{display:grid;gap:.6rem;margin:1rem 0;}',
+    '.pb section{border-left:3px solid var(--edge);background:var(--surface);',
+    'padding:.6rem .95rem;border-radius:0 5px 5px 0;}',
+    '.pb h3{margin:0 0 .15rem;font-size:.95rem;}',
+    '.pb p{margin:0;}',
+    '.crits{display:grid;gap:1rem;margin:1rem 0;}',
+    '@media (min-width:52rem){.crits{grid-template-columns:repeat(2,minmax(0,1fr));}}',
+    '.crit{border:1px solid var(--border);border-top-width:4px;border-top-color:var(--accent);',
+    'border-radius:6px;padding:.9rem 1rem;background:var(--surface);}',
+    '.crit .kind{font-size:.76rem;letter-spacing:.1em;font-weight:700;color:var(--accent);margin:0;}',
+    '.crit h3{margin:.15rem 0 .1rem;font-size:1.02rem;}',
+    '.crit .basis{color:var(--fg-dim);font-size:.84rem;margin:0 0 .55rem;line-height:1.6;}',
+    '.same{border:1px solid var(--ok);background:var(--ok-bg);color:var(--ok);border-radius:6px;',
+    'padding:.6rem 1rem;margin:1rem 0;font-size:.9rem;font-weight:600;}',
+    '.gap{border:1px solid var(--warn);background:var(--warn-bg);border-radius:6px;',
+    'padding:.7rem 1rem;margin:1rem 0;font-size:.9rem;}',
+    '.gap h4{margin:0 0 .2rem;font-size:.85rem;color:var(--warn);}',
+    '.gap p{margin:0;}',
     '.tw{overflow-x:auto;margin:1rem 0;}',
     'table{border-collapse:collapse;width:100%;font-size:.89rem;}',
     'th,td{border:1px solid var(--border);padding:.5rem .65rem;text-align:left;vertical-align:top;}',
@@ -171,9 +212,10 @@
     'padding:.9rem 1rem;background:var(--surface);}',
     '.opt h3{margin:0 0 .1rem;font-size:1.02rem;}',
     '.opt .sm{color:var(--fg-dim);font-size:.9rem;margin:0 0 .6rem;}',
-    '.opt dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:.3rem .8rem;font-size:.88rem;}',
-    '.opt dt{color:var(--fg-dim);white-space:nowrap;}',
-    '.opt dd{margin:0;}',
+    '.opt dl,.crit dl{margin:0;display:grid;grid-template-columns:auto 1fr;',
+    'gap:.3rem .8rem;font-size:.88rem;}',
+    '.opt dt,.crit dt{color:var(--fg-dim);white-space:nowrap;}',
+    '.opt dd,.crit dd{margin:0;}',
     '.opt.chosen{outline:2px solid var(--ok);outline-offset:2px;}',
     '.cond{margin:1rem 0;padding-left:1.1rem;}',
     '.cond li{margin:.3rem 0;}',
@@ -230,13 +272,41 @@
     if (has(b.blocked)) {
       h.push('<div><h4>決まらないと止まること</h4><p>' + esc(b.blocked) + '</p></div>');
     }
-    if (has(b.context)) {
-      h.push('<div><h4>この分岐が出た理由</h4><p>' + esc(b.context) + '</p></div>');
-    }
     if (has(b.deadline)) {
       h.push('<div><h4>期限・制約</h4><p>' + esc(b.deadline) + '</p></div>');
     }
     h.push('</div>');
+
+    // 課題。この案件を知らない読者が、以降の選択肢を読める状態になるまでを書く
+    var pr = b.problem || {};
+    var prBlocks = [
+      ['対象', pr.subject],
+      ['現在の構造と動作', pr.current],
+      ['衝突している要求と制約', pr.conflict],
+      ['単純な解が無い理由', pr.difficulty]
+    ].filter(function (x) { return has(x[1]); });
+
+    if (prBlocks.length || has(pr.figureSvg) || (pr.terms || []).length) {
+      h.push('<h2>課題</h2><div class="pb">');
+      prBlocks.forEach(function (x) {
+        h.push('<section><h3>' + esc(x[0]) + '</h3><p>' + esc(x[1]) + '</p></section>');
+      });
+      h.push('</div>');
+
+      if (has(pr.figureSvg)) {
+        h.push('<figure class="dia">' + pr.figureSvg +
+          (has(pr.figureCaption) ? '<figcaption>' + esc(pr.figureCaption) + '</figcaption>' : '') +
+          '</figure>');
+      }
+
+      if ((pr.terms || []).length) {
+        h.push('<div class="tw"><table><thead><tr><th>用語</th><th>意味</th></tr></thead><tbody>');
+        pr.terms.forEach(function (t) {
+          h.push('<tr><td><code>' + esc(t.term) + '</code></td><td>' + esc(t.meaning) + '</td></tr>');
+        });
+        h.push('</tbody></table></div>');
+      }
+    }
 
     // 軸 × 選択肢の対比
     h.push('<h2>選択肢の対比</h2>');
@@ -262,9 +332,34 @@
         '</figure>');
     }
 
-    if (b.recommendation && b.recommendation.optionId) {
-      h.push('<p><strong>推奨: ' + esc(optLabel(b, b.recommendation.optionId)) + '</strong> — ' +
-        esc(b.recommendation.reason) + '</p>');
+    // 2つの基準での最適案。どちらも最終判断ではなく、基準を明示した材料として並べる
+    var pk = b.optimal || {};
+    var CRIT = [
+      ['ideal', 'あるべき姿',
+        '長期的な保守性・モデルの整合性・抽象化の適切さから、既存実装を前提にせずに選ぶ'],
+      ['practical', '現実解',
+        '実装コスト・破壊的変更の回避と保守性の均衡から選ぶ']
+    ];
+    if ((pk.ideal && pk.ideal.optionId) || (pk.practical && pk.practical.optionId)) {
+      h.push('<h2>2つの基準での最適案</h2><div class="crits">');
+      CRIT.forEach(function (c) {
+        var p = pk[c[0]];
+        if (!p || !p.optionId) return;
+        h.push('<div class="crit"><p class="kind">' + esc(c[1]) + '</p>');
+        h.push('<h3>' + esc(optLabel(b, p.optionId)) + '</h3>');
+        h.push('<p class="basis">選ぶ基準: ' + esc(c[2]) + '</p><dl>');
+        h.push('<dt>この案になる理由</dt><dd>' + esc(p.reason) + '</dd>');
+        h.push('<dt>引き受ける不利</dt><dd>' + esc(p.cost) + '</dd>');
+        h.push('</dl></div>');
+      });
+      h.push('</div>');
+
+      if (pk.ideal && pk.practical && pk.ideal.optionId === pk.practical.optionId) {
+        h.push('<p class="same">2つの基準はどちらも ' + esc(optLabel(b, pk.ideal.optionId)) +
+          ' を指している。</p>');
+      } else if (has(pk.gap)) {
+        h.push('<div class="gap"><h4>現実解を採った場合に残る差</h4><p>' + esc(pk.gap) + '</p></div>');
+      }
     }
 
     // 回答欄
