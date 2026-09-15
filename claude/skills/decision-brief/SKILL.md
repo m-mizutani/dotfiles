@@ -1,5 +1,5 @@
 ---
-name: build-decision-brief
+name: decision-brief
 description: "ユーザーの判断が必要な事項を、選択肢・判断を分ける軸・それぞれの帰結を対比した artifact にまとめ、そのページ上で回答できる形で提示するスキル。ターミナルの文章では選択肢の違いが読み取れない、あるいは AskUserQuestion の短い選択肢では判断材料が足りないときに、判断そのものを1枚の資料にする。ユーザーが「判断材料をまとめて」「選択肢を整理して」「わかりやすく説明して」「artifact にして」「どれにするか決めたい」「比較して見せて」と言ったときに必ず使うこと。加えて、設計・実装の途中でユーザーの判断が必要になり、選択肢が複数あって後戻りコストが大きいとき（アーキテクチャ・データモデル・外部契約・セキュリティ・永続化スキーマなど）は、指示がなくても自分から使うこと。逆に、選択肢の違いを1文で言い切れて後戻りも容易な選択は、このスキルを使わず AskUserQuestion で済ませる。"
 allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch, Artifact, Skill, AskUserQuestion
 ---

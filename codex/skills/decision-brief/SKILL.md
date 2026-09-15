@@ -1,5 +1,5 @@
 ---
-name: build-decision-brief
+name: decision-brief
 description: "後戻りコストの高い判断を、選択肢・比較軸・帰結を対比した Markdown 資料にまとめて判断を依頼する。"
 ---
 

@@ -64,10 +64,10 @@ SHARED_SKILLS = (
 
 CODEX_SKILLS = (
     "brainstorm",
-    "build-decision-brief",
     "build-review-report",
     "check-pr",
     "codex-review",
+    "decision-brief",
     "spec",
     "implement",
     "my-code-review",
