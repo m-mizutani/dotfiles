@@ -166,9 +166,12 @@ When authenticating or authorizing requests:
 
 ## Delegation and Background Work
 
-- Delegate only large, independent, parallel work that would produce repetitive output, such as multi-file investigation or bulk scanning.
+- Each subagent request resends that subagent's whole context, so its cost is roughly (context size) x (number of turns). Parallel subagents multiply that cost. Delegate only when this cost is justified.
+- Before delegating an enumeration (call sites, implementations, usages), try a single `rg`, `ast-grep`, or LSP query in the main agent. Delegate only if the result cannot be obtained or summarized that way.
+- When delegating, bound the scope in the prompt: name the directories or files to read, the exact question, and a compact output format (a table or list, no file dumps). Tell the subagent to stop and report when the named scope is covered.
+- Do not split one investigation into parallel subagents that each need to read the same shared files. Default to one subagent; use more only for scopes that share no files.
 - Do not delegate work that takes only a few tool calls. Never spawn a subagent to verify your own work.
-- Use one subagent when one is sufficient, and use a lighter model such as `sonnet` or `haiku`. Keep architectural judgment and synthesis in the main agent.
+- Use a lighter model such as `sonnet` or `haiku`. Keep architectural judgment and synthesis in the main agent.
 - Run a task in the background only when independent foreground work will materially reduce total time. Otherwise run it in the foreground.
 
 ## Terminal Tab Name
