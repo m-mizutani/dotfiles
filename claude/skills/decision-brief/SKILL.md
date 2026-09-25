@@ -133,7 +133,7 @@ allowed-tools: Read, Write, Edit, Bash, Grep, Glob, Agent, WebFetch, WebSearch, 
    - spec がある場合: `.spec/{slug}/decision-{主題}.html`（slug はブランチ名の slash 以降）
    - spec がない場合: `tmp/decision-{主題}.html`（リポジトリルート直下の `tmp`）
 3. テンプレート内の `BRIEF` JSON を書き換える。**編集するのは JSON だけ**で、スタイルと描画スクリプトには手を入れない。ページはこの JSON から描画され、回答もこの JSON に書き戻される
-4. `Artifact` ツールで公開する。`capabilities` に `{"artifact": {}}` を必ず渡す（これがページ上で回答を記録するための宣言）。初回は `favicon` も渡す
+4. `Artifact` ツールで公開する。`capabilities` に `{"artifact": {}}` を必ず渡す（これがページ上で回答を記録するための宣言）。初回は `icon` に `decision` を渡す
 5. ターミナルには**要約1〜3行と URL、そして「何を決めてほしいか」の1文**だけを書く。artifact の内容をターミナルに再掲しない
 
 JSON の各フィールドの意味と、回答がどう届くかは `references/answering.md` を読む。

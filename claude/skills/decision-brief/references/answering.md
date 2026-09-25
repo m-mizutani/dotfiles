@@ -98,7 +98,7 @@ JSON だけで、スタイルと描画スクリプトには触れない。
 Artifact ツール:
   file_path:     .spec/{slug}/decision-{主題}.html  （spec が無ければ tmp/decision-{主題}.html）
   capabilities:  {"artifact": {}}
-  favicon:       初回のみ。絵文字1〜2字
+  icon:          初回のみ。ページの種類を表す英単語1語（例: decision）
   description:   1文。ギャラリーの副題になる
 ```
 
