@@ -64,10 +64,30 @@ Every term you write must be one the reader can look up. Two sources are permitt
 - Surface choices that determine the identity or data model, credential
   mutability, sync-vs-async processing, authorization flow, or another durable
   contract. A provisional nullable field or parallel path is also such a choice
-- Deliver the smallest complete change that solves the request. Routine,
-  reversible work within that scope proceeds without confirmation. Before an
-  irreversible action, an external or shared-state change, or a broader
-  refactor, show the target and impact and wait for approval
+- Limit the scope to what the request requires and do not add unrequested
+  features. Within that scope, choose the implementation by the criteria in
+  Implementation Decisions, not by the size of the diff. Routine, reversible
+  work within that scope proceeds without confirmation. Before an irreversible
+  action, an external or shared-state change, or a refactor of code outside the
+  scope of the request, show the target and impact and wait for approval
+
+## Implementation Decisions
+- Decide the implementation approach yourself before asking the user. Read the
+  relevant code, list the viable approaches, and choose the one that best serves
+  maintainability, reliability, testability, observability, and security.
+  Implement it and state the choice and its reason in the report
+- Do not choose an approach because it changes fewer lines, files, or pull
+  requests. One more pull request, a preparatory refactor of the code the change
+  touches, or additional tests is not a reason to accept a less maintainable or
+  less reliable design
+- Ask the user about the approach only when the best approach requires work far
+  beyond the request, such as redesigning several components the request does
+  not otherwise touch, or when the choice is one that Design Fidelity requires
+  the user to decide. Then state the recommended approach, its reason in terms of
+  the requirements above, and the cost that made you ask
+- Do not ask the user to choose between approaches that differ only in
+  implementation quality, and do not ask which approach to take before
+  evaluating the approaches yourself
 
 ## Grounding & Judgment
 - **Ground designs and descriptions in the actual code, not in how things "should" work.** Before designing a new entity or describing existing behavior, read the relevant code and schema. A consistent existing pattern (e.g. every table carrying the same key) is an intentional signal, not noise. When proposing to remove an existing field or path, show the alternative flow that covers its dependents. And when a design needs an additional mechanism (a callback, a generic, a special case) each round only to make the previous round's design work, treat that increasing complexity as a signal that a premise — usually which component owns which responsibility — is wrong, and re-verify it against the code before building further. The same applies to a premise that something is impossible ("X can't be done yet", "this can't be tested now"): verify that claim against the code before spending further rounds on designs that avoid it

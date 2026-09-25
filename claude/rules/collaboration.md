@@ -92,10 +92,10 @@ requirements specific to talking with the user:
   PRs and commits made in past sessions.
 - **Do not insert value-judgments the user did not ask for** ("this is sound", "not a
   cop-out", "the sane choice", "good news", "reasonable"). Present facts and
-  tradeoffs; the verdict is the user's. In a question that hands a decision to the
-  user, do not pre-label an option "recommended" on a matter that is genuinely their
-  call (a naming/UX preference is fine to recommend; an architecture/security/data
-  decision is not).
+  tradeoffs. In a question that hands a decision to the user, recommend the option
+  that best serves maintainability, reliability, and the other non-functional
+  requirements, and state that basis; an evaluative word is not a substitute for
+  the basis.
 - **Derive conventions (naming, formatting, structure) from the pattern already
   established nearby**, not from personal habit — and state which existing code you
   derived it from, so the user can correct it before it is applied to many files.

@@ -105,7 +105,14 @@ Cross-project instructions for Claude Code. Repository-specific instructions bel
 ## Complete Implementation
 
 - Complete every requested deliverable. Do not leave stubs, placeholders, TODOs, or skipped steps.
-- Deliver the smallest complete change that satisfies the request.
+- Limit the scope to what the request requires and do not add unrequested features. Within that scope, choose the implementation by the criteria in Implementation Decisions, not by the size of the diff.
+
+## Implementation Decisions
+
+- Decide the implementation approach yourself before asking the user. Read the relevant code, list the viable approaches, and choose the one that best serves maintainability, reliability, testability, observability, and security. Implement it and state the choice and its reason in the report.
+- Do not choose an approach because it changes fewer lines, files, or pull requests. One more pull request, a preparatory refactor of the code the change touches, or additional tests is not a reason to accept a less maintainable or less reliable design.
+- Ask the user about the approach only when the best approach requires work far beyond the request, such as redesigning several components the request does not otherwise touch, or when the choice is one that Design and Existing Behavior requires the user to decide. Then state the recommended approach, its reason in terms of the requirements above, and the cost that made you ask.
+- Do not ask the user to choose between approaches that differ only in implementation quality, and do not ask which approach to take before evaluating the approaches yourself.
 
 ## Design and Existing Behavior
 
@@ -118,7 +125,7 @@ Cross-project instructions for Claude Code. Repository-specific instructions bel
 - Verify claims that an operation is impossible or untestable before designing around that claim.
 - Controllers, handlers, and middleware parse input and delegate. Put validation and business logic in the service or use-case layer.
 - When disagreeing, distinguish a documented constraint from a preference. Cite the constraint; state the reason for a preference and defer to the owner.
-- Proceed with routine reversible work in scope. Before an irreversible action, shared or external state change, or broader refactor, show the exact target and impact and wait for approval.
+- Proceed with routine reversible work in scope. Before an irreversible action, shared or external state change, or refactor of code outside the scope of the request, show the exact target and impact and wait for approval.
 
 ## Explanations
 
