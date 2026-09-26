@@ -78,6 +78,12 @@ CODEX_SKILLS = (
 
 CLAUDE_SKILLS = SHARED_SKILLS + CODEX_SKILLS
 
+# Plugins linked into ~/.claude/skills load as <name>@skills-dir without a
+# marketplace entry.
+CLAUDE_PLUGINS = (
+    "idle-compact",
+)
+
 
 def build_groups(home: Path = HOME) -> list[Group]:
     return [
@@ -116,6 +122,10 @@ def build_groups(home: Path = HOME) -> list[Group]:
             *[
                 Link(f"claude/skills/{skill}", f"{home}/.claude/skills/{skill}")
                 for skill in CLAUDE_SKILLS
+            ],
+            *[
+                Link(f"claude/plugins/{plugin}", f"{home}/.claude/skills/{plugin}")
+                for plugin in CLAUDE_PLUGINS
             ],
         ]),
         Group("Codex", [
