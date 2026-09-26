@@ -106,6 +106,7 @@ def build_groups(home: Path = HOME) -> list[Group]:
         Group("Claude Code", [
             Link("claude/settings.json", f"{home}/.claude/settings.json"),
             Link("claude/CLAUDE.md", f"{home}/.claude/CLAUDE.md"),
+            Link("claude/keybindings.json", f"{home}/.claude/keybindings.json"),
             Link("claude/rules", f"{home}/.claude/rules"),
             Link("claude/output-styles", f"{home}/.claude/output-styles"),
             Link("claude/commands", f"{home}/.claude/commands"),
