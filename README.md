@@ -38,3 +38,26 @@ or storage.
 For skills that create an Artifact in Claude Code, the Codex version creates a
 Markdown file under `.spec/`, opens it with `mo`, and receives decisions in the
 conversation instead of through an Artifact page.
+
+## Claude Code plugins
+
+`setup.py` links each plugin under `claude/plugins` into `~/.claude/skills`,
+where Claude Code loads it as `<name>@skills-dir` without a marketplace.
+
+`idle-compact` compacts the conversation once after the main conversation has
+been idle for 50 minutes, while the 1-hour prompt cache is still warm, so the
+next turn starts from a small context instead of re-caching the whole one. A
+new message, `/compact`, or the end of the session cancels the pending
+compaction. A timer that fires 58 minutes or more after the last turn (for
+example after the Mac slept) does nothing, because the cache may already be
+cold. When the timer is set, the conversation shows the planned time; after
+the compaction, it shows the cache hit rate of the summary call.
+
+The plugin uses function hooks, which are early access and need
+`CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1`; `claude/settings.json` sets it. Run the
+plugin tests with:
+
+```sh
+claude plugin validate claude/plugins/idle-compact
+CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude plugin test claude/plugins/idle-compact
+```

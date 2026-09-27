@@ -38,7 +38,7 @@ class SetupTests(unittest.TestCase):
         claude_links = {
             Path(link.dst).name: link.src
             for link in groups["Claude Code"].links
-            if "/.claude/skills/" in link.dst
+            if "/.claude/skills/" in link.dst and not link.src.startswith("claude/plugins/")
         }
         codex_links = {
             Path(link.dst).name: link.src
@@ -54,6 +54,16 @@ class SetupTests(unittest.TestCase):
             self.assertEqual(codex_links[skill], f"claude/skills/{skill}")
         for skill in setup.CODEX_SKILLS:
             self.assertEqual(codex_links[skill], f"codex/skills/{skill}")
+
+    def test_claude_plugins_are_linked_into_the_skills_directory(self):
+        home = Path("/tmp/test-home")
+        groups = {group.name: group for group in setup.build_groups(home)}
+
+        claude_links = {link.dst: link.src for link in groups["Claude Code"].links}
+
+        for plugin in setup.CLAUDE_PLUGINS:
+            self.assertEqual(claude_links[f"{home}/.claude/skills/{plugin}"], f"claude/plugins/{plugin}")
+            self.assertTrue((setup.REPO / f"claude/plugins/{plugin}/.claude-plugin/plugin.json").is_file())
 
     def test_registered_skills_have_matching_metadata(self):
         for skill in setup.CLAUDE_SKILLS:
