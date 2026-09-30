@@ -81,6 +81,7 @@ CLAUDE_SKILLS = SHARED_SKILLS + CODEX_SKILLS
 # Plugins linked into ~/.claude/skills load as <name>@skills-dir without a
 # marketplace entry.
 CLAUDE_PLUGINS = (
+    "compact-instructions",
     "idle-compact",
 )
 

@@ -53,11 +53,20 @@ example after the Mac slept) does nothing, because the cache may already be
 cold. When the timer is set, the conversation shows the planned time; after
 the compaction, it shows the cache hit rate of the summary call.
 
-The plugin uses function hooks, which are early access and need
+`compact-instructions` adds instructions to every compaction (`/compact`, auto
+compaction, `idle-compact`, and subagents). The summary must keep the user's
+decisions and corrections with their own words, the content of pasted material
+such as emails and screenshots, and the location of each document the work
+depends on, and it must carry these forward from an earlier summary. Text typed
+after `/compact` is kept and comes first.
+
+The plugins use function hooks, which are early access and need
 `CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1`; `claude/settings.json` sets it. Run the
 plugin tests with:
 
 ```sh
 claude plugin validate claude/plugins/idle-compact
 CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude plugin test claude/plugins/idle-compact
+claude plugin validate claude/plugins/compact-instructions
+CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude plugin test claude/plugins/compact-instructions
 ```

@@ -1,0 +1,5 @@
+{
+  "name": "compact-instructions",
+  "version": "0.1.0",
+  "description": "Tell every compaction summary to keep user decisions, corrections, supplied material and the sources to re-read."
+}
