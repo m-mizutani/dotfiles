@@ -30,6 +30,9 @@ trust_level = "trusted"
 [projects."/Users/mizutani/.ghq/github.com/m-mizutani/octify"]
 trust_level = "trusted"
 
+[projects."/Users/mizutani/.ghq/github.com/gollem-dev/gollem"]
+trust_level = "trusted"
+
 [mcp_servers.sentry]
 url = "https://mcp.sentry.dev/mcp"
 
@@ -66,7 +69,7 @@ screen_reader_detection_done = true
 
 [tui.model_availability_nux]
 gpt-6-astra = 4
-"gpt-6.1-sol" = 1
+"gpt-6.1-sol" = 2
 
 [desktop]
 followUpQueueMode = "steer"
