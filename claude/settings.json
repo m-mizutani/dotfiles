@@ -162,7 +162,7 @@
       }
     }
   },
-  "outputStyle": "Structured",
+  "outputStyle": "default",
   "language": "日本語",
   "sandbox": {
     "enabled": true,
