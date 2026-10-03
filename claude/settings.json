@@ -4,7 +4,9 @@
     "CLAUDE_AFK_TIMEOUT_MS": "2147483647",
     "CLAUDE_CODE_ENABLE_FUNCTION_HOOKS": "1",
     "CLAUDE_CODE_THRIFTY_SONIC": "false",
-    "ENABLE_TOOL_SEARCH": "true"
+    "DOCKER_HOST": "unix:///Users/mizutani/.rd/docker.sock",
+    "ENABLE_TOOL_SEARCH": "true",
+    "TESTCONTAINERS_RYUK_DISABLED": "true"
   },
   "permissions": {
     "allow": [
@@ -171,6 +173,8 @@
       "allowedDomains": [
         "github.com",
         "proxy.golang.org",
+        "golang.flatt.tech",
+        "sum.golang.org",
         "google.golang.org",
         "ai.google.dev",
         "cloud.google.com",

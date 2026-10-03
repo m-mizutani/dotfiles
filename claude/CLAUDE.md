@@ -204,6 +204,7 @@ This machine denies the following commands. Use the stated alternative without a
 - Do not use `go build` or `go run`. Use `go vet ./...`, `go test`, or the project's task runner.
 - Do not use `curl` or `wget`. Use WebFetch or `gh api` for GitHub.
 - Avoid compound commands beginning with `cd X && ...`; set an absolute working directory instead.
+- Run `gh`, `gcloud`, `bq`, `git`, `docker`, and `herdr-label` as a single standalone command. A call that adds a pipe, `;`, `&&`, `cd`, a redirect, a leading `VAR=value`, `$(...)`, or backquotes (including Markdown code spans inside a quoted argument) does not match `sandbox.excludedCommands`, so it runs inside the sandbox, where these tools cannot read their credentials or reach their sockets. Shape output with the tool's own options such as `--jq` or `--format`, and pass a pull-request body with `--body-file`.
 
 ## Documentation and Source Language
 
