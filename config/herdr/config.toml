@@ -25,10 +25,27 @@ command = "herdr-new-tab"
 name = "one-dark"
 auto_switch = false
 
+# one-dark's default row highlight is a gray close to the dimmed row text, so
+# the focused row's tab and agent labels became unreadable. Use a saturated blue
+# that stands out from the sidebar and keeps the row labels (#d7dae0) at about
+# 4.5:1 contrast.
+[theme.custom]
+active_row_bg = "#1d5aa6"
+selection_bg = "#1d5aa6"
+
 [ui]
 prompt_new_tab_name = false
 
 agent_panel_sort = "spaces"
+
+# Same layout as the default rows, but the tab and agent labels are not dimmed
+# so they stay readable on the highlighted row.
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "machine", "workspace", { token = "tab", fg = "#d7dae0", dim = false }],
+  [{ token = "agent", fg = "#d7dae0", dim = false }],
+]
+
 [ui.toast]
 delivery = "herdr"
 
