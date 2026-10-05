@@ -219,7 +219,6 @@
         "~/.gnupg",
         "~/.aws",
         "~/.azure",
-        "~/.config/gcloud",
         "~/.config/gh",
         "~/.docker/config.json",
         "~/.kube",
