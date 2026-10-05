@@ -71,6 +71,12 @@ Every term you write must be one the reader can look up. Two sources are permitt
   action, an external or shared-state change, or a refactor of code outside the
   scope of the request, show the target and impact and wait for approval
 
+## User Decisions
+
+- Whenever you need to ask the user for a decision, use the `decision-brief` skill before asking, even when the user has not explicitly requested `/decision-brief`.
+- This requirement also applies to simple, easily reversible choices and overrides the skill's guidance to skip such choices. Prepare and present the decision material according to the skill before requesting the user's answer.
+- Do not ask for a decision that the user has already made or that you are authorized to make yourself.
+
 ## Implementation Decisions
 - Decide the implementation approach yourself before asking the user. Read the
   relevant code, list the viable approaches, and choose the one that best serves

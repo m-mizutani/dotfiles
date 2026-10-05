@@ -109,6 +109,12 @@ Cross-project instructions for Claude Code. Repository-specific instructions bel
 - Complete every requested deliverable. Do not leave stubs, placeholders, TODOs, or skipped steps.
 - Limit the scope to what the request requires and do not add unrequested features. Within that scope, choose the implementation by the criteria in Implementation Decisions, not by the size of the diff.
 
+## User Decisions
+
+- Whenever you need to ask the user for a decision, use the `decision-brief` skill before asking, even when the user has not explicitly requested `/decision-brief`.
+- This requirement also applies to simple, easily reversible choices and overrides the skill's guidance to skip such choices. Prepare and present the decision material according to the skill before requesting the user's answer.
+- Do not ask for a decision that the user has already made or that you are authorized to make yourself.
+
 ## Implementation Decisions
 
 - Decide the implementation approach yourself before asking the user. Read the relevant code, list the viable approaches, and choose the one that best serves maintainability, reliability, testability, observability, and security. Implement it and state the choice and its reason in the report.
