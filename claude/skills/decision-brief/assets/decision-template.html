@@ -21,17 +21,20 @@
   "deadline": "",
 
   "problem": {
-    "subject": "{{この判断が関わるシステムまたはコンポーネントが何をするものか。案件を知らない読者向けに1〜2文}}",
-    "current": "{{現在の構造と動作。どの要素がどの責務を持ち、どこから呼ばれているか}}",
-    "conflict": "{{どの要求とどの制約が両立しないのか。現在の構造のままでは何が満たせないのか}}",
-    "difficulty": "{{単純な解決方法がない理由。どの案を採っても何を失うことになるのか}}",
+    "subject": "{{対象の役割と今回実現したい結果。未説明の識別子や選択肢を列挙せず、1〜2文で}}",
+    "current": "{{現在の動作。図の概念と同じ具体例で、入力から処理と結果まで説明する}}",
+    "target": "{{目指す動作。同じ具体例で何ができるようになるか。共通の目標と各案の実現方法を区別する}}",
+    "conflict": "",
+    "difficulty": "",
     "terms": [
       { "term": "{{リポジトリ固有の識別子や語}}", "meaning": "{{その意味。この語を知らない読者が以降を読めるように}}" }
     ],
+    "figureIntro": "{{図で理解する重要な概念と関係、現在と目標の違い。固有の用語はここまでに説明する}}",
     "figureSvg": "",
     "figureCaption": ""
   },
 
+  "figureIntro": "",
   "figureSvg": "",
   "figureCaption": "",
 
@@ -265,6 +268,35 @@
         (has(b.decision.note) ? ' ／ メモ: ' + esc(b.decision.note) : '') + '</span></div>');
     }
 
+    var pr = b.problem || {};
+    var prBlocks = [
+      ['現在の構造と動作', pr.current],
+      ['目指す構造と動作', pr.target],
+      ['変更に関わる制約', pr.conflict]
+    ].filter(function (x) { return has(x[1]); });
+
+    if (has(pr.subject) || prBlocks.length || has(pr.figureSvg) || (pr.terms || []).length) {
+      if (has(pr.subject)) h.push('<p>' + esc(pr.subject) + '</p>');
+      if (has(pr.figureIntro)) h.push('<p>' + esc(pr.figureIntro) + '</p>');
+      if ((pr.terms || []).length) {
+        h.push('<div class="tw"><table><thead><tr><th>用語</th><th>意味</th></tr></thead><tbody>');
+        pr.terms.forEach(function (t) {
+          h.push('<tr><td><code>' + esc(t.term) + '</code></td><td>' + esc(t.meaning) + '</td></tr>');
+        });
+        h.push('</tbody></table></div>');
+      }
+      if (has(pr.figureSvg)) {
+        h.push('<figure class="dia">' + pr.figureSvg +
+          (has(pr.figureCaption) ? '<figcaption>' + esc(pr.figureCaption) + '</figcaption>' : '') +
+          '</figure>');
+      }
+      h.push('<div class="pb">');
+      prBlocks.forEach(function (x) {
+        h.push('<section><h3>' + esc(x[0]) + '</h3><p>' + esc(x[1]) + '</p></section>');
+      });
+      h.push('</div>');
+    }
+
     h.push('<div class="ask"><p class="lbl">決めてほしいこと</p><p class="q">' +
       esc(b.question) + '</p></div>');
 
@@ -273,40 +305,9 @@
       h.push('<div><h4>決まらないと進められない作業</h4><p>' + esc(b.blocked) + '</p></div>');
     }
     if (has(b.deadline)) {
-      h.push('<div><h4>期限・制約</h4><p>' + esc(b.deadline) + '</p></div>');
+      h.push('<div><h4>判断に関わる期限</h4><p>' + esc(b.deadline) + '</p></div>');
     }
     h.push('</div>');
-
-    // 課題。この案件を知らない読者が、以降の選択肢を読める状態になるまでを書く
-    var pr = b.problem || {};
-    var prBlocks = [
-      ['対象', pr.subject],
-      ['現在の構造と動作', pr.current],
-      ['両立しない要求と制約', pr.conflict],
-      ['単純な解決方法がない理由', pr.difficulty]
-    ].filter(function (x) { return has(x[1]); });
-
-    if (prBlocks.length || has(pr.figureSvg) || (pr.terms || []).length) {
-      h.push('<h2>課題</h2><div class="pb">');
-      prBlocks.forEach(function (x) {
-        h.push('<section><h3>' + esc(x[0]) + '</h3><p>' + esc(x[1]) + '</p></section>');
-      });
-      h.push('</div>');
-
-      if (has(pr.figureSvg)) {
-        h.push('<figure class="dia">' + pr.figureSvg +
-          (has(pr.figureCaption) ? '<figcaption>' + esc(pr.figureCaption) + '</figcaption>' : '') +
-          '</figure>');
-      }
-
-      if ((pr.terms || []).length) {
-        h.push('<div class="tw"><table><thead><tr><th>用語</th><th>意味</th></tr></thead><tbody>');
-        pr.terms.forEach(function (t) {
-          h.push('<tr><td><code>' + esc(t.term) + '</code></td><td>' + esc(t.meaning) + '</td></tr>');
-        });
-        h.push('</tbody></table></div>');
-      }
-    }
 
     h.push('<h2>比較項目ごとの各案の結果</h2>');
     h.push('<div class="tw"><table class="mx"><thead><tr><th class="axis">比較項目</th>');
@@ -326,6 +327,7 @@
     h.push('</tbody></table></div>');
 
     if (has(b.figureSvg)) {
+      if (has(b.figureIntro)) h.push('<p>' + esc(b.figureIntro) + '</p>');
       h.push('<figure class="dia">' + b.figureSvg +
         (has(b.figureCaption) ? '<figcaption>' + esc(b.figureCaption) + '</figcaption>' : '') +
         '</figure>');
@@ -398,6 +400,10 @@
         h.push('<li>' + esc(c.priority) + ' → <strong>' + esc(optLabel(b, c.optionId)) + '</strong></li>');
       });
       h.push('</ul>');
+    }
+
+    if (has(pr.difficulty)) {
+      h.push('<h2>補足</h2><p>' + esc(pr.difficulty) + '</p>');
     }
 
     if ((b.assumptions || []).length) {
