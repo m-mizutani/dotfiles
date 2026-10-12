@@ -164,7 +164,7 @@
       }
     }
   },
-  "outputStyle": "concise",
+  "outputStyle": "default",
   "language": "日本語",
   "sandbox": {
     "enabled": true,
