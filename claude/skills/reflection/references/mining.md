@@ -6,26 +6,26 @@
 
 Claude Code のセッションは `~/.claude/projects/<encoded>/` に JSONL で保存される。`<encoded>` は対象ディレクトリの絶対パスを **`/` と `.` をすべて `-` に置換** したもの。
 
-例: `/Users/mizutani/.ghq/github.com/ubie-inc/shirabe`
-→ `-Users-mizutani--ghq-github-com-ubie-inc-shirabe`
+例: `/Users/mizutani/.ghq/github.com/example-org/example-project`
+→ `-Users-mizutani--ghq-github-com-example-org-example-project`
 （`/.ghq` の `/`と`.`が連続して `--ghq`、`.com` が `-com` になる点に注意）
 
 ## リポジトリ全体（全 worktree）の解決
 
-1. 渡されたパスから **リポジトリルート** を求める。worktree の中（`.../.claude/worktrees/<name>`）なら、その接尾辞を剥がした親がルート。判断に迷えば `git -C <path> rev-parse --show-toplevel` の親をたどる。
+1. 渡されたパスから **リポジトリルート** を求める。worktree の中（`.../.claude/worktrees/<name>`）なら、その接尾辞を除いた親ディレクトリがルート。判断に迷えば `git -C <path> rev-parse --show-toplevel` の親をたどる。
 2. ルートをエンコードして prefix を作る。
 3. リポジトリ本体と全 worktree のセッションディレクトリを集める。worktree のセッションは `<encoded-root>--claude-worktrees-<name>` という名前になる。
 
 ```bash
-ROOT="/Users/mizutani/.ghq/github.com/ubie-inc/shirabe"   # Step 1 で求めたルート
-ENC=$(printf '%s' "$ROOT" | sed 's/[/.]/-/g')             # / と . を - に
+ROOT="/Users/mizutani/.ghq/github.com/example-org/example-project"   # Step 1 で求めたルート
+ENC=$(awk -v path="$ROOT" 'BEGIN { gsub(/[\/.]/, "-", path); print path }')
 PROJ="$HOME/.claude/projects"
 
 # リポジトリ本体 + 全 worktree のセッションディレクトリ
 ls -d "$PROJ/$ENC" "$PROJ/$ENC"--claude-worktrees-* 2>/dev/null
 ```
 
-`<encoded-root>*` のような緩いglobは別リポジトリ（`shirabe-foo` 等）を巻き込むので使わない。本体は完全一致、worktree は `--claude-worktrees-*` で限定する。
+`<encoded-root>*` のような緩いglobは別リポジトリ（`example-project-extra` 等）を巻き込むので使わない。本体は完全一致、worktree は `--claude-worktrees-*` で限定する。
 
 ## 現在のセッションのJSONLを特定する（入力なしモードの補完用）
 
@@ -35,14 +35,14 @@ ls -d "$PROJ/$ENC" "$PROJ/$ENC"--claude-worktrees-* 2>/dev/null
 
 ```bash
 CWD=$(pwd)                                       # worktree の中ならそのパスのまま
-ENC=$(printf '%s' "$CWD" | sed 's/[/.]/-/g')     # / と . を - に
+ENC=$(awk -v path="$CWD" 'BEGIN { gsub(/[\/.]/, "-", path); print path }')
 PROJ="$HOME/.claude/projects"
 
 # 直近に更新された JSONL が現在のセッション（IDが分かっていれば直接指定する方が確実）
 ls -t "$PROJ/$ENC"/*.jsonl 2>/dev/null | head -1
 ```
 
-抽出は本体と同じ「対話を時系列で抜く jq」を使う。
+抽出は本体と同じ「対話を時系列で抽出する jq」を使う。
 
 ## 対話（人間＋Claude）を時系列で抽出する jq
 
@@ -62,17 +62,17 @@ jq -r '
     end' FILE
 ```
 
-これで `[USER] ...` と `[ASSISTANT] ...` が交互に並んだ読める対話になる。指摘エピソード（Claudeの提案 → 人間のダメ出し）はこの流れから読み取れる。Claudeの思考過程まで踏み込みたい場合だけ、`type=="thinking"` ブロックを追加で覗く（量が多いので原則は text のみ）。
+これで `[USER] ...` と `[ASSISTANT] ...` が交互に並んだ読める対話になる。指摘エピソード（Claudeの提案 → 人間の修正要求）はこの流れから読み取れる。Claudeの思考過程まで踏み込みたい場合だけ、`type=="thinking"` ブロックを追加で覗く（量が多いので原則は text のみ）。
 
 > fish 注意: フィルタは `!=` を **意図的に避けて** `(.x // false) | not`（＝falsyなら通す）で書いている。`!=` を含む jq プログラムは fish のコマンドラインで化けることがあるため。複雑な条件は `.jq` ファイルに書いて `jq -rf filter.jq FILE` で渡すと確実。
 
-## 抽出＋一次蒸留のサブエージェント委譲（雛形）
+## 対話の抽出と教訓の整理のサブエージェント委任（雛形）
 
-全 worktree 分の対話を読むのは重いので、軽量モデル（`sonnet` など）のサブエージェントに委譲する。返させるのは生ログではなく **構造化された蒸留結果** だけ。
+全 worktree 分の対話を読むのは重いので、軽量モデル（`sonnet` など）のサブエージェントに委任する。返させるのは生ログではなく **項目ごとに整理した抽出結果** だけ。
 
 ```
 あなたは Claude Code のセッション JSONL 群を分析し、ソフトウェア設計/実装中に
-Claude(ASSISTANT)がやらかしたことと、それに対する人間(USER)の指摘をペアで読み解く。
+Claude(ASSISTANT)の誤った提案や行動と、それに対する人間(USER)の指摘を併せて読む。
 目的は「Claudeが同じミスを繰り返さないための教訓」を抽出すること。
 人間の発話だけを転記しても意味がない。直前にClaudeが何を提案/実装したかを必ず見ること。
 
@@ -82,22 +82,22 @@ Claude(ASSISTANT)がやらかしたことと、それに対する人間(USER)の
 抽出方法（上の jq で [USER]/[ASSISTANT] の対話を時系列で取り出す。python3 は使えない）:
   <上の jq コマンドを貼る>
 
-拾う対象は次の2種類:
-  (1) 指摘エピソード = 人間が修正/軌道修正/ダメ出し/好みを入れた箇所 +
+抽出する対象は次の2種類:
+  (1) 指摘エピソード = 人間が修正/軌道修正/修正要求/好みを入れた箇所 +
       その直前にClaudeが提案/実装した内容。単なるタスク依頼は対象外。
-  (2) Claude自身のつまずき = 明示的ダメ出しが無くても、誤った前提・手戻り・
-      無駄な遠回り・自己訂正の形跡。
+  (2) Claude自身の誤りや行き詰まり = 明示的修正要求が無くても、誤った前提・手戻り・
+      不要な作業・自己訂正の形跡。
 
 成果物（これだけを返す。生ログは返さない）:
 - PART A エピソード一覧: 各件について「Claudeは何をしたか」「人間は何と言ったか
-  （引用、日本語可）/ または何が不味かったか」を各一行。
-- PART B 教訓への一次蒸留: 各エピソードに GENERAL / PROJECT-SPECIFIC のラベルを付け、
+  （引用、日本語可）/ または何が問題だったか」を各一行。
+- PART B 教訓の整理: 各エピソードに GENERAL / PROJECT-SPECIFIC のラベルを付け、
   ラベルごとに扱いを変える。似たものはまとめる。
   - GENERAL（どのプロジェクトでも成り立つ）: 具体（このパス・このトークン形式・特定API）
-    を剥がし、「Claudeが本来どう振る舞うべきだったか」を転用可能な一般原則として一文で述べる。
-  - PROJECT-SPECIFIC（このコードベース固有）: Claudeがこの固有事情で寄り道/難航した箇所。
-    こちらは具体を剥がさず、「知っていれば遠回りを避けられた事実」（例: ビルド/テストの回し方、
+    を除き、「Claudeが本来どう振る舞うべきだったか」を転用可能な一般原則として一文で述べる。
+  - PROJECT-SPECIFIC（このコードベース固有）: Claudeがこの固有事情を知らずに不要な作業をしたり、作業が難航したりした箇所。
+    こちらは具体的な事実を省かず、「知っていれば不要な作業を避けられた事実」（例: ビルドとテストの実行方法、
     状態の置き場所、生成物の扱い、特定の前提）をそのまま記録する一文にする。
 ```
 
-返ってきた PART B を SKILL.md Step 3 以降で磨く。
+返ってきた PART B を SKILL.md Step 3 以降で整理する。

@@ -1,6 +1,6 @@
 ---
 name: herdr-tab-name
-description: herdr のタブ名と pane 名を、作業段階と現在の作業を示す短い日本語ラベルへ更新する。最初の作業指示、作業内容の変更、作業段階の変更時に使用する。
+description: herdr のタブ名とペイン名を、作業段階と現在の作業を示す短い日本語ラベルへ更新する。最初の作業指示、作業内容の変更、作業段階の変更時に使用する。
 ---
 
 # herdr-tab-name
@@ -37,7 +37,7 @@ herdr-label "<ラベル>"
 Herdr のソケットは Workspace sandbox から接続できないため、`exec_command` には次を指定する。
 
 - `sandbox_permissions`: `require_escalated`
-- `justification`: `Herdr のタブ名と pane 名の更新にはソケット接続が必要です。`
+- `justification`: `Herdr のタブ名とペイン名の更新にはソケット接続が必要です。`
 - `prefix_rule`: `["herdr-label"]`
 
 環境変数の確認、条件分岐、コマンド連結は行わない。`herdr-label` は herdr の外では

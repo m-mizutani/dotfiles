@@ -2,9 +2,9 @@
 
 Before declaring a task complete:
 
-- Run the project's verification commands (format, vet/lint, test, and any others
-  the project defines) once and require them to pass. Language- and
-  framework-specific rules name the commands for their own ecosystem
+- Run the project's required verification commands relevant to the change once
+  and require them to pass. Language- and framework-specific rules name those
+  commands. Do not run unrelated application tests for a prose-only edit
 - When something in the environment prevents a command from running, first try the
   available remedy: start the dependency, adjust the host, or request permission.
   Report the task as unverified if the command still cannot run

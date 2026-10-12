@@ -88,7 +88,7 @@
   svg .n { fill: var(--fg); font-size: 12.5px; font-weight: 600; }
   svg .s { fill: var(--fg-dim); font-size: 11px; }
 
-  /* 充足度の帯 */
+  /* Verification status distribution. */
   .bar {
     display: flex; height: 2.2rem; border-radius: 5px; overflow: hidden;
     border: 1px solid var(--border);
@@ -174,17 +174,17 @@
       <p>{{観測できる挙動の変化として3〜5行。差分の要約ではなく「入力 A に対する結果が B から C に変わった」の形}}</p>
     </div>
     <div>
-      <h3>検証が届いている範囲</h3>
-      <p>{{このテスト群が通ることで何を信じてよいかの宣言。個別のテスト内容ではない}}</p>
+      <h3>検証できている範囲</h3>
+      <p>{{テストの成功によって確認できた動作の説明。個別のテスト内容ではない}}</p>
     </div>
     <div>
-      <h3>届いていない範囲</h3>
-      <p>{{点の列挙ではなく傾向として。意図的な見送りと未判断の欠落を区別して書く}}</p>
+      <h3>検証できていない範囲</h3>
+      <p>{{個別の不足事項の列挙ではなく傾向として。意図的な見送りと未判断の欠落を区別して書く}}</p>
     </div>
   </div>
 
-  <!-- 構造を示す図（変更の形に応じて 図A / 図C / 図D / 図E から1枚を選ぶ。
-       references/diagrams.md の選択基準に従う） -->
+  <!-- Structural diagram: choose A, C, D, or E for the change.
+       Follow the selection criteria in references/diagrams.md. -->
   <figure class="dia">
     {{構造を示す図}}
     <figcaption>{{図の説明。太枠は本変更で変わった箇所、破線は変わっていないが影響を受ける箇所}}</figcaption>
@@ -202,8 +202,8 @@
   </figure>
 
   <div class="legend">
-    <span class="l-ok"><i></i>検証済み（値まで検証し、壊れたら落ちる）</span>
-    <span class="l-weak"><i></i>弱い（存在するが壊れても落ちない可能性）</span>
+    <span class="l-ok"><i></i>検証済み（値まで検証し、期待した動作から外れたらテストが失敗する）</span>
+    <span class="l-weak"><i></i>弱い（テストは存在するが期待した動作から外れてもテストが成功する可能性）</span>
     <span class="l-def"><i></i>見送り（明示的な判断がある）</span>
     <span class="l-mis"><i></i>欠落（要求があるのに検証がない）</span>
   </div>

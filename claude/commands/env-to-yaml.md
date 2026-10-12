@@ -1,6 +1,6 @@
-.env ファイルを .env.yaml に変換しなさい。これはzenvというツールで使われている.envファイルで、以下の移行ガイドに沿って書き換えをすること。すでに .env.yaml が存在する場合、既存の内容を優先し .env の内容を移管するように。.env は今後利用しない前提で、すべての値を移植せよ。また同様の値があったり再構成が必要な変数があれば、alias, value, refs などを利用して最適化せよ。
+zenv で使う `.env` を、以下の移行ガイドに従って `.env.yaml` に変換する。すでに `.env.yaml` がある場合はその内容を優先し、`.env` の内容を追加する。今後 `.env` を使わずに済むよう、すべての値を移す。値が重複している変数や、定義を組み直す必要がある変数には、`alias`、`value`、`refs` などを使う。
 
-また移管する際に項目の種類ごとに分類し、適切な順序にせよ。各種類ごとに見出しと区切り文字( `-----` など)を挿入し、視認性を向上させよ。
+項目は種類ごとに分類し、関連する設定をまとめて並べる。種類ごとに見出しと区切り文字（`-----` など）を挿入し、設定を探しやすくする。
 # Migration Guide: zenv v1 to v2
 
 This guide helps you migrate from zenv v1 to v2. **v2 encourages using `.env.yaml` files** as the primary configuration format, offering cleaner syntax and more features than traditional `.env` files.

@@ -26,6 +26,15 @@ an existing unmanaged Codex file.
 
 ## Agent skills
 
+Common instructions live in `claude/CLAUDE.md` and `codex/AGENTS.md`.
+Their `User-Facing Text` sections define the text-quality checks used by
+implementation and review skills. Keep those checks in the common files;
+skills reference them and describe only their own steps.
+
+The legacy Claude `spec` command delegates to the `spec` skill. The `dig`
+command updates the current task's spec and reads `.cckiro/specs` only when
+the current `.spec` location has no matching file.
+
 Claude Code loads the managed skills from `~/.claude/skills`. Codex loads the
 same managed set from `~/.agents/skills`; start a new Codex session after the
 first setup or after changing a skill.

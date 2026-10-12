@@ -1,12 +1,12 @@
 ---
 name: difit
-description: difitコマンドでGitのdiffをブラウザのGitHub風UIで表示する。コードレビューや差分確認時に使用。
+description: difitコマンドでGitの差分を、GitHubと同様の画面でブラウザに表示する。コードレビューや差分の確認時に使う。
 user_invocable: true
 ---
 
 # difit
 
-会話のコンテキストに応じて `difit` コマンドを実行し、Gitの差分をブラウザで表示する。
+会話の内容から確認したい差分を特定し、`difit`コマンドでブラウザに表示する。
 
 ## 基本方針
 

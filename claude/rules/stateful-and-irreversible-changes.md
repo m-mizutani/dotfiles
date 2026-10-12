@@ -1,9 +1,10 @@
 # Operating on Stateful Systems & Irreversible Changes
 
-These rules govern any action that touches persistent or shared state — databases,
-migrations, deployed environments, files you overwrite or delete, external services.
-They exist because a wrong action here is not a failed compile you can retry; it can
-destroy data that cannot be recovered.
+These rules govern changes to persistent or shared state, including databases,
+migrations, deployed environments, and external services, and irreversible file
+changes. Routine, reversible edits within the user's request follow `CLAUDE.md`'s
+Design and Existing Behavior rules and do not require repeated approval. Operations
+that can destroy unrecoverable data require the checks below.
 
 ## The root failure to avoid
 Treating a failure as "an error to silence" instead of "a signal that the system's

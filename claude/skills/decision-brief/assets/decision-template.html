@@ -1,7 +1,7 @@
 <title>{{判断の主題}}</title>
 
 <!--
-  判断依頼ブリーフのテンプレート。
+  判断依頼資料のテンプレート。
 
   編集するのは下の <script type="application/json" id="brief-state"> の中身だけ。
   スタイルと描画スクリプトには手を入れない。ページはこの JSON から描画され、
@@ -17,14 +17,14 @@
 {
   "title": "{{判断の主題}}",
   "question": "{{何をどう決めるのかを1文で。「XをAにするかBにするか」の形}}",
-  "blocked": "{{決まらないと止まること。止まらないなら、そもそも今聞く判断ではない}}",
+  "blocked": "{{決まらないと進められない作業。該当する作業がないなら、今尋ねる必要はない}}",
   "deadline": "",
 
   "problem": {
     "subject": "{{この判断が関わるシステムまたはコンポーネントが何をするものか。案件を知らない読者向けに1〜2文}}",
     "current": "{{現在の構造と動作。どの要素がどの責務を持ち、どこから呼ばれているか}}",
-    "conflict": "{{どの要求とどの制約が衝突しているのか。現在の構造のままでは何が満たせないのか}}",
-    "difficulty": "{{単純な解が無い理由。どの案を採っても何を失うことになるのか}}",
+    "conflict": "{{どの要求とどの制約が両立しないのか。現在の構造のままでは何が満たせないのか}}",
+    "difficulty": "{{単純な解決方法がない理由。どの案を採っても何を失うことになるのか}}",
     "terms": [
       { "term": "{{リポジトリ固有の識別子や語}}", "meaning": "{{その意味。この語を知らない読者が以降を読めるように}}" }
     ],
@@ -36,33 +36,33 @@
   "figureCaption": "",
 
   "axes": [
-    { "name": "{{軸の名前}}", "detail": "{{選択によって何がどう変わるのか。観測できる形で}}" },
-    { "name": "{{軸の名前}}", "detail": "{{同上}}" },
-    { "name": "{{軸の名前}}", "detail": "{{同上}}" }
+    { "name": "{{比較項目の名前}}", "detail": "{{選んだ案によって何がどう変わるのか。観測できる値で書く}}" },
+    { "name": "{{比較項目の名前}}", "detail": "{{同上}}" },
+    { "name": "{{比較項目の名前}}", "detail": "{{同上}}" }
   ],
 
   "options": [
     {
       "id": "a",
-      "label": "{{案の名前。造語を作らず、実際の技術名か「案A」}}",
-      "summary": "{{1文で。この案が何をするものか}}",
+      "label": "{{案の名前。独自の名前を付けず、実際の技術名か「案A」}}",
+      "summary": "{{この案が何をするかを1文で}}",
       "stance": [
-        "{{軸1でのこの案の位置づけ}}",
-        "{{軸2でのこの案の位置づけ}}",
-        "{{軸3でのこの案の位置づけ}}"
+        "{{比較項目1についての、この案の結果}}",
+        "{{比較項目2についての、この案の結果}}",
+        "{{比較項目3についての、この案の結果}}"
       ],
-      "change": "{{具体的な変更。どのファイルの何がどうなるか}}",
-      "before": "{{現在の観測できる挙動}}",
-      "after": "{{この案を採ったあとの観測できる挙動。変わらないなら「変わらない」}}",
-      "cost": "{{この案で諦めるもの。「特になし」と書きたくなったら軸の抽出が足りていない}}",
-      "reversibility": "{{後から別案に変えるときに必要になること}}",
-      "next": "{{これが選ばれた場合に直ちに着手すること}}"
+      "change": "{{具体的な変更。どのファイルの何をどう変えるか}}",
+      "before": "{{現在の、外から観測できる動作}}",
+      "after": "{{この案を採った後の、外から観測できる動作。変わらない場合は「変わらない」}}",
+      "cost": "{{この案で維持できなくなる性質。「特になし」と書きたくなった場合は、比較項目が不足している}}",
+      "reversibility": "{{後から別の案に変える場合に必要な作業}}",
+      "next": "{{この案が選ばれた場合に直ちに行う作業}}"
     },
     {
       "id": "b",
       "label": "{{案の名前}}",
       "summary": "{{1文}}",
-      "stance": ["{{軸1}}", "{{軸2}}", "{{軸3}}"],
+      "stance": ["{{比較項目1}}", "{{比較項目2}}", "{{比較項目3}}"],
       "change": "{{...}}",
       "before": "{{...}}",
       "after": "{{...}}",
@@ -75,20 +75,20 @@
   "optimal": {
     "ideal": {
       "optionId": "a",
-      "reason": "{{長期的な保守性・モデルの整合性・抽象化の適切さから、既存実装を前提にせずに選ぶとこれになる理由}}",
-      "cost": "{{この基準でこの案を採ったときに引き受ける不利。実装量、破壊的変更の範囲など}}"
+      "reason": "{{長期的な保守性、データモデルの一貫性、抽象化の適切さで、既存の実装を前提にせずに選んだ場合に、この案になる理由}}",
+      "cost": "{{この基準でこの案を採用した場合に受け入れる欠点。実装量、互換性を壊す変更の範囲など}}"
     },
     "practical": {
       "optionId": "b",
-      "reason": "{{実装コスト・破壊的変更の回避と保守性の均衡で選ぶとこれになる理由}}",
-      "cost": "{{この基準でこの案を採ったときに引き受ける不利。残る構造上の歪みなど}}"
+      "reason": "{{実装コスト、互換性を壊す変更を避けること、保守性の3つを比べて選んだ場合に、この案になる理由}}",
+      "cost": "{{この基準でこの案を採用した場合に受け入れる欠点。残る設計上の問題など}}"
     },
-    "gap": "{{2つの基準が別の案を指す場合、現実解を採ったときに残る差と、後からあるべき姿へ移すために必要になること。同じ案を指す場合は空文字}}"
+    "gap": "{{2つの基準で別の案を選んだ場合に、実装コストも考慮した案を採ったときに残る問題と、後から保守性を優先した案へ移行するために必要な作業。同じ案を選んだ場合は空文字}}"
   },
 
   "conditional": [
-    { "priority": "{{どの軸を優先するなら}}", "optionId": "a" },
-    { "priority": "{{どの軸を優先するなら}}", "optionId": "b" }
+    { "priority": "{{どの比較項目を優先する場合か}}", "optionId": "a" },
+    { "priority": "{{どの比較項目を優先する場合か}}", "optionId": "b" }
   ],
 
   "assumptions": [
@@ -270,7 +270,7 @@
 
     h.push('<div class="meta">');
     if (has(b.blocked)) {
-      h.push('<div><h4>決まらないと止まること</h4><p>' + esc(b.blocked) + '</p></div>');
+      h.push('<div><h4>決まらないと進められない作業</h4><p>' + esc(b.blocked) + '</p></div>');
     }
     if (has(b.deadline)) {
       h.push('<div><h4>期限・制約</h4><p>' + esc(b.deadline) + '</p></div>');
@@ -282,8 +282,8 @@
     var prBlocks = [
       ['対象', pr.subject],
       ['現在の構造と動作', pr.current],
-      ['衝突している要求と制約', pr.conflict],
-      ['単純な解が無い理由', pr.difficulty]
+      ['両立しない要求と制約', pr.conflict],
+      ['単純な解決方法がない理由', pr.difficulty]
     ].filter(function (x) { return has(x[1]); });
 
     if (prBlocks.length || has(pr.figureSvg) || (pr.terms || []).length) {
@@ -308,9 +308,8 @@
       }
     }
 
-    // 軸 × 選択肢の対比
-    h.push('<h2>選択肢の対比</h2>');
-    h.push('<div class="tw"><table class="mx"><thead><tr><th class="axis">判断を分ける軸</th>');
+    h.push('<h2>比較項目ごとの各案の結果</h2>');
+    h.push('<div class="tw"><table class="mx"><thead><tr><th class="axis">比較項目</th>');
     b.options.forEach(function (o, i) {
       h.push('<th class="opt" style="border-top-color:' + tone(i) + ';background:' + toneBg(i) + '">' +
         esc(o.label) + '<small>' + esc(o.summary) + '</small></th>');
@@ -332,39 +331,39 @@
         '</figure>');
     }
 
-    // 2つの基準での最適案。どちらも最終判断ではなく、基準を明示した材料として並べる
+    // Neither recommendation is the final decision; each is shown with the criterion that produced it.
     var pk = b.optimal || {};
     var CRIT = [
-      ['ideal', 'あるべき姿',
-        '長期的な保守性・モデルの整合性・抽象化の適切さから、既存実装を前提にせずに選ぶ'],
-      ['practical', '現実解',
-        '実装コスト・破壊的変更の回避と保守性の均衡から選ぶ']
+      ['ideal', '長期の保守性を優先する基準',
+        '長期的な保守性、データモデルの一貫性、抽象化の適切さで、既存の実装を前提にせずに選ぶ'],
+      ['practical', '実装コストも考慮する基準',
+        '実装コスト、互換性を壊す変更を避けること、保守性の3つを比べて選ぶ']
     ];
     if ((pk.ideal && pk.ideal.optionId) || (pk.practical && pk.practical.optionId)) {
-      h.push('<h2>2つの基準での最適案</h2><div class="crits">');
+      h.push('<h2>2つの基準で推奨する案</h2><div class="crits">');
       CRIT.forEach(function (c) {
         var p = pk[c[0]];
         if (!p || !p.optionId) return;
         h.push('<div class="crit"><p class="kind">' + esc(c[1]) + '</p>');
         h.push('<h3>' + esc(optLabel(b, p.optionId)) + '</h3>');
         h.push('<p class="basis">選ぶ基準: ' + esc(c[2]) + '</p><dl>');
-        h.push('<dt>この案になる理由</dt><dd>' + esc(p.reason) + '</dd>');
-        h.push('<dt>引き受ける不利</dt><dd>' + esc(p.cost) + '</dd>');
+        h.push('<dt>この案を選んだ理由</dt><dd>' + esc(p.reason) + '</dd>');
+        h.push('<dt>受け入れる欠点</dt><dd>' + esc(p.cost) + '</dd>');
         h.push('</dl></div>');
       });
       h.push('</div>');
 
       if (pk.ideal && pk.practical && pk.ideal.optionId === pk.practical.optionId) {
-        h.push('<p class="same">2つの基準はどちらも ' + esc(optLabel(b, pk.ideal.optionId)) +
-          ' を指している。</p>');
+        h.push('<p class="same">2つの基準のどちらでも ' + esc(optLabel(b, pk.ideal.optionId)) +
+          ' を推奨する。</p>');
       } else if (has(pk.gap)) {
-        h.push('<div class="gap"><h4>現実解を採った場合に残る差</h4><p>' + esc(pk.gap) + '</p></div>');
+        h.push('<div class="gap"><h4>実装コストも考慮した案を採用した場合に残る問題</h4><p>' + esc(pk.gap) + '</p></div>');
       }
     }
 
     // 回答欄
     h.push('<div class="answer"><h3>回答</h3>');
-    h.push('<p class="hint">このページで選ぶと、選択が記録され、作業中のセッションに伝わる。ターミナルで直接答えても構わない。</p>');
+    h.push('<p class="hint">このページで案を選ぶと、選択結果が記録され、作業中のセッションに通知されます。ターミナルで直接回答することもできます。</p>');
     h.push('<div class="picks" id="picks" hidden>');
     b.options.forEach(function (o) {
       var on = b.decision && b.decision.optionId === o.id;
@@ -387,14 +386,14 @@
       h.push('<dt>変更前</dt><dd>' + esc(o.before) + '</dd>');
       h.push('<dt>変更後</dt><dd>' + esc(o.after) + '</dd>');
       h.push('<dt>失うもの</dt><dd>' + esc(o.cost) + '</dd>');
-      h.push('<dt>後戻りコスト</dt><dd>' + esc(o.reversibility) + '</dd>');
-      h.push('<dt>選ばれたら</dt><dd>' + esc(o.next) + '</dd>');
+      h.push('<dt>後から別の案に変える費用</dt><dd>' + esc(o.reversibility) + '</dd>');
+      h.push('<dt>選ばれた場合に直ちに行う作業</dt><dd>' + esc(o.next) + '</dd>');
       h.push('</dl></div>');
     });
     h.push('</div>');
 
     if ((b.conditional || []).length) {
-      h.push('<h2>優先する軸ごとの対応</h2><ul class="cond">');
+      h.push('<h2>特定の比較項目を優先する場合の推奨</h2><ul class="cond">');
       b.conditional.forEach(function (c) {
         h.push('<li>' + esc(c.priority) + ' → <strong>' + esc(optLabel(b, c.optionId)) + '</strong></li>');
       });
@@ -414,7 +413,7 @@
     }
 
     if ((b.dropped || []).length) {
-      h.push('<h2>検討して落とした案</h2><ul class="plain note">');
+      h.push('<h2>検討して除外した案</h2><ul class="plain note">');
       b.dropped.forEach(function (d) {
         h.push('<li><strong>' + esc(d.label) + '</strong> — ' + esc(d.reason) + '</li>');
       });
@@ -431,9 +430,8 @@
     return h.join('');
   }
 
-  // ページ自身のソースを組み立て直す。live DOM は直列化しない（描画結果には
-  // 閲覧側の状態が混ざるため）。状態は JSON に、描画規則はこのスクリプトに
-  // 閉じているので、この2つを埋め込めば同じページが再現できる。
+  // Avoid serializing the live DOM because it includes viewer-specific state.
+  // The stored JSON and this script are sufficient to reproduce the page.
   function renderDoc(b) {
     var json = JSON.stringify(b, null, 2).replace(/</g, '\\u003c');
     var boot = document.getElementById('brief-boot').textContent;
@@ -508,7 +506,7 @@
 
         artifact.publish(renderDoc(next)).catch(function (err) {
           var code = err && err.code;
-          // conflict は誰かが先に publish しただけ。全ビューが勝者に再読み込みされる
+          // A conflict means another publish succeeded first; all views reload that version.
           if (code === 'conflict') return;
           if (code === 'not_writer' || code === 'not_granted' ||
               code === 'not_declared' || code === 'capability_disabled') {

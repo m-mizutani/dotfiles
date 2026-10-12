@@ -31,6 +31,16 @@ Every term you write must be one the reader can look up. Two sources are permitt
 - Use a different register only when the user explicitly asks for one (an analogy, a casual summary, specific wording). Their instruction overrides this default for as long as it stands
 - This governs replies, summaries, reports, plans, review comments, specs, docs, commit messages, PR descriptions, and code comments alike
 
+## User-Facing Text
+
+Apply these checks to explanatory text, UI labels, notifications, errors, empty states, CLI help, documentation, and translations.
+
+- Match the implementation: make the operation's target, result, and next step clear. Do not expose unexplained internal names or abbreviations.
+- Check Japanese vocabulary, particles, word order, modifiers, omitted subjects and objects, politeness, and sentence endings in context. Use precise, natural wording, not harder words or longer sentences.
+- Read text with its surrounding explanation and the relevant UI or command state. Use consistent terminology and style; make button text match the action.
+- For each translated language, check missing or mixed-language text, placeholders, plurals, numbers, dates, and units. Check concatenated or interpolated text and whether long translations fit. Use actual output when available; report any part not observed.
+- In reviews, treat unnatural Japanese, ambiguous wording, mistranslation, and misleading operations as Must-fix. Give the file and line or translation key, the text, its context, the concrete problem, and a natural replacement. Distinguish an observable problem from a preference among equally natural expressions.
+
 ## Implementation Completeness
 - Complete every requested, in-scope deliverable without stubs, placeholders,
   TODOs, or skipped requested steps. If the work is complex, break it into
@@ -110,7 +120,7 @@ An explanation is a finished product, not a transcript of how you arrived at it.
 - **Cut anything that does not change the reader's next action** — a premise you checked and found fine, an option you already rejected, a caveat about work that has not started
 - **A correction is one sentence**: what was wrong, what is right. Do not re-derive how the error happened or list its downstream effects
 - **Name the concrete object.** Give the `file:line`, identifier, command, configuration key, or observed output, and describe the behavior literally. Wording follows the Vocabulary rules above: established terms only, each in its dictionary sense, no figurative language. Where a comparison seems necessary, state the property the two things actually share
-- **If the user has to ask "つまりどういうこと" / "so what" / "which part is the proposal," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place. When they report a reply as hard to read, check first whether its content was sorted by kind and fix that; adding headings, bold, and rules to a reply whose parts are still unsorted reproduces the same defect and costs another round
+- **If the user has to ask "つまり、どういうことですか" / "so what" / "which part is the proposal," the previous reply was defective.** The short version they are asking for is what should have been sent in the first place. When they report a reply as hard to read, check first whether its content was sorted by kind and fix that; adding headings, bold, and rules to a reply whose parts are still unsorted reproduces the same defect and costs another round
 
 ## URLs of What Was Discussed
 End every reply that concludes a task or a round of discussion with the URLs of the things it produced or referred to.

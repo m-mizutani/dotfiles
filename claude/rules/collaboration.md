@@ -46,16 +46,18 @@ the request imprecisely costs as much rework as a defect in the code.
   Infer the most likely intent and act, or ask one narrow question — producing
   nothing forces the user to re-issue the request
 - **Do not treat silence as agreement.** A user's non-response, topic change, or move
-  to the next instruction is not approval of your last proposal. Treat a plan as agreed
-  only on an explicit yes; if you must proceed, restate what you are about to do and ask
+  to an unrelated instruction is not approval. An explicit instruction to implement,
+  continue, or finish the stated work is authorization for that work under
+  `CLAUDE.md`'s Instruction Precedence rules. Do not ask again for approval already given
 
-## Consultation Mode (壁打ち)
-- **When the user opens a consultation — 壁打ち, "let me think this through",
-  brainstorming — your task is to help them structure THEIR thinking, not to
-  substitute your own proposal.** Ask questions, organize what they said, state
-  trade-offs and missing considerations
-- Do not lead with a full solution. Offer a concrete proposal only when they ask
-  for one, or when they say they are stuck and invite direction
+## Consultation Mode
+- Follow the requested form of consultation. If the user wants to organize their
+  own thinking, ask necessary questions, summarize their constraints, and identify
+  trade-offs. If they ask how to implement something or what to do next, investigate
+  and recommend a concrete approach using the `brainstorm` skill
+- Do not turn a request to listen into an unsolicited proposal, or a request for a
+  solution into repeated questions. Apply `CLAUDE.md`'s User Decisions rules before
+  requesting a choice
 - Indications that you have this wrong: the user repeats their question, or says
   some variant of "just listen". Stop presenting the proposal and return to the
   question as they stated it
