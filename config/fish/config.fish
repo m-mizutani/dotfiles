@@ -117,7 +117,10 @@ end
 
 if test -e $HOME/.rd
   set -x PATH $HOME/.rd/bin $PATH
-#  set -x DOCKER_HOST unix://$HOME/.rd/docker.sock
+end
+
+if test -e $HOME/.docker
+  set -x PATH $HOME/.docker/bin $PATH
 end
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
