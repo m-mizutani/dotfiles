@@ -181,6 +181,33 @@ local-only tools, desktop applications, or standalone batch processes.
 - Run a standalone task in the foreground. When the time saving is uncertain,
   prefer the foreground
 
+## Waiting for a Condition
+- Whenever a task must wait until something finishes or reaches a state (CI
+  checks, a workflow run, a deployment, a server becoming ready, an
+  asynchronous job, a log line appearing), wait with `hachi`. Do not write
+  `sleep` loops or shell `until`/`while` polling, and do not rerun the same
+  status command across turns. Read `hachi --help` for options and examples;
+  the README is at https://github.com/m-mizutani/hachi
+- Give a success condition (`--jq`, `--grep`, `--regex`, `--expr`, or
+  `--exit-code`). When the state can end in failure, also give a fail condition
+  (`--fail-jq` and the other `--fail-*` options) so that `hachi` exits as soon
+  as the failure appears instead of at the timeout. Without a success
+  condition, `hachi` only waits for exit code 0
+- Set `--timeout` explicitly (the default is 30 minutes) to a value shorter
+  than the time limit of the command execution environment
+- `hachi` runs the command without a shell. Inspect output with `--jq`,
+  `--expr`, or `--target` instead of a pipe
+- Report the result by exit code: 0 the success condition matched, 1 timeout,
+  2 a fail condition matched, 3 invalid options, 4 the command could not be
+  run. Do not rerun the same wait after a timeout without stating the reason
+- To wait for the checks of a pull request, inspect the `bucket` field of
+  `gh pr checks` and require the expected check names, because a check that
+  has not started yet is absent from the output:
+
+  ```
+  hachi -t 9m --jq 'any(.[]; .name == "test" and .bucket == "pass")' --fail-jq 'any(.[]; .bucket == "fail" or .bucket == "cancel")' -- gh pr checks 123 --json name,bucket
+  ```
+
 ## Terminal Tab Name
 - When starting a new task, update the tab name with the `herdr-tab-name` skill.
   Do the same when the subject of the work clearly changes, or when the work

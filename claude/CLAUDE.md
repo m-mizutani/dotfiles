@@ -175,6 +175,19 @@ When authenticating or authorizing requests:
 - Use a lighter model such as `sonnet` or `haiku`. Keep architectural judgment and synthesis in the main agent.
 - Run a task in the background only when independent foreground work will materially reduce total time. Otherwise run it in the foreground.
 
+## Waiting for a Condition
+
+- Whenever a task must wait until something finishes or reaches a state (CI checks, a workflow run, a deployment, a server becoming ready, an asynchronous job, a log line appearing), wait with `hachi`. Do not write `sleep` loops or shell `until`/`while` polling, and do not rerun the same status command across turns. Read `hachi --help` for options and examples; the README is at https://github.com/m-mizutani/hachi .
+- Give a success condition (`--jq`, `--grep`, `--regex`, `--expr`, or `--exit-code`). When the state can end in failure, also give a fail condition (`--fail-jq` and the other `--fail-*` options) so that `hachi` exits as soon as the failure appears instead of at the timeout. Without a success condition, `hachi` only waits for exit code 0.
+- Set `--timeout` explicitly. A foreground Bash call ends after at most 10 minutes, while the `hachi` default timeout is 30 minutes. Use `-t` of 9 minutes or less in the foreground; for a longer wait, run `hachi` with `run_in_background` and continue independent work until its completion is notified.
+- `hachi` runs the command without a shell, and `sh -c` is denied on this machine. Inspect output with `--jq`, `--expr`, or `--target` instead of a pipe.
+- Report the result by exit code: 0 the success condition matched, 1 timeout, 2 a fail condition matched, 3 invalid options, 4 the command could not be run. Do not rerun the same wait after a timeout without stating the reason.
+- To wait for the checks of a pull request, inspect the `bucket` field of `gh pr checks` and require the expected check names, because a check that has not started yet is absent from the output:
+
+  ```
+  hachi -t 9m --jq 'any(.[]; .name == "test" and .bucket == "pass")' --fail-jq 'any(.[]; .bucket == "fail" or .bucket == "cancel")' -- gh pr checks 123 --json name,bucket
+  ```
+
 ## Terminal Tab Name
 
 - On the first task in every session, use the `herdr-tab-name` skill immediately.
@@ -196,7 +209,7 @@ This machine denies the following commands. Use the stated alternative without a
 - Do not use `go build`. Use `go vet ./...`, `go test`, or the project's task runner for compile checks. `go run` is permitted.
 - Do not use `curl` or `wget`. Use WebFetch or `gh api` for GitHub.
 - Avoid compound commands beginning with `cd X && ...`; set an absolute working directory instead.
-- Run `gh`, `gcloud`, `bq`, `git`, `docker`, and `herdr-label` as a single standalone command. A call that adds a pipe, `;`, `&&`, `cd`, a redirect, a leading `VAR=value`, `$(...)`, or backquotes (including Markdown code spans inside a quoted argument) does not match `sandbox.excludedCommands`, so it runs inside the sandbox, where these tools cannot read their credentials or reach their sockets. Shape output with the tool's own options such as `--jq` or `--format`, and pass a pull-request body with `--body-file`.
+- Run `gh`, `gcloud`, `bq`, `git`, `docker`, `herdr-label`, and `hachi` as a single standalone command. A call that adds a pipe, `;`, `&&`, `cd`, a redirect, a leading `VAR=value`, `$(...)`, or backquotes (including Markdown code spans inside a quoted argument) does not match `sandbox.excludedCommands`, so it runs inside the sandbox, where these tools cannot read their credentials or reach their sockets. Shape output with the tool's own options such as `--jq` or `--format`, and pass a pull-request body with `--body-file`.
 
 ## Documentation and Source Language
 
