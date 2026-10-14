@@ -193,6 +193,9 @@ local-only tools, desktop applications, or standalone batch processes.
   (`--fail-jq` and the other `--fail-*` options) so that `hachi` exits as soon
   as the failure appears instead of at the timeout. Without a success
   condition, `hachi` only waits for exit code 0
+- `--grep` and `--fail-grep` match a fixed string, not a regular expression:
+  `--grep 'a|b'` matches only the text `a|b`, so a wait that expects `a` or
+  `b` ends at the timeout. Use `--regex` and `--fail-regex` for patterns
 - Set `--timeout` explicitly (the default is 30 minutes) to a value shorter
   than the time limit of the command execution environment
 - `hachi` runs the command without a shell. Inspect output with `--jq`,
