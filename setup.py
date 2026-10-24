@@ -74,6 +74,7 @@ CODEX_SKILLS = (
     "my-code-review",
     "refine-rules",
     "reflection",
+    "visual-report",
 )
 
 CLAUDE_SKILLS = SHARED_SKILLS + CODEX_SKILLS

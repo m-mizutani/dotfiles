@@ -1,0 +1,313 @@
+<title>{{報告の主題を表す2〜4語の名前}}</title>
+<style>
+  /* All tokens are defined for light; the dark blocks only replace values. */
+  :root {
+    --bg: #ffffff;
+    --surface: #f5f6f8;
+    --fg: #1a1d21;
+    --fg-dim: #5d646c;
+    --border: #dfe3e8;
+    --edge: #8f979f;
+    --accent: #2459c4;  --accent-bg: #e8effc;
+    --ok: #2f7d54;      --ok-bg: #e7f3ec;
+    --warn: #a9720f;    --warn-bg: #fbf1de;
+    --bad: #bc2f2f;     --bad-bg: #fbe9e9;
+    --muted: #6b7280;   --muted-bg: #eceef1;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #16191d;
+      --surface: #1f242a;
+      --fg: #e6e9ed;
+      --fg-dim: #9aa2ab;
+      --border: #2f363d;
+      --edge: #7d858e;
+      --accent: #7aa5f5;  --accent-bg: #1c2840;
+      --ok: #5fbe89;      --ok-bg: #1b2f24;
+      --warn: #dfa640;    --warn-bg: #332914;
+      --bad: #ef7676;     --bad-bg: #331d1d;
+      --muted: #9aa2ab;   --muted-bg: #262b31;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16191d;
+    --surface: #1f242a;
+    --fg: #e6e9ed;
+    --fg-dim: #9aa2ab;
+    --border: #2f363d;
+    --edge: #7d858e;
+    --accent: #7aa5f5;  --accent-bg: #1c2840;
+    --ok: #5fbe89;      --ok-bg: #1b2f24;
+    --warn: #dfa640;    --warn-bg: #332914;
+    --bad: #ef7676;     --bad-bg: #331d1d;
+    --muted: #9aa2ab;   --muted-bg: #262b31;
+  }
+
+  body { background: var(--bg); color: var(--fg); margin: 0; }
+  .vr {
+    max-width: 60rem; margin: 0 auto; padding: 1.5rem 1rem 4rem;
+    line-height: 1.8;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  }
+  .vr h1 { font-size: 1.6rem; line-height: 1.4; margin: 0 0 .3rem; }
+  .vr h2 {
+    font-size: 1.22rem; margin: 2.8rem 0 .8rem;
+    padding-bottom: .3rem; border-bottom: 1px solid var(--border);
+  }
+  .vr h3 { font-size: 1rem; margin: 1.8rem 0 .5rem; }
+  .vr .meta { color: var(--fg-dim); font-size: .88rem; margin: 0 0 1.4rem; }
+  .vr code {
+    background: var(--surface); padding: .1rem .35rem; border-radius: 3px;
+    font-size: .88em; overflow-wrap: anywhere;
+  }
+  .vr a { color: var(--accent); }
+
+  /* Conclusion block: the only part some readers will read. */
+  .conclusion {
+    border: 1px solid var(--accent); border-left-width: 5px;
+    background: var(--accent-bg); border-radius: 0 6px 6px 0;
+    padding: .9rem 1.1rem; margin: 1rem 0 1.6rem;
+  }
+  .conclusion h2 { border: 0; margin: 0 0 .4rem; padding: 0; font-size: 1rem; color: var(--accent); }
+  .conclusion p, .conclusion ul { margin: .3rem 0; }
+  .conclusion .ask { margin-top: .7rem; font-weight: 600; }
+
+  /* Table of contents */
+  nav.toc { font-size: .9rem; background: var(--surface); border-radius: 6px; padding: .6rem 1rem; }
+  nav.toc ol { margin: 0; padding-left: 1.3rem; }
+
+  /* Term definitions placed where the term first appears. */
+  dl.terms { display: grid; grid-template-columns: max-content 1fr; gap: .35rem 1rem; margin: 1rem 0; }
+  dl.terms dt { font-weight: 600; }
+  dl.terms dd { margin: 0; color: var(--fg); }
+  @media (max-width: 36rem) {
+    dl.terms { grid-template-columns: 1fr; }
+    dl.terms dd { margin: 0 0 .5rem; }
+  }
+
+  /* Figures */
+  figure.dia { margin: 1.4rem 0; }
+  figure.dia svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  figure.dia figcaption {
+    color: var(--fg-dim); font-size: .84rem; margin-top: .55rem; text-align: center;
+  }
+  .lead { margin: 1.2rem 0 .2rem; }
+  svg .n { fill: var(--fg); font-size: 13px; font-weight: 600; }
+  svg .s { fill: var(--fg-dim); font-size: 11px; }
+  svg .node { fill: var(--surface); stroke: var(--edge); stroke-width: 1.2; }
+  svg .node.focus { fill: var(--accent-bg); stroke: var(--accent); stroke-width: 3; }
+  svg .node.st-ok { fill: var(--ok-bg); stroke: var(--ok); stroke-width: 2; }
+  svg .node.st-warn { fill: var(--warn-bg); stroke: var(--warn); stroke-width: 2; }
+  svg .node.st-bad { fill: var(--bad-bg); stroke: var(--bad); stroke-width: 2; }
+  svg .node.st-muted { fill: var(--muted-bg); stroke: var(--muted); stroke-dasharray: 4 3; }
+  svg .edge { stroke: var(--edge); stroke-width: 1.5; fill: none; }
+  svg .edge.dashed { stroke-dasharray: 5 4; }
+  svg .focus-edge { stroke: var(--accent); stroke-width: 2.5; }
+  svg .bad-edge { stroke: var(--bad); stroke-width: 2; stroke-dasharray: 6 4; }
+  svg .bad-text { fill: var(--bad); }
+  svg .lifeline { stroke: var(--border); stroke-width: 1.5; stroke-dasharray: 3 4; }
+
+  /* Legend: every figure that assigns meaning to colors or line styles needs one. */
+  .legend {
+    display: flex; flex-wrap: wrap; gap: .4rem 1.1rem;
+    font-size: .82rem; color: var(--fg-dim); margin: .6rem 0 0;
+    padding: .5rem .8rem; background: var(--surface); border-radius: 5px;
+  }
+  .legend span { display: inline-flex; align-items: center; gap: .35rem; }
+  .legend i { width: .95rem; height: .95rem; border-radius: 3px; display: inline-block; border: 1.5px solid; }
+  .legend .k-focus i { background: var(--accent-bg); border-color: var(--accent); border-width: 3px; }
+  .legend .k-ok i { background: var(--ok-bg); border-color: var(--ok); }
+  .legend .k-warn i { background: var(--warn-bg); border-color: var(--warn); }
+  .legend .k-bad i { background: var(--bad-bg); border-color: var(--bad); }
+  .legend .k-muted i { background: var(--muted-bg); border-color: var(--muted); border-style: dashed; }
+  .legend .k-line i { height: 0; border-width: 1px 0 0; border-color: var(--edge); width: 1.4rem; border-radius: 0; }
+  .legend .k-dash i { height: 0; border-width: 1.5px 0 0; border-style: dashed; border-color: var(--edge); width: 1.4rem; border-radius: 0; }
+
+  /* Before / after: identical layouts side by side. */
+  .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 44rem) { .ba { grid-template-columns: 1fr; } }
+  .ba > div { border: 1px solid var(--border); border-radius: 6px; padding: .6rem; }
+  .ba h4 { margin: 0 0 .3rem; font-size: .85rem; color: var(--fg-dim); }
+
+  /* Timeline */
+  ol.tl { list-style: none; margin: 0; padding: 0 0 0 1.1rem; border-left: 3px solid var(--border); }
+  ol.tl li { position: relative; padding: .2rem 0 .8rem .6rem; }
+  ol.tl li::before {
+    content: ""; position: absolute; left: -1.62rem; top: .55rem;
+    width: .8rem; height: .8rem; border-radius: 50%;
+    background: var(--bg); border: 3px solid var(--edge);
+  }
+  ol.tl li.bad::before { border-color: var(--bad); background: var(--bad-bg); }
+  ol.tl li.ok::before { border-color: var(--ok); background: var(--ok-bg); }
+  ol.tl li.warn::before { border-color: var(--warn); background: var(--warn-bg); }
+  ol.tl time { display: inline-block; min-width: 6.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* Cause-and-effect chain: horizontal on wide screens, vertical on narrow ones. */
+  .chain { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; }
+  .chain .step {
+    flex: 1 1 0; border: 1.5px solid var(--edge); border-radius: 6px;
+    background: var(--surface); padding: .6rem .7rem; position: relative;
+    display: flex; flex-direction: column; gap: .2rem; font-size: .9rem;
+  }
+  .chain .step + .step { margin-left: 1.8rem; }
+  .chain .step + .step::before {
+    content: "→"; position: absolute; left: -1.45rem; top: 50%; transform: translateY(-50%);
+    color: var(--edge); font-size: 1.2rem;
+  }
+  .chain .step span { color: var(--fg-dim); font-size: .82rem; }
+  .chain .step.bad { border-color: var(--bad); background: var(--bad-bg); }
+  .chain .step.ok { border-color: var(--ok); background: var(--ok-bg); }
+  .chain .step.guess { border-style: dashed; }
+  @media (max-width: 40rem) {
+    .chain { flex-direction: column; }
+    .chain .step + .step { margin: 1.6rem 0 0; }
+    .chain .step + .step::before { content: "↓"; left: 50%; top: -1.35rem; transform: translateX(-50%); }
+  }
+
+  /* Tables: only the table scrolls horizontally, never the page. */
+  .tw { overflow-x: auto; margin: 1rem 0; }
+  table { border-collapse: collapse; width: 100%; font-size: .89rem; }
+  th, td { border: 1px solid var(--border); padding: .45rem .6rem; text-align: left; vertical-align: top; }
+  th { background: var(--surface); font-weight: 600; white-space: nowrap; }
+  td.st { white-space: nowrap; font-weight: 600; }
+  td.st.ok { color: var(--ok); }
+  td.st.warn { color: var(--warn); }
+  td.st.bad { color: var(--bad); }
+  td.st.muted { color: var(--muted); }
+
+  /* Supplementary information: collapsed by default and visually lighter,
+     so readers can skip it unless a point raises a question. */
+  details.more {
+    margin: .8rem 0; border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); font-size: .9rem; color: var(--fg-dim);
+  }
+  details.more > summary {
+    cursor: pointer; padding: .45rem .8rem; font-weight: 600; list-style: none;
+  }
+  details.more > summary::-webkit-details-marker { display: none; }
+  details.more > summary::before { content: "▸"; display: inline-block; width: 1.1rem; transition: transform .15s; }
+  details.more[open] > summary::before { transform: rotate(90deg); }
+  details.more > summary .hint { font-weight: 400; font-size: .8rem; margin-left: .4rem; }
+  details.more > .body { padding: .2rem 1rem .8rem; color: var(--fg); }
+  details.more.section > summary { font-size: 1.05rem; color: var(--fg); }
+  .aside { color: var(--fg-dim); font-size: .86rem; }
+
+  /* Labels that separate verified facts from guesses. */
+  .tag { display: inline-block; font-size: .74rem; font-weight: 700; padding: 0 .4rem; border-radius: 3px; margin-right: .3rem; vertical-align: .08em; }
+  .tag.guess { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn); }
+  .tag.unverified { background: var(--muted-bg); color: var(--muted); border: 1px solid var(--muted); }
+</style>
+
+<article class="vr">
+  <h1>{{報告の主題}}</h1>
+  <p class="meta">{{報告日 YYYY-MM-DD}} ／ 対象: {{報告の対象の範囲。リポジトリ、期間、環境など}}</p>
+
+  <!-- 1. Conclusion -->
+  <section class="conclusion">
+    <h2>結論</h2>
+    <p>{{報告の主題に対する答えを3〜5行。この囲みだけを読んだ読み手が、何が起きて今どうなっているかを説明できる内容にする}}</p>
+    <p class="ask">{{読み手に求める行動。求める行動がない場合はこの段落を削除する}}</p>
+  </section>
+
+  <nav class="toc" aria-label="目次">
+    <ol>
+      <li><a href="#overview">全体像</a></li>
+      <li><a href="#concepts">{{重要な概念の節の見出し}}</a></li>
+      <li><a href="#main">{{本題の節の見出し}}</a></li>
+      <li><a href="#status">現在の状態と残っている課題</a></li>
+      <li><a href="#unverified">確認できていない事項</a></li>
+      <li><a href="#sources">根拠</a></li>
+    </ol>
+  </nav>
+
+  <!-- 2. Overview: where the subject sits in the whole system -->
+  <h2 id="overview">全体像</h2>
+  <p>{{対象の役割を2〜4行。具体例（例: ユーザー A が注文を確定した場合）をここで導入し、以降の節でも同じ例を使う}}</p>
+  <p class="lead">{{次の図で何を見るかを1文で}}</p>
+  <figure class="dia">
+    {{構成図の SVG。references/diagrams.md の「構成図」を参照}}
+    <figcaption>{{図の説明。太枠と矢印の意味}}</figcaption>
+  </figure>
+  <div class="legend">
+    <span class="k-focus"><i></i>{{報告の対象}}</span>
+    <span class="k-line"><i></i>{{矢印の意味}}</span>
+  </div>
+  <p>{{図から読み取れる結論を1〜2文}}</p>
+
+  <!-- 3. Concepts the reader needs -->
+  <h2 id="concepts">{{重要な概念の節の見出し}}</h2>
+  <p>{{結論を理解するために必要な概念と、その関係を2〜3行}}</p>
+  <dl class="terms">
+    <dt>{{用語}}</dt><dd>{{何を表すか。1件が何に対応するか}}</dd>
+  </dl>
+  <figure class="dia">
+    {{概念の関係を示す図}}
+    <figcaption>{{図の説明}}</figcaption>
+  </figure>
+
+  <!-- 4. Main body: split into sections that fit the subject -->
+  <h2 id="main">{{本題の節の見出し}}</h2>
+  <h3>{{小見出し}}</h3>
+  <p class="lead">{{次の図で何を見るかを1文で}}</p>
+  <figure class="dia">
+    {{この小見出しの主張を示す図}}
+    <figcaption>{{図の説明}}</figcaption>
+  </figure>
+  <p><strong>{{この小見出しで最初に読むべき1文}}</strong>{{図から読み取れる結論。推測には <span class="tag guess">推測</span> を付ける}}</p>
+  <p class="aside">{{本文中の短い補足。読まなくても結論を誤解しない内容。不要なら削除する}}</p>
+  <details class="more">
+    <summary>{{中身が分かる名詞句。例: タイムアウト値を決めた計測の条件}}<span class="hint">補足</span></summary>
+    <div class="body">
+      {{補足の情報。詳しい手順、ログの抜粋、計測条件、採らなかった案など}}
+    </div>
+  </details>
+
+  <!-- 5. Current status and remaining work -->
+  <h2 id="status">現在の状態と残っている課題</h2>
+  <figure class="dia">
+    {{状態を重ねた構成図、または状態の一覧}}
+    <figcaption>{{図の説明}}</figcaption>
+  </figure>
+  <div class="legend">
+    <span class="k-ok"><i></i>完了</span>
+    <span class="k-warn"><i></i>対応中</span>
+    <span class="k-bad"><i></i>未対応</span>
+    <span class="k-muted"><i></i>対象外</span>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>項目</th><th>状態</th><th>内容</th><th>次に行うこと</th></tr></thead>
+      <tbody>
+        <tr><td>{{項目}}</td><td class="st ok">完了</td><td>{{内容}}</td><td>—</td></tr>
+        <tr><td>{{項目}}</td><td class="st bad">未対応</td><td>{{内容}}</td><td>{{担当と作業}}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 6. Unverified items -->
+  <h2 id="unverified">確認できていない事項</h2>
+  <ul>
+    <li><span class="tag unverified">未確認</span>{{結論に影響する、確認できていない前提と、確認する方法}}</li>
+  </ul>
+  <details class="more">
+    <summary>結論に影響しない未確認の事項<span class="hint">{{N}}件</span></summary>
+    <div class="body">
+      <ul><li>{{未確認の事項}}</li></ul>
+    </div>
+  </details>
+
+  <!-- 7. Sources: collapsed as a whole because it only supports the claims above. -->
+  <details class="more section" id="sources">
+    <summary>根拠<span class="hint">参照したファイル、ログ、コマンド、URL</span></summary>
+    <div class="body">
+      <div class="tw">
+        <table>
+          <thead><tr><th>主張</th><th>根拠</th></tr></thead>
+          <tbody>
+            <tr><td>{{主張}}</td><td><code>{{file:line / コマンド / URL}}</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </details>
+</article>
