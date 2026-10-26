@@ -43,13 +43,19 @@ function renderStatusLine() {
       const rl5h = data.rate_limits?.five_hour;
       let label5h = "5h";
       if (rl5h?.resets_at) {
-        const d = new Date(rl5h.resets_at * 1000);
-        label5h = `5h→${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
+        label5h = `5h→${fmtClock(new Date(rl5h.resets_at * 1000))}`;
       }
       parts1.push(makeBar(label5h, rl5h?.used_percentage));
 
-      // 7d rate limit
-      parts1.push(makeBar("7d", data.rate_limits?.seven_day?.used_percentage));
+      // 7d rate limit with reset weekday and time; the reset can be up to a
+      // week away, so the time alone does not identify the day.
+      const rl7d = data.rate_limits?.seven_day;
+      let label7d = "7d";
+      if (rl7d?.resets_at) {
+        const d = new Date(rl7d.resets_at * 1000);
+        label7d = `7d→${WEEKDAYS[d.getDay()]} ${fmtClock(d)}`;
+      }
+      parts1.push(makeBar(label7d, rl7d?.used_percentage));
 
       lines.push(parts1.join("  "));
 
@@ -231,6 +237,12 @@ function fmtPr(pr) {
   };
   const mark = marks[pr.review_state] ?? "";
   return `\x1b[35mPR #${pr.number}\x1b[0m${mark}`;
+}
+
+const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+function fmtClock(d) {
+  return `${d.getHours().toString().padStart(2, "0")}:${d.getMinutes().toString().padStart(2, "0")}`;
 }
 
 function fmtDuration(ms) {
