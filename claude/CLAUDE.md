@@ -133,15 +133,22 @@ Apply these checks to explanatory text, UI labels, notifications, errors, empty 
 - If a new topic appears, state it in one sentence and ask whether to pursue it rather than mixing it into the current answer.
 - A correction is one sentence: what was wrong and what is correct. Then provide the corrected result.
 
-## Resource URLs
+## URLs Requiring Action
 
-At the end of every reply that concludes a task or discussion round, list every discussed resource that has a confirmed URL: pull requests, issues, commits, branches on the hosting service, CI runs and failing jobs, deployed or preview environments, published artifacts, and external documents or pages created or updated during the work.
+At the end of every reply that concludes a task or discussion round, list the URLs of the resources on which the user must act next. Typical entries:
 
-- Use a separate heading, one resource per line, with a short label.
-- Repeat URLs already given when the resource remains under discussion.
+- the spec under discussion that the user must review or approve;
+- the pull request that must be reviewed or merged next (in a stack, the next one in merge order);
+- a failing CI run or job that blocks the next step;
+- a page that waits for the user's answer, such as a decision brief.
+
+Rules:
+
+- Do not list a resource only because it appeared in the conversation. Exclude merged pull requests, pushed commits, passed CI runs, closed issues, and reference documents that require no action.
+- Use a separate heading, one resource per line, with a label that states the required action (for example, "Merge next: PR #12").
 - Copy URLs from command or API output. Never construct an unverified URL.
 - Put whitespace around every bare URL so terminal link detection does not include punctuation.
-- Omit the section when no discussed resource has a confirmed URL.
+- Omit the section when no resource requires the user's action.
 
 ## Artifact Responsibilities
 
