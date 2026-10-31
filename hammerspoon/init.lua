@@ -12,7 +12,7 @@ local function keyCode(key, modifiers)
 end
 
 local function remapKey(modifiers, key, keyCode)
-   hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
+   return hs.hotkey.bind(modifiers, key, keyCode, nil, keyCode)
 end
 
 local function disableAllHotkeys()
@@ -134,6 +134,24 @@ local function updateGhosttyImagePasteTap(app)
    end
 end
 
+-- Ghostty and kitty have no cut action, so the Cmd+X that the Ctrl+W remap
+-- below sends reaches the terminal app as a plain "x" (for example, Claude
+-- Code's /resume picker never receives its Ctrl+W worktree toggle). Only this
+-- remap is released there; the other remaps stay active in these apps.
+local ctrlWPassthroughBundleIDs = {
+   [ghosttyBundleID] = true,
+   ["net.kovidgoyal.kitty"] = true,
+}
+local ctrlWCutHotkey
+
+local function updateCtrlWCutHotkey(app)
+   if app and ctrlWPassthroughBundleIDs[app:bundleID()] then
+      ctrlWCutHotkey:disable()
+   else
+      ctrlWCutHotkey:enable()
+   end
+end
+
 local function handleGlobalAppEvent(name, event, app)
    if event == hs.application.watcher.activated then
       -- hs.alert.show(name)
@@ -141,6 +159,7 @@ local function handleGlobalAppEvent(name, event, app)
          disableAllHotkeys()
       else
          enableAllHotkeys()
+         updateCtrlWCutHotkey(app)
       end
       updateGhosttyImagePasteTap(app)
    end
@@ -158,7 +177,8 @@ remapKey({'ctrl'}, 'n', keyCode('down'))
 remapKey({'ctrl'}, 'p', keyCode('up'))
 
 -- テキスト編集
-remapKey({'ctrl'}, 'w', keyCode('x', {'cmd'}))
+ctrlWCutHotkey = remapKey({'ctrl'}, 'w', keyCode('x', {'cmd'}))
+updateCtrlWCutHotkey(hs.application.frontmostApplication())
 remapKey({'ctrl'}, 'y', keyCode('v', {'cmd'}))
 
 -- ページスクロール
